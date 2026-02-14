@@ -25,45 +25,50 @@ const slugLoader = ({ params }) => {
   return { slug: params.slug }
 }
 
-const router = createBrowserRouter([
+const router = createBrowserRouter(
+  [
+    {
+      path: '/',
+      element: <AppLayout />,
+      children: [
+        { index: true, element: <HomePage /> },
+
+        { path: 'products', element: <ProductsPage /> },
+        { path: 'products/:slug', element: <ProductDetailPage />, loader: slugLoader },
+
+        { path: 'solutions', element: <SolutionsPage /> },
+        { path: 'solutions/:slug', element: <SolutionDetailPage />, loader: slugLoader },
+
+        { path: 'use-cases', element: <SolutionsPage /> },
+        { path: 'use-cases/:slug', element: <SolutionDetailPage />, loader: slugLoader },
+
+        { path: 'software-services', element: <SoftwareServicesPage /> },
+
+        { path: 'support', element: <SupportHubPage /> },
+        { path: 'support/knowledge-base', element: <KnowledgeBasePage /> },
+        { path: 'support/product-updates', element: <ProductUpdatesPage /> },
+        { path: 'support/request-help', element: <RequestHelpPage /> },
+
+        { path: 'resources', element: <ResourcesPage /> },
+        { path: 'resources/whitepapers', element: <WhitepapersPage /> },
+        { path: 'resources/case-studies', element: <CaseStudiesPage /> },
+        { path: 'resources/press-releases', element: <PressReleasesPage /> },
+
+        { path: 'company', element: <CompanyPage /> },
+        { path: 'company/about-us', element: <AboutUsPage /> },
+        { path: 'company/careers', element: <CareersPage /> },
+
+        { path: 'contact', element: <ContactPage /> },
+
+        { path: 'legal/privacy-policy', element: <PrivacyPolicyPage /> },
+
+        { path: '*', element: <NotFoundPage /> },
+      ],
+    },
+  ],
   {
-    path: '/',
-    element: <AppLayout />,
-    children: [
-      { index: true, element: <HomePage /> },
-
-      { path: 'products', element: <ProductsPage /> },
-      { path: 'products/:slug', element: <ProductDetailPage />, loader: slugLoader },
-
-      { path: 'solutions', element: <SolutionsPage /> },
-      { path: 'solutions/:slug', element: <SolutionDetailPage />, loader: slugLoader },
-
-      { path: 'use-cases', element: <SolutionsPage /> },
-      { path: 'use-cases/:slug', element: <SolutionDetailPage />, loader: slugLoader },
-
-      { path: 'software-services', element: <SoftwareServicesPage /> },
-
-      { path: 'support', element: <SupportHubPage /> },
-      { path: 'support/knowledge-base', element: <KnowledgeBasePage /> },
-      { path: 'support/product-updates', element: <ProductUpdatesPage /> },
-      { path: 'support/request-help', element: <RequestHelpPage /> },
-
-      { path: 'resources', element: <ResourcesPage /> },
-      { path: 'resources/whitepapers', element: <WhitepapersPage /> },
-      { path: 'resources/case-studies', element: <CaseStudiesPage /> },
-      { path: 'resources/press-releases', element: <PressReleasesPage /> },
-
-      { path: 'company', element: <CompanyPage /> },
-      { path: 'company/about-us', element: <AboutUsPage /> },
-      { path: 'company/careers', element: <CareersPage /> },
-
-      { path: 'contact', element: <ContactPage /> },
-
-      { path: 'legal/privacy-policy', element: <PrivacyPolicyPage /> },
-
-      { path: '*', element: <NotFoundPage /> },
-    ],
-  },
-])
+    basename: import.meta.env.BASE_URL,
+  }
+)
 
 export default router

@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom'
+import getInTouchImage from '../../assets/home/Touch.jpg'
 
 const GetInTouchBanner = () => {
   return (
@@ -7,7 +8,7 @@ const GetInTouchBanner = () => {
         <div className="relative overflow-hidden">
           <div
             className="relative flex aspect-[21/6] items-center justify-center bg-center bg-cover bg-no-repeat px-6 text-center"
-            style={{ backgroundImage: `url(${'/src/assets/home/Touch.jpg'})` }}
+            style={{ backgroundImage: `url(${getInTouchImage})` }}
           >
             <div className="absolute inset-0 bg-black/35" aria-hidden="true" />
             <div className="relative z-10">
