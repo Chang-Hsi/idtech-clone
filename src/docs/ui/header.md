@@ -42,7 +42,7 @@
 Products 下拉選單（Desktop hover）項目如下（先做靜態清單，後續可用資料檔生成）：
 
 - Full Product Catalog → `/products`
-- NEO 3 Platform of Products → `/products?category=neo3`
+- Kiodk Platform of Products → `/products?category=neo3`
 - EMV Common Kernel → `/products?category=emv-kernel`
 - Unattended Payment Solutions → `/products?category=unattended`
 - Mobile Payment Devices → `/products?category=mobile`

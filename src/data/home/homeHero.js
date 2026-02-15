@@ -82,9 +82,9 @@ export const homeHeroSlides = [
   },
   {
     id: 'hero-c',
-    title: 'INTRODUCING THE NEO 3 PLATFORM OF PRODUCTS',
+    title: 'INTRODUCING THE Kiodk PLATFORM OF PRODUCTS',
     desc: 'ONE COMMON KERNEL. ONE INTEGRATION. MULTIPLE ENVIRONMENTS.',
-    primaryCta: { label: 'View the NEO 3 Platform of Products', to: '/products?category=neo3' },
+    primaryCta: { label: 'View the Kiodk Platform of Products', to: '/products?category=neo3' },
     background: {
       imageUrl: carousel1Image,
       overlay: true,
@@ -94,7 +94,7 @@ export const homeHeroSlides = [
       {
         id: 'c-title',
         type: 'title',
-        content: 'INTRODUCING THE NEO 3 PLATFORM OF PRODUCTS',
+        content: 'INTRODUCING THE Kiodk PLATFORM OF PRODUCTS',
         position: {
           anchor: 'center',
           top: '36%',
@@ -113,7 +113,7 @@ export const homeHeroSlides = [
           anchor: 'center',
           top: '36%',
           left: '61%',
-          translateX: '-40%',
+          translateX: '-30%',
           translateY: '-50%',
         },
         style: { maxWidth: '400px', descSize: 'text-2xl', textAlign: 'left' },
@@ -136,14 +136,14 @@ export const homeHeroSlides = [
       {
         id: 'c-cta',
         type: 'cta',
-        content: 'View the NEO 3 Platform of Products',
+        content: 'View the Kiodk Platform of Products',
         to: '/products?category=neo3',
         position: {
           anchor: 'center',
           top: '64%',
-          left: '61%',
+          left: '62%',
           translateX: '-50%',
-          translateY: '-50%',
+          translateY: '-30%',
         },
         motion: { enter: 'slideUp', duration: 760, delay: 620, easing: 'ease-out' },
       },

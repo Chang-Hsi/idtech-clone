@@ -7,32 +7,73 @@ import useCase5Image from '../../assets/home/UseCase5.jpg'
 import useCase6Image from '../../assets/home/UseCase6.jpg'
 import useCase7Image from '../../assets/home/UseCase7.jpg'
 import useCase8Image from '../../assets/home/UseCase8.jpg'
+import collectionImage1 from '../../assets/collection/Collection1.jpg'
+import collectionImage2 from '../../assets/collection/Collection2.jpg'
+import collectionImage3 from '../../assets/collection/Collection3.jpg'
+import collectionImage4 from '../../assets/collection/Collection4.jpg'
+import collectionImage5 from '../../assets/collection/Collection5.jpg'
+import collectionImage6 from '../../assets/collection/Collection6.jpg'
+import collectionImage7 from '../../assets/collection/Collection7.jpg'
+import collectionImage8 from '../../assets/collection/Collection8.jpg'
+import collectionImage9 from '../../assets/collection/Collection9.jpg'
+import collectionImage10 from '../../assets/collection/Collection10.jpg'
+import collectionImage11 from '../../assets/collection/Collection11.jpg'
+import collectionImage12 from '../../assets/collection/Collection12.jpg'
 
 export const collections = [
   {
     slug: 'neo-3',
-    name: 'NEO 3 Platform',
-    heroTitle: 'NEO 3 Platform of Products',
-    heroSubtitle: 'One common kernel. One integration path. Multiple deployment environments.',
+    name: 'Kiodk Platform',
+    heroTitle: 'Kiodk Platform of Products',
+    heroSubtitle:
+      'A single integration pathway reduces development overhead and accelerates time to market. Whether youre implementing payments in retail, transportation, hospitality, or self-service kiosks, our streamlined framework minimizes redundant certification efforts and simplifies ongoing maintenance. The result is a scalable solution that adapts as your business grows.',
     intro:
-      'The NEO 3 platform helps teams standardize integrations while scaling across unattended, mobile, and countertop payment touchpoints.',
+      'The Kiodk platform helps teams standardize integrations while scaling across unattended, mobile, and countertop payment touchpoints.',
     valueProps: [
       'Shared software foundation across multiple device families',
       'Faster deployment with reusable integration patterns',
       'Operational consistency for multi-location rollouts',
     ],
     featuredSlugs: ['neo3', 'vp3300', 'countertop', 'unattended'],
+    hasFeaturedProductsSection: true,
+    exploreDesc:
+      'The Kiodk Platform collection is built for teams that need one stable product family across multiple payment environments. This series emphasizes shared integration patterns, predictable lifecycle maintenance, and faster rollout execution by minimizing duplicated implementation work between mobile, countertop, and unattended deployments. By standardizing hardware behavior and software touchpoints, organizations can shorten pilot cycles, simplify regional expansion, and improve long-term operational consistency.',
+    displayProducts: [
+      {
+        slug: 'neo3-display-kiosk-v',
+        targetSlug: 'neo3',
+        name: 'Kiosk V',
+        shortDescription:
+          'Our newest contactless card reader supporting mobile payments and loyalty programs.',
+        media: { heroImageUrl: collectionImage1 },
+      },
+      {
+        slug: 'neo3-display-vp3350',
+        targetSlug: 'vp3300',
+        name: 'VP3350',
+        shortDescription: 'Robust wireless device ready for mobile and business payment use cases.',
+        media: { heroImageUrl: collectionImage2 },
+      },
+      {
+        slug: 'neo3-display-vp7200',
+        targetSlug: 'unattended',
+        name: 'VP7200',
+        shortDescription:
+          'Smart NFC reader with integrated scanner support for self-service flows.',
+        media: { heroImageUrl: collectionImage3 },
+      },
+    ],
     resources: [
-      { title: 'NEO 3 Datasheet', url: '/resources/whitepapers' },
+      { title: 'Kiodk Datasheet', url: '/resources/whitepapers' },
       { title: 'Integration Guide', url: '/support/knowledge-base' },
     ],
     media: {
       heroImageUrl: carouselInsideImage,
     },
     seo: {
-      title: 'NEO 3 Platform | Products',
+      title: 'Kiodk Platform | Products',
       description:
-        'Explore the NEO 3 platform for scalable payment experiences across unattended, mobile, and countertop environments.',
+        'Explore the Kiodk platform for scalable payment experiences across unattended, mobile, and countertop environments.',
     },
   },
   {
@@ -48,6 +89,31 @@ export const collections = [
       'Consistent SDK approach for mobile app teams',
     ],
     featuredSlugs: ['vp3300', 'mobile'],
+    hasFeaturedProductsSection: false,
+    exploreDesc: '',
+    displayProducts: [
+      {
+        slug: 'mobile-display-sprint-mini',
+        targetSlug: 'mobile',
+        name: 'Sprint Mini',
+        shortDescription: 'Pocket-size tap-ready reader for line-busting and event retail.',
+        media: { heroImageUrl: collectionImage1 },
+      },
+      {
+        slug: 'mobile-display-vp3350',
+        targetSlug: 'vp3300',
+        name: 'VP3350',
+        shortDescription: 'Wireless checkout terminal for on-the-go transaction handling.',
+        media: { heroImageUrl: collectionImage2 },
+      },
+      {
+        slug: 'mobile-display-flex-go',
+        targetSlug: 'mobile',
+        name: 'Flex Go',
+        shortDescription: 'Portable payment terminal optimized for field and mobile sales teams.',
+        media: { heroImageUrl: collectionImage3 },
+      },
+    ],
     resources: [{ title: 'Mobile Buyer Guide', url: '/resources/whitepapers' }],
     media: {
       heroImageUrl: useCase2Image,
@@ -56,6 +122,56 @@ export const collections = [
       title: 'Mobile Payment Devices | Products',
       description:
         'Compare mobile payment readers built for flexible and secure customer experiences.',
+    },
+  },
+  {
+    slug: 'emv-kernel',
+    name: 'EMV Common Kernel',
+    heroTitle: 'EMV Common Kernel',
+    heroSubtitle:
+      'A reusable software foundation that streamlines card-present payment logic across device lines.',
+    intro:
+      'EMV Common Kernel is designed to reduce duplicated integration effort and improve consistency across product families.',
+    valueProps: [
+      'Shared payment behavior across multiple deployment types',
+      'Reduced certification and maintenance overhead',
+      'Aligned integration workflow for product teams',
+    ],
+    featuredSlugs: ['emv-kernel', 'neo3'],
+    hasFeaturedProductsSection: true,
+    exploreDesc:
+      'The EMV Common Kernel collection focuses on software-level consistency for card-present payment flows. It is designed for product teams that want a reusable transaction foundation that can be applied across multiple device categories without re-implementing core payment behavior each time. This approach helps reduce certification friction, improves release quality through shared validation workflows, and creates a clearer upgrade path for future feature expansion.',
+    displayProducts: [
+      {
+        slug: 'kernel-display-core',
+        targetSlug: 'emv-kernel',
+        name: 'Kernel Core',
+        shortDescription: 'Baseline kernel package for consistent payment transaction handling.',
+        media: { heroImageUrl: collectionImage1 },
+      },
+      {
+        slug: 'kernel-display-edge',
+        targetSlug: 'emv-kernel',
+        name: 'Kernel Edge',
+        shortDescription: 'Extended package for specialized unattended and OEM scenarios.',
+        media: { heroImageUrl: collectionImage2 },
+      },
+      {
+        slug: 'kernel-display-ops',
+        targetSlug: 'emv-kernel',
+        name: 'Kernel Ops',
+        shortDescription: 'Operational support layer for lifecycle updates and maintenance.',
+        media: { heroImageUrl: collectionImage3 },
+      },
+    ],
+    resources: [{ title: 'Kernel Integration Notes', url: '/support/knowledge-base' }],
+    media: {
+      heroImageUrl: useCase6Image,
+    },
+    seo: {
+      title: 'EMV Common Kernel | Products',
+      description:
+        'Explore EMV Common Kernel to standardize payment logic and reduce integration complexity.',
     },
   },
   {
@@ -72,6 +188,32 @@ export const collections = [
       'Security-focused design with long-term support',
     ],
     featuredSlugs: ['unattended', 'emv-kernel'],
+    hasFeaturedProductsSection: true,
+    exploreDesc:
+      'Unattended Payment Solutions are tailored for self-service environments where reliability, uptime, and deployment resilience are critical. This collection supports kiosk, vending, parking, and charging scenarios with products that can withstand high-volume use while remaining integration-friendly for OEM and enterprise programs. The overall goal is to provide dependable unattended acceptance with maintainable software and hardware operations over long deployment cycles.',
+    displayProducts: [
+      {
+        slug: 'unattended-display-vp7200',
+        targetSlug: 'unattended',
+        name: 'VP7200',
+        shortDescription: 'Compact unattended reader for kiosks and parking terminals.',
+        media: { heroImageUrl: collectionImage3 },
+      },
+      {
+        slug: 'unattended-display-vp6825',
+        targetSlug: 'unattended',
+        name: 'VP6825',
+        shortDescription: 'All-in-one kiosk terminal with robust unattended performance profile.',
+        media: { heroImageUrl: collectionImage1 },
+      },
+      {
+        slug: 'unattended-display-ap6800',
+        targetSlug: 'unattended',
+        name: 'AP6800',
+        shortDescription: 'Android-based unattended unit with flexible deployment options.',
+        media: { heroImageUrl: collectionImage2 },
+      },
+    ],
     resources: [{ title: 'Unattended Deployment Checklist', url: '/support/request-help' }],
     media: {
       heroImageUrl: useCase1Image,
@@ -95,6 +237,31 @@ export const collections = [
       'Flexible deployment options',
     ],
     featuredSlugs: ['countertop', 'neo3'],
+    hasFeaturedProductsSection: false,
+    exploreDesc: '',
+    displayProducts: [
+      {
+        slug: 'countertop-display-ct100',
+        targetSlug: 'countertop',
+        name: 'CT100',
+        shortDescription: 'Compact countertop terminal for daily checkout operations.',
+        media: { heroImageUrl: collectionImage4 },
+      },
+      {
+        slug: 'countertop-display-ct200',
+        targetSlug: 'countertop',
+        name: 'CT200',
+        shortDescription: 'Customer-facing unit with durable housing and stable performance.',
+        media: { heroImageUrl: collectionImage5 },
+      },
+      {
+        slug: 'countertop-display-ctpro',
+        targetSlug: 'countertop',
+        name: 'CT Pro',
+        shortDescription: 'High-throughput countertop option for enterprise checkout lanes.',
+        media: { heroImageUrl: collectionImage6 },
+      },
+    ],
     resources: [{ title: 'Countertop Deployment Guide', url: '/support/knowledge-base' }],
     media: {
       heroImageUrl: useCase3Image,
@@ -117,6 +284,32 @@ export const collections = [
       'Consistent payment acceptance layer',
     ],
     featuredSlugs: ['oem', 'emv-kernel'],
+    hasFeaturedProductsSection: true,
+    exploreDesc:
+      'OEM Modules are intended for manufacturers and platform builders who need embedded payment capabilities without sacrificing product-specific design flexibility. This series supports custom enclosure constraints, integration control, and scalable rollout planning while keeping payment acceptance behavior aligned with broader platform standards. It is especially useful for teams balancing bespoke hardware requirements with long-term maintainability and compliance goals.',
+    displayProducts: [
+      {
+        slug: 'oem-display-embed-a',
+        targetSlug: 'oem',
+        name: 'Embed A',
+        shortDescription: 'Low-profile module for compact OEM payment designs.',
+        media: { heroImageUrl: collectionImage7 },
+      },
+      {
+        slug: 'oem-display-embed-b',
+        targetSlug: 'oem',
+        name: 'Embed B',
+        shortDescription: 'Mid-range embedded device with flexible hardware integration options.',
+        media: { heroImageUrl: collectionImage9 },
+      },
+      {
+        slug: 'oem-display-embed-c',
+        targetSlug: 'oem',
+        name: 'Embed C',
+        shortDescription: 'Advanced module for high-volume and custom OEM deployment scenarios.',
+        media: { heroImageUrl: collectionImage8 },
+      },
+    ],
     resources: [{ title: 'OEM Integration Starter Pack', url: '/support/request-help' }],
     media: {
       heroImageUrl: useCase4Image,
@@ -139,6 +332,31 @@ export const collections = [
       'Operational governance patterns',
     ],
     featuredSlugs: ['neo3', 'unattended'],
+    hasFeaturedProductsSection: false,
+    exploreDesc: '',
+    displayProducts: [
+      {
+        slug: 'enterprise-display-control',
+        targetSlug: 'neo3',
+        name: 'Control Hub',
+        shortDescription: 'Centralized rollout control panel for multi-site deployment programs.',
+        media: { heroImageUrl: collectionImage10 },
+      },
+      {
+        slug: 'enterprise-display-ops',
+        targetSlug: 'unattended',
+        name: 'Ops Suite',
+        shortDescription: 'Operations visibility toolkit for enterprise support workflows.',
+        media: { heroImageUrl: collectionImage3 },
+      },
+      {
+        slug: 'enterprise-display-govern',
+        targetSlug: 'software-services',
+        name: 'Govern Core',
+        shortDescription: 'Policy and governance layer for region-based rollout standards.',
+        media: { heroImageUrl: collectionImage2 },
+      },
+    ],
     resources: [{ title: 'Enterprise Rollout Checklist', url: '/resources/case-studies' }],
     media: {
       heroImageUrl: useCase5Image,
@@ -161,6 +379,32 @@ export const collections = [
       'Lifecycle planning and updates',
     ],
     featuredSlugs: ['software-services', 'emv-kernel'],
+    hasFeaturedProductsSection: true,
+    exploreDesc:
+      'Software Services in this collection are structured to accelerate implementation while reducing architecture and maintenance risk. The focus is on practical onboarding, integration guidance, and lifecycle support that helps teams move from prototype to production with stronger technical foundations. These offerings are designed to complement product deployments with consistent engineering practices, release planning discipline, and operational continuity support.',
+    displayProducts: [
+      {
+        slug: 'software-display-workshop',
+        targetSlug: 'software-services',
+        name: 'Launch Workshop',
+        shortDescription: 'Structured onboarding workshop to accelerate implementation timelines.',
+        media: { heroImageUrl: collectionImage1 },
+      },
+      {
+        slug: 'software-display-architecture',
+        targetSlug: 'software-services',
+        name: 'Architecture Assist',
+        shortDescription: 'Solution architecture support tailored to payment deployment needs.',
+        media: { heroImageUrl: collectionImage2 },
+      },
+      {
+        slug: 'software-display-lifecycle',
+        targetSlug: 'software-services',
+        name: 'Lifecycle Care',
+        shortDescription: 'Ongoing update and support framework for long-term maintainability.',
+        media: { heroImageUrl: collectionImage6 },
+      },
+    ],
     resources: [{ title: 'Service Overview', url: '/software-services' }],
     media: {
       heroImageUrl: useCase6Image,
@@ -183,6 +427,31 @@ export const collections = [
       'Migration path guidance',
     ],
     featuredSlugs: ['legacy'],
+    hasFeaturedProductsSection: false,
+    exploreDesc: '',
+    displayProducts: [
+      {
+        slug: 'legacy-display-lx1',
+        targetSlug: 'legacy',
+        name: 'LX-1',
+        shortDescription: 'Legacy kiosk reader with migration planning documentation.',
+        media: { heroImageUrl: collectionImage3 },
+      },
+      {
+        slug: 'legacy-display-lx2',
+        targetSlug: 'legacy',
+        name: 'LX-2',
+        shortDescription: 'Sustaining product track for long-tail enterprise rollouts.',
+        media: { heroImageUrl: collectionImage9 },
+      },
+      {
+        slug: 'legacy-display-lx3',
+        targetSlug: 'legacy',
+        name: 'LX-3',
+        shortDescription: 'Compatibility-focused unit for transition and upgrade paths.',
+        media: { heroImageUrl: collectionImage8 },
+      },
+    ],
     resources: [{ title: 'Legacy Migration Notes', url: '/support/product-updates' }],
     media: {
       heroImageUrl: useCase7Image,
@@ -205,6 +474,33 @@ export const collections = [
       'Operational consistency in motion-heavy environments',
     ],
     featuredSlugs: ['unattended', 'mobile'],
+    hasFeaturedProductsSection: true,
+    exploreDesc:
+      'Transit & Mobility products are optimized for speed-sensitive payment interactions and operational robustness in transportation use cases. This collection addresses environments where quick taps, repeated throughput, and distributed deployment management are essential. It combines compact hardware options with scalable operational patterns so teams can support real-world mobility workflows while maintaining reliable payment performance.',
+    displayProducts: [
+      {
+        slug: 'transit-display-tapone',
+        targetSlug: 'unattended',
+        name: 'TapOne',
+        shortDescription:
+          'Fast transaction endpoint for transit gate and onboard validation flows.',
+        media: { heroImageUrl: collectionImage12 },
+      },
+      {
+        slug: 'transit-display-mobilityx',
+        targetSlug: 'mobile',
+        name: 'Mobility X',
+        shortDescription: 'Compact mobility reader designed for route-based payment scenarios.',
+        media: { heroImageUrl: collectionImage11 },
+      },
+      {
+        slug: 'transit-display-hub',
+        targetSlug: 'software-services',
+        name: 'Transit Hub',
+        shortDescription: 'Back-office integration layer for mobility payment operations.',
+        media: { heroImageUrl: collectionImage1 },
+      },
+    ],
     resources: [{ title: 'Transit Deployment Overview', url: '/resources/whitepapers' }],
     media: {
       heroImageUrl: useCase8Image,

@@ -19,8 +19,7 @@ const buildInitialState = () => {
     status: 'success',
     error: null,
   })
-  productsAdapter.setAll(state, products)
-  return state
+  return productsAdapter.setAll(state, products)
 }
 
 const catalogSlice = createSlice({

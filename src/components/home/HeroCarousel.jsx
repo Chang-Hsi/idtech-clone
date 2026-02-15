@@ -138,7 +138,7 @@ const HeroCarousel = ({ slides }) => {
 
     const timer = setInterval(() => {
       setActiveIndex((prev) => (prev + 1) % slides.length)
-    }, 6000)
+    }, 12000)
 
     return () => clearInterval(timer)
   }, [slides.length])

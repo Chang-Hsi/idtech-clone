@@ -2,12 +2,14 @@ import neo3Image from '../../assets/home/Products2.jpg'
 import vp3300Image from '../../assets/home/Products1.webp'
 import unattendedImage from '../../assets/home/Products4.jpg'
 import kernelImage from '../../assets/home/Products3.jpg'
+import fullWidthImage1 from '../../assets/products/fullWidthImage1.jpg'
+import fullWidthImage2 from '../../assets/products/fullWidthImage2.jpg'
 
 export const products = [
   {
     id: 'prod-neo3',
-    slug: 'neo3',
-    name: 'NEO 3',
+    slug: 'neo3-display-vp3350',
+    name: 'Kiodk',
     tagline: 'Scalable platform for multi-environment payment programs.',
     shortDescription:
       'A platform-level product strategy for teams that need consistency across diverse payment touchpoints.',
@@ -27,16 +29,35 @@ export const products = [
       gallery: [neo3Image],
     },
     specs: [
-      { key: 'Connectivity', value: 'USB, serial, optional network adapter' },
-      { key: 'Environment', value: 'Indoor commercial deployments' },
-      { key: 'Security', value: 'EMV-ready architecture support' },
+      { key: 'Interfaces', value: 'USB 2.0, RS-232, Ethernet (optional)' },
+      { key: 'Operating Temperatures', value: '0 deg C to 55 deg C (32 deg F to 131 deg F)' },
+      { key: 'Storage Temperatures', value: '-20 deg C to 70 deg C (-4 deg F to 158 deg F)' },
+      { key: 'Dimensions', value: '116.3 mm x 70 mm x 19 mm' },
     ],
     features: [
-      'Unified platform approach',
-      'Faster rollout across multiple sites',
-      'SDK-aligned integration path',
+      'PCI 6.x SRED',
+      'ID TECH common software baseline',
+      'TDES / AES / RSA encryption support',
+      'Enterprise device lifecycle management',
+      'Cross-platform SDK integration',
     ],
     relatedSlugs: ['vp3300', 'emv-kernel'],
+    detail: {
+      heroSubtitle: 'Built for enterprise teams that need stable payment operations at scale.',
+      heroDescription:
+        'NEO3 provides a consistent software and hardware baseline for mobile, countertop, and unattended programs, reducing duplicated implementation effort.',
+      introParagraph:
+        'This platform is optimized for organizations that need to standardize device behavior while keeping integration and maintenance predictable across regions.',
+      introBullets: [
+        'Shared platform patterns for multi-device programs',
+        'Lower integration overhead for new deployments',
+        'Operational consistency for long-term lifecycle management',
+      ],
+      fullWidthImageUrl: fullWidthImage1,
+      ctaTitle: 'Need a rollout plan?',
+      ctaDescription:
+        'We can help map architecture, pilot scope, and production rollout steps for NEO3 programs.',
+    },
   },
   {
     id: 'prod-vp3300',
@@ -57,12 +78,35 @@ export const products = [
       gallery: [vp3300Image],
     },
     specs: [
-      { key: 'Form Factor', value: 'Portable handheld reader' },
-      { key: 'Interfaces', value: 'USB / Bluetooth (model dependent)' },
-      { key: 'Target Use', value: 'Mobile and pop-up checkout flows' },
+      { key: 'Interfaces', value: 'Bluetooth 4.2 BLE, USB - HID' },
+      { key: 'Operating Temperatures', value: '0 deg C to 55 deg C (32 deg F to 131 deg F)' },
+      { key: 'Storage Temperatures', value: '-20 deg C to 70 deg C (-4 deg F to 158 deg F)' },
+      { key: 'Dimensions', value: '118 mm x 71 mm x 18 mm' },
     ],
-    features: ['Mobile-first design', 'Low integration overhead', 'Reliable daily operation'],
+    features: [
+      'PCI 6.x SRED',
+      'ID TECH Common L2 Kernel',
+      'TDES / AES / RSA / MK&SK Encryption',
+      'Bluetooth low energy for mobile pairing',
+      'iOS, Android and Windows support',
+    ],
     relatedSlugs: ['mobile', 'neo3'],
+    detail: {
+      heroSubtitle: 'A compact reader designed for modern mobile checkout.',
+      heroDescription:
+        'VP3300 helps teams launch secure card-present acceptance in app-based experiences with minimal setup complexity.',
+      introParagraph:
+        'From queue-busting to field-service use cases, VP3300 balances portability and reliability for fast-moving payment workflows.',
+      introBullets: [
+        'Optimized for mobile and pop-up scenarios',
+        'Simple deployment model for app teams',
+        'Consistent secure transaction handling',
+      ],
+      fullWidthImageUrl: fullWidthImage2,
+      ctaTitle: 'Evaluate VP3300 for your app',
+      ctaDescription:
+        'Contact us for integration guidance, compatibility checks, and pilot rollout recommendations.',
+    },
   },
   {
     id: 'prod-emv-kernel',
@@ -87,16 +131,22 @@ export const products = [
       gallery: [kernelImage],
     },
     specs: [
-      { key: 'Type', value: 'Software platform component' },
-      { key: 'Integration', value: 'SDK and API based' },
-      { key: 'Primary Value', value: 'Standardized card-present logic' },
+      { key: 'Kernel Type', value: 'Common EMV L2 software kernel' },
+      { key: 'Certification Scope', value: 'Shared certification workflow across device families' },
+      { key: 'Integration Mode', value: 'SDK/API integration for host applications' },
+      { key: 'Deployment Model', value: 'Reusable package for multi-terminal programs' },
     ],
     features: [
-      'Consistent payment behavior',
-      'Reusable integration model',
-      'Long-term maintainability',
+      'Consistent card-present transaction behavior',
+      'Reduced duplicated certification effort',
+      'Reusable integration path across product lines',
+      'Centralized maintenance and release management',
+      'Supports enterprise rollout governance',
     ],
     relatedSlugs: ['neo3', 'unattended'],
+    detail: {
+      fullWidthImageUrl: fullWidthImage1,
+    },
   },
   {
     id: 'prod-unattended-suite',
@@ -121,12 +171,22 @@ export const products = [
       gallery: [unattendedImage],
     },
     specs: [
-      { key: 'Deployment', value: 'Kiosk / vending / unattended terminals' },
-      { key: 'Durability', value: 'Commercial unattended profile' },
-      { key: 'Support', value: 'Long-term service planning support' },
+      { key: 'Reader Type', value: 'Contactless + contact + magstripe (model dependent)' },
+      { key: 'Connectivity', value: 'USB, serial, Ethernet options' },
+      { key: 'Operating Temperatures', value: '-10 deg C to 55 deg C' },
+      { key: 'Ingress Profile', value: 'Designed for unattended commercial environments' },
     ],
-    features: ['Self-service optimized', 'Operational resilience', 'Flexible deployment profile'],
+    features: [
+      'Unattended first hardware profile',
+      'High reliability in self-service locations',
+      'Remote firmware and estate lifecycle support',
+      'Flexible mounting and OEM enclosure compatibility',
+      'EMV and contactless acceptance support',
+    ],
     relatedSlugs: ['emv-kernel', 'neo3'],
+    detail: {
+      fullWidthImageUrl: fullWidthImage2,
+    },
   },
   {
     id: 'prod-mobile',
@@ -146,11 +206,22 @@ export const products = [
       gallery: [vp3300Image],
     },
     specs: [
-      { key: 'Category', value: 'Mobile family' },
-      { key: 'Primary Integration', value: 'App SDK' },
+      { key: 'Form Factor', value: 'Compact handheld mobile reader' },
+      { key: 'Connectivity', value: 'Bluetooth LE, USB-C' },
+      { key: 'Operating Temperatures', value: '0 deg C to 50 deg C' },
+      { key: 'Battery Profile', value: 'All-day mobile operation (usage dependent)' },
     ],
-    features: ['Fast time-to-market', 'Portable setup'],
+    features: [
+      'Fast mobile onboarding with SDK samples',
+      'Low-latency transaction response',
+      'Optimized for queue-busting and field checkout',
+      'Secure key management and encryption',
+      'Cross-platform mobile app compatibility',
+    ],
     relatedSlugs: ['vp3300'],
+    detail: {
+      fullWidthImageUrl: fullWidthImage1,
+    },
   },
   {
     id: 'prod-countertop',
@@ -174,11 +245,22 @@ export const products = [
       gallery: [neo3Image],
     },
     specs: [
-      { key: 'Category', value: 'Countertop family' },
-      { key: 'Primary Use', value: 'Fixed checkout stations' },
+      { key: 'Device Type', value: 'Countertop payment terminal' },
+      { key: 'Interfaces', value: 'USB, serial, LAN (model dependent)' },
+      { key: 'Operating Temperatures', value: '0 deg C to 40 deg C' },
+      { key: 'Mounting', value: 'Fixed lane and checkout desk deployment' },
     ],
-    features: ['Checkout stability', 'Operator-friendly deployment'],
+    features: [
+      'Stable daily operation for high-volume lanes',
+      'Operator-friendly interaction flow',
+      'Durable enclosure for retail use',
+      'Consistent customer-facing checkout behavior',
+      'Simple integration with POS middleware',
+    ],
     relatedSlugs: ['neo3'],
+    detail: {
+      fullWidthImageUrl: fullWidthImage2,
+    },
   },
   {
     id: 'prod-oem',
@@ -199,11 +281,22 @@ export const products = [
       gallery: [unattendedImage],
     },
     specs: [
-      { key: 'Category', value: 'OEM module family' },
-      { key: 'Integration Pattern', value: 'Embedded system integration' },
+      { key: 'Module Type', value: 'Embedded OEM payment module' },
+      { key: 'Host Interfaces', value: 'USB, UART, SPI (configuration dependent)' },
+      { key: 'Power Input', value: '5V / 12V profiles (hardware dependent)' },
+      { key: 'Operating Temperatures', value: '-10 deg C to 60 deg C' },
     ],
-    features: ['OEM flexibility', 'Custom deployment alignment'],
+    features: [
+      'Compact footprint for custom enclosures',
+      'Flexible host integration pathways',
+      'Secure payment acceptance primitives',
+      'Long lifecycle supply and firmware strategy',
+      'Custom deployment alignment for OEM programs',
+    ],
     relatedSlugs: ['unattended', 'emv-kernel'],
+    detail: {
+      fullWidthImageUrl: fullWidthImage1,
+    },
   },
   {
     id: 'prod-legacy',
@@ -222,9 +315,23 @@ export const products = [
       heroImageUrl: neo3Image,
       gallery: [neo3Image],
     },
-    specs: [{ key: 'Status', value: 'Sustaining support track' }],
-    features: ['Migration planning support', 'Documentation continuity'],
+    specs: [
+      { key: 'Lifecycle Status', value: 'Sustaining support track' },
+      { key: 'Firmware Branch', value: 'Maintenance release channel' },
+      { key: 'Recommended Migration', value: 'Move to current-generation device families' },
+      { key: 'Documentation', value: 'Legacy integration and migration references available' },
+    ],
+    features: [
+      'Backward compatibility guidance',
+      'Migration planning references',
+      'Long-tail enterprise support model',
+      'Operational continuity for existing deployments',
+      'Upgrade advisory for future roadmap alignment',
+    ],
     relatedSlugs: ['neo3'],
+    detail: {
+      fullWidthImageUrl: fullWidthImage2,
+    },
   },
   {
     id: 'prod-software-services',
@@ -244,8 +351,22 @@ export const products = [
       heroImageUrl: kernelImage,
       gallery: [kernelImage],
     },
-    specs: [{ key: 'Type', value: 'Service offering' }],
-    features: ['Faster integration ramps', 'Operational continuity support'],
+    specs: [
+      { key: 'Offering Type', value: 'Professional services and software enablement' },
+      { key: 'Delivery Model', value: 'Remote + on-site engagement options' },
+      { key: 'Coverage', value: 'Integration, architecture, rollout, and lifecycle support' },
+      { key: 'Engagement Window', value: 'Project-based and managed ongoing support' },
+    ],
+    features: [
+      'Faster implementation ramp-up',
+      'Architecture review and hardening support',
+      'Release and deployment readiness workflows',
+      'Operational runbook and lifecycle planning',
+      'Post-launch stability and optimization guidance',
+    ],
     relatedSlugs: ['emv-kernel', 'neo3'],
+    detail: {
+      fullWidthImageUrl: fullWidthImage1,
+    },
   },
 ]

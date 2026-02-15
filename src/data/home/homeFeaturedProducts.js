@@ -13,7 +13,7 @@ export const homeFeaturedProducts = [
   },
   {
     id: 'fp-neo3',
-    name: 'NEO 3',
+    name: 'Kiodk',
     desc: 'Scalable platform that supports a wide range of payment acceptance environments.',
     to: '/products/neo3',
     imageUrl: products2Image,

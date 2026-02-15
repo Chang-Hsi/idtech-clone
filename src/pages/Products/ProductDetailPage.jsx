@@ -1,11 +1,87 @@
-import { Link, useParams } from 'react-router-dom'
+import { useEffect, useMemo } from 'react'
+import { Link, Navigate, useParams } from 'react-router-dom'
 import { useSelector } from 'react-redux'
-import { selectProductBySlug, selectRelatedProducts } from '../../features/catalog/catalogSelectors'
+import LeadFormSection from '../../components/home/LeadFormSection'
+import ProductDetailFullImageSection from '../../components/products/detail/ProductDetailFullImageSection'
+import ProductDetailHeroSection from '../../components/products/detail/ProductDetailHeroSection'
+import ProductDetailIntroSection from '../../components/products/detail/ProductDetailIntroSection'
+import ProductDetailSpecsSection from '../../components/products/detail/ProductDetailSpecsSection'
+import { homeLeadForm } from '../../data/home/homeLeadForm'
+import {
+  selectAllCollections,
+  selectAllProducts,
+  selectCollectionBySlug,
+  selectProductBySlug,
+} from '../../features/catalog/catalogSelectors'
 
 const ProductDetailPage = () => {
   const { productSlug } = useParams()
   const product = useSelector((state) => selectProductBySlug(state, productSlug))
-  const relatedProducts = useSelector((state) => selectRelatedProducts(state, productSlug))
+  const collectionAlias = useSelector((state) => selectCollectionBySlug(state, productSlug))
+  const allProducts = useSelector(selectAllProducts)
+  const allCollections = useSelector(selectAllCollections)
+  const allProductSlugs = useMemo(() => allProducts.map((item) => item.slug), [allProducts])
+
+  const aliasCollection = allCollections.find((collection) =>
+    (collection.displayProducts ?? []).some((item) => item.slug === productSlug)
+  )
+  const aliasIndex =
+    aliasCollection?.displayProducts?.findIndex((item) => item.slug === productSlug) ?? -1
+  const aliasItem = aliasIndex >= 0 ? aliasCollection?.displayProducts?.[aliasIndex] : null
+  const aliasCandidates = useMemo(
+    () =>
+      aliasItem
+        ? [
+            aliasItem.targetSlug,
+            aliasItem.slug,
+            aliasCollection?.featuredSlugs?.[aliasIndex],
+            aliasCollection?.featuredSlugs?.[0],
+          ].filter(Boolean)
+        : [],
+    [aliasCollection?.featuredSlugs, aliasIndex, aliasItem]
+  )
+  const validAliasCandidates = useMemo(
+    () =>
+      aliasCandidates.filter((candidateSlug) =>
+        allProducts.some((productItem) => productItem.slug === candidateSlug)
+      ),
+    [aliasCandidates, allProducts]
+  )
+  const displayProductAliasTarget = validAliasCandidates[0] ?? null
+
+  useEffect(() => {
+    if (!import.meta.env.DEV) return
+
+    console.groupCollapsed('[ProductDetail Debug]')
+    console.log('routeSlug:', productSlug)
+    console.log('productFound:', Boolean(product), product?.slug ?? null)
+    console.log('collectionAliasFound:', Boolean(collectionAlias), collectionAlias?.slug ?? null)
+    console.log('aliasCollection:', aliasCollection?.slug ?? null)
+    console.log('aliasItem:', aliasItem)
+    console.log('aliasCandidates:', aliasCandidates)
+    console.log('validAliasCandidates:', validAliasCandidates)
+    console.log('displayProductAliasTarget:', displayProductAliasTarget)
+    console.log('allProductSlugs:', allProductSlugs)
+    console.groupEnd()
+  }, [
+    aliasCandidates,
+    aliasCollection?.slug,
+    aliasItem,
+    allProductSlugs,
+    collectionAlias,
+    displayProductAliasTarget,
+    product,
+    productSlug,
+    validAliasCandidates,
+  ])
+
+  if (!product && displayProductAliasTarget) {
+    return <Navigate to={`/products/${displayProductAliasTarget}`} replace />
+  }
+
+  if (!product && collectionAlias) {
+    return <Navigate to={`/products/collections/${productSlug}`} replace />
+  }
 
   if (!product) {
     return (
@@ -20,80 +96,46 @@ const ProductDetailPage = () => {
     )
   }
 
+  const detail = product.detail ?? {}
+  const hero = {
+    title: product.name,
+    subtitle: detail.heroSubtitle ?? product.tagline,
+    description: detail.heroDescription ?? product.shortDescription,
+    imageUrl: detail.heroImageUrl ?? product.media?.heroImageUrl ?? null,
+    primaryCta: {
+      label: detail.heroPrimaryCtaLabel ?? 'Download Datasheet',
+      to: product.downloads?.datasheetUrl ?? '/resources/whitepapers',
+    },
+  }
+  const intro = {
+    paragraph: detail.introParagraph ?? product.shortDescription,
+    bullets: detail.introBullets ?? product.bullets ?? [],
+    imageUrl:
+      detail.introImageUrl ?? product.media?.gallery?.[0] ?? product.media?.heroImageUrl ?? null,
+    imageAlt: `${product.name} intro`,
+  }
+  const fullWidthImageUrl = detail.fullWidthImageUrl ?? product.media?.gallery?.[0] ?? null
+  const specs = detail.specs ?? product.specs ?? []
+  const specImageUrl = detail.specImageUrl ?? product.media?.heroImageUrl ?? null
+  const features = detail.features ?? product.features ?? []
+
   return (
-    <section className="bg-[#171A1F] py-12 text-white md:py-20">
-      <div className="mx-auto w-full max-w-[120rem] px-4 sm:px-6">
-        <p className="text-sm tracking-[0.12em] text-[#7DC242]">PRODUCT</p>
-        <h1 className="mt-2 text-3xl font-semibold sm:text-4xl">{product.name}</h1>
-        <p className="mt-2 text-white/75">{product.tagline}</p>
-
-        {product.media?.heroImageUrl && (
-          <img
-            src={product.media.heroImageUrl}
-            alt={product.name}
-            className="mt-6 aspect-[21/8] w-full rounded-sm object-cover"
-          />
-        )}
-
-        <p className="mt-6 max-w-4xl text-white/80">{product.shortDescription}</p>
-
-        <ul className="mt-5 list-disc space-y-2 pl-5 text-white/80">
-          {product.bullets.map((bullet) => (
-            <li key={bullet}>{bullet}</li>
-          ))}
-        </ul>
-
-        <h2 className="mt-10 text-2xl font-semibold">Downloads</h2>
-        <div className="mt-4 flex flex-wrap gap-3">
-          <Link
-            to={product.downloads.datasheetUrl}
-            className="rounded-sm border border-white/30 px-4 py-2 text-sm hover:border-[#7DC242] hover:text-[#7DC242]"
-          >
-            Datasheet
-          </Link>
-          <Link
-            to={product.downloads.kbUrl}
-            className="rounded-sm border border-white/30 px-4 py-2 text-sm hover:border-[#7DC242] hover:text-[#7DC242]"
-          >
-            Knowledge Base
-          </Link>
-        </div>
-
-        <h2 className="mt-10 text-2xl font-semibold">Specs</h2>
-        <div className="mt-4 overflow-hidden rounded-sm border border-white/10">
-          {product.specs.map((spec) => (
-            <div
-              key={spec.key}
-              className="grid grid-cols-1 border-b border-white/10 bg-[#232830] px-4 py-3 last:border-b-0 sm:grid-cols-[14rem_1fr]"
-            >
-              <p className="text-sm text-white/65">{spec.key}</p>
-              <p className="text-sm text-white">{spec.value}</p>
-            </div>
-          ))}
-        </div>
-
-        <h2 className="mt-10 text-2xl font-semibold">Key Features</h2>
-        <ul className="mt-4 list-disc space-y-2 pl-5 text-white/80">
-          {product.features.map((feature) => (
-            <li key={feature}>{feature}</li>
-          ))}
-        </ul>
-
-        <h2 className="mt-10 text-2xl font-semibold">Related Products</h2>
-        <div className="mt-5 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {relatedProducts.map((related) => (
-            <Link
-              key={related.id}
-              to={`/products/${related.slug}`}
-              className="rounded-sm border border-white/10 bg-[#232830] p-4 hover:border-[#7DC242]/60"
-            >
-              <p className="text-lg font-medium">{related.name}</p>
-              <p className="mt-2 text-sm text-white/70">{related.tagline}</p>
-            </Link>
-          ))}
-        </div>
-      </div>
-    </section>
+    <>
+      <ProductDetailHeroSection hero={hero} />
+      <ProductDetailIntroSection intro={intro} />
+      <ProductDetailFullImageSection
+        imageUrl={fullWidthImageUrl}
+        imageAlt={`${product.name} visual`}
+      />
+      <ProductDetailSpecsSection
+        title="Specifications"
+        imageUrl={specImageUrl}
+        imageAlt={`${product.name} specifications`}
+        specs={specs.map((spec) => ({ label: spec.key, value: spec.value }))}
+        features={features}
+      />
+      <LeadFormSection config={homeLeadForm} />
+    </>
   )
 }
 
