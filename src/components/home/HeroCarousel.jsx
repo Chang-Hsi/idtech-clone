@@ -39,12 +39,7 @@ const getPositionStyle = (position = {}) => {
 const getLayerAnimationStyle = (isActive, motion = {}) => {
   if (!isActive) return { opacity: 0 }
 
-  const {
-    enter = 'fade',
-    duration = 650,
-    delay = 0,
-    easing = 'ease-out',
-  } = motion
+  const { enter = 'fade', duration = 650, delay = 0, easing = 'ease-out' } = motion
 
   const animationName = MOTION_TO_KEYFRAME[enter] ?? MOTION_TO_KEYFRAME.fade
 
@@ -166,7 +161,7 @@ const HeroCarousel = ({ slides }) => {
   }
 
   return (
-    <section className="relative h-screen overflow-hidden bg-[#171A1F] text-white">
+    <section className="relative h-[72vh] min-h-[460px] overflow-hidden bg-[#171A1F] text-white sm:h-[82vh] md:h-screen">
       {safeSlides.map((slide, index) => {
         const isActive = index === activeIndex
 
@@ -195,14 +190,27 @@ const HeroCarousel = ({ slides }) => {
               />
             )}
 
-            <div className="relative mx-auto h-full w-full max-w-[120rem] px-6">
-              {slide.layers.map((layer) => renderLayer(layer, isActive))}
+            <div className="relative mx-auto h-full w-full max-w-[120rem] px-4 sm:px-6">
+              <div className="hidden md:block">
+                {slide.layers.map((layer) => renderLayer(layer, isActive))}
+              </div>
+
+              <div className="absolute inset-x-4 top-1/2 z-20 -translate-y-1/2 rounded-sm border border-white/20 bg-black/45 p-4 text-left backdrop-blur-sm sm:inset-x-6 md:hidden">
+                <h2 className="text-2xl font-semibold leading-tight">{slide.title}</h2>
+                <p className="mt-2 text-sm text-white/80">{slide.desc}</p>
+                <Link
+                  to={slide.primaryCta?.to ?? '/'}
+                  className="mt-4 inline-flex items-center rounded-sm bg-[#7DC242] px-4 py-2 text-sm font-medium text-[#121417] hover:bg-[#93d25b]"
+                >
+                  {slide.primaryCta?.label ?? 'Learn More'}
+                </Link>
+              </div>
             </div>
           </div>
         )
       })}
 
-      <div className="absolute bottom-8 left-1/2 z-30 flex -translate-x-1/2 gap-2">
+      <div className="absolute bottom-5 left-1/2 z-30 flex -translate-x-1/2 gap-2 sm:bottom-8">
         {safeSlides.map((slide, index) => (
           <button
             key={slide.id}
@@ -220,7 +228,7 @@ const HeroCarousel = ({ slides }) => {
         type="button"
         onClick={handlePrevSlide}
         aria-label="Previous slide"
-        className="absolute top-1/2 left-0 z-30 flex h-24 w-12 -translate-y-1/2 items-center justify-center rounded-r-sm bg-[#339545] text-white hover:bg-[#339545]"
+        className="absolute left-0 top-1/2 z-30 hidden h-24 w-12 -translate-y-1/2 items-center justify-center rounded-r-sm bg-[#339545] text-white hover:bg-[#339545] sm:flex"
       >
         <ChevronLeftIcon className="h-7 w-7" />
       </button>
@@ -229,7 +237,7 @@ const HeroCarousel = ({ slides }) => {
         type="button"
         onClick={handleNextSlide}
         aria-label="Next slide"
-        className="absolute top-1/2 right-0 z-30 flex h-24 w-12 -translate-y-1/2 items-center justify-center rounded-l-sm bg-[#339545] text-white hover:bg-[#339545]"
+        className="absolute right-0 top-1/2 z-30 hidden h-24 w-12 -translate-y-1/2 items-center justify-center rounded-l-sm bg-[#339545] text-white hover:bg-[#339545] sm:flex"
       >
         <ChevronRightIcon className="h-7 w-7" />
       </button>

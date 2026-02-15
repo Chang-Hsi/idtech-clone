@@ -55,13 +55,15 @@ const LeadFormSection = ({ config }) => {
   }
 
   return (
-    <section className="py-[3rem] text-black">
-      <div className="mx-auto w-full max-w-7xl">
-        <div className="rounded-sm p-8">
-          <h2 className="text-6xl font-extrabold text-emerald-600">{config.heading}</h2>
-          <p className="mt-3 max-w-3xl text-black/70">{config.desc}</p>
+    <section className="py-12 text-black md:py-16">
+      <div className="mx-auto w-full max-w-7xl px-4 sm:px-6">
+        <div className="rounded-sm p-2 sm:p-4 md:p-8">
+          <h2 className="text-3xl font-extrabold text-emerald-600 sm:text-4xl lg:text-6xl">
+            {config.heading}
+          </h2>
+          <p className="mt-3 max-w-3xl text-sm text-black/70 sm:text-base">{config.desc}</p>
 
-          <form onSubmit={handleSubmit} className="mt-8 grid grid-cols-2 gap-4">
+          <form onSubmit={handleSubmit} className="mt-8 grid grid-cols-1 gap-4 md:grid-cols-2">
             <label className="space-y-2 text-sm">
               <span>First Name *</span>
               <input
@@ -134,7 +136,7 @@ const LeadFormSection = ({ config }) => {
               {errors.region && <span className="text-xs text-red-300">{errors.region}</span>}
             </label>
 
-            <label className="col-span-2 space-y-2 text-sm">
+            <label className="space-y-2 text-sm md:col-span-2">
               <span>Message / Comments *</span>
               <textarea
                 name="message"
@@ -146,7 +148,7 @@ const LeadFormSection = ({ config }) => {
               {errors.message && <span className="text-xs text-red-300">{errors.message}</span>}
             </label>
 
-            <div className="col-span-2">
+            <div className="md:col-span-2">
               <label className="inline-flex w-full max-w-[22rem] cursor-pointer items-center gap-3 rounded-sm border border-black/20 bg-white px-4 py-3 text-sm">
                 <input
                   type="checkbox"
@@ -169,7 +171,7 @@ const LeadFormSection = ({ config }) => {
               )}
             </div>
 
-            <div className="col-span-2 flex items-center justify-between">
+            <div className="flex flex-col gap-3 md:col-span-2 md:flex-row md:items-center md:justify-between">
               <button
                 type="submit"
                 disabled={!isHuman}

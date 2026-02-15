@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { MagnifyingGlassIcon } from '@heroicons/react/24/outline'
+import { Bars3Icon, ChevronDownIcon, XMarkIcon } from '@heroicons/react/24/solid'
 import { Link, NavLink, useLocation, useNavigate } from 'react-router-dom'
 import logo from '../../assets/header/logo.png'
 
@@ -79,6 +80,8 @@ const Header = () => {
 
   const [activeDropdownKey, setActiveDropdownKey] = useState(null)
   const [isSearchOpen, setIsSearchOpen] = useState(false)
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
+  const [mobileOpenKey, setMobileOpenKey] = useState(null)
   const [searchKeyword, setSearchKeyword] = useState('')
   const [isCompact, setIsCompact] = useState(false)
   const [isHidden, setIsHidden] = useState(false)
@@ -120,6 +123,16 @@ const Header = () => {
   }, [])
 
   useEffect(() => {
+    const timer = window.setTimeout(() => {
+      setActiveDropdownKey(null)
+      setIsMobileMenuOpen(false)
+      setMobileOpenKey(null)
+    }, 0)
+
+    return () => window.clearTimeout(timer)
+  }, [pathname])
+
+  useEffect(() => {
     const handleScroll = () => {
       const currentY = window.scrollY
       setIsCompact(currentY > 80)
@@ -149,8 +162,17 @@ const Header = () => {
     }
   }, [isHome])
 
+  useEffect(() => {
+    document.body.style.overflow = isMobileMenuOpen ? 'hidden' : ''
+
+    return () => {
+      document.body.style.overflow = ''
+    }
+  }, [isMobileMenuOpen])
+
   const handleSearchToggle = () => {
     setActiveDropdownKey(null)
+    setIsMobileMenuOpen(false)
     setIsSearchOpen((prev) => {
       const next = !prev
 
@@ -168,6 +190,17 @@ const Header = () => {
   const handleSearchClose = () => {
     setIsSearchOpen(false)
     setSearchKeyword('')
+  }
+
+  const handleMobileMenuToggle = () => {
+    setIsSearchOpen(false)
+    setActiveDropdownKey(null)
+    setIsMobileMenuOpen((prev) => !prev)
+  }
+
+  const handleMobileMenuClose = () => {
+    setIsMobileMenuOpen(false)
+    setMobileOpenKey(null)
   }
 
   const handleSearchSubmit = (event) => {
@@ -196,102 +229,216 @@ const Header = () => {
   }
 
   return (
-    <div
-      ref={headerRef}
-      className={`sticky top-0 z-50 transition-transform duration-300 ${isHidden ? '-translate-y-full' : 'translate-y-0'}`}
-    >
-      <header
-        className={`border-b border-white/10 bg-[#1F2328] text-white transition-all duration-300 ${
-          isCompact ? 'h-[72px]' : 'h-[108px]'
-        }`}
+    <div ref={headerRef} className="sticky top-0 z-50">
+      <div
+        className={`transition-transform duration-300 ${isHidden ? '-translate-y-full' : 'translate-y-0'}`}
       >
-        <div className="mx-auto flex h-full w-full max-w-[120rem] items-center justify-between px-6">
-          <Link
-            to="/"
-            onClick={() => setActiveDropdownKey(null)}
-            className="flex items-center hover:opacity-90"
-          >
-            <img
-              src={logo}
-              alt="ID TECH logo"
-              className={`w-auto object-contain transition-all duration-300 ${
-                isCompact ? 'h-[16rem]' : 'h-[18rem]'
-              }`}
-            />
-          </Link>
-
-          <div className="hidden items-center gap-7 lg:flex">
-            <nav className="flex h-full items-center gap-7">
-              {NAV_ITEMS.map((item) => {
-                const isActive = activeMainKey === item.key
-                const isDropdownOpen = activeDropdownKey === item.key
-
-                return (
-                  <div
-                    key={item.key}
-                    className="relative flex h-full items-center"
-                    onMouseEnter={() => handleNavMouseEnter(item.key)}
-                    onMouseLeave={handleNavMouseLeave}
-                  >
-                    <NavLink
-                      to={item.to}
-                      onClick={() => setActiveDropdownKey(null)}
-                      className={`text-lg font-medium tracking-wide transition-colors duration-200 hover:text-[#7DC242] ${
-                        isActive ? 'text-[#7DC242]' : 'text-white'
-                      }`}
-                    >
-                      {item.label}
-                    </NavLink>
-
-                    {isDropdownOpen && (
-                      <div
-                        className="absolute left-0 top-[54px] z-20 min-w-[280px] pt-3"
-                        style={dropdownEnterStyle}
-                      >
-                        <div className="rounded-sm border border-white/10 bg-[#2B3036] py-3 shadow-2xl">
-                          {item.dropdown.map((dropdownItem) => (
-                            <Link
-                              key={dropdownItem.label}
-                              to={dropdownItem.to}
-                              onClick={() => setActiveDropdownKey(null)}
-                              className="block px-4 py-2 text-lg text-white transition-colors duration-200 hover:text-[#7DC242]"
-                            >
-                              {dropdownItem.label}
-                            </Link>
-                          ))}
-                        </div>
-                      </div>
-                    )}
-                  </div>
-                )
-              })}
-            </nav>
-
-            <div className="flex items-center gap-3">
-              <NavLink
-                to="/contact"
-                onClick={() => setActiveDropdownKey(null)}
-                className={`rounded border px-4 py-2 text-lg font-medium transition-colors duration-200 ${
-                  isContactActive
-                    ? 'border-[#7DC242] text-[#7DC242]'
-                    : 'border-white text-white hover:border-[#7DC242] hover:text-[#7DC242]'
+        <header
+          className={`border-b border-white/10 bg-[#1F2328] text-white transition-all duration-300 ${
+            isCompact ? 'h-[64px] md:h-[72px]' : 'h-[72px] md:h-[96px]'
+          }`}
+        >
+          <div className="mx-auto flex h-full w-full max-w-[120rem] items-center justify-between px-4 sm:px-6">
+            <Link
+              to="/"
+              onClick={() => setActiveDropdownKey(null)}
+              className="flex items-center hover:opacity-90"
+            >
+              <img
+                src={logo}
+                alt="ID TECH logo"
+                className={`w-auto object-contain transition-all duration-300 ${
+                  isCompact ? 'h-16 md:h-32' : 'h-32 md:h-56'
                 }`}
-              >
-                Contact
-              </NavLink>
+              />
+            </Link>
 
+            <div className="hidden items-center gap-6 lg:flex">
+              <nav className="flex h-full items-center gap-6 xl:gap-7">
+                {NAV_ITEMS.map((item) => {
+                  const isActive = activeMainKey === item.key
+                  const isDropdownOpen = activeDropdownKey === item.key
+
+                  return (
+                    <div
+                      key={item.key}
+                      className="relative flex h-full items-center"
+                      onMouseEnter={() => handleNavMouseEnter(item.key)}
+                      onMouseLeave={handleNavMouseLeave}
+                    >
+                      <NavLink
+                        to={item.to}
+                        onClick={() => setActiveDropdownKey(null)}
+                        className={`text-base font-medium tracking-wide transition-colors duration-200 hover:text-[#7DC242] xl:text-lg ${
+                          isActive ? 'text-[#7DC242]' : 'text-white'
+                        }`}
+                      >
+                        {item.label}
+                      </NavLink>
+
+                      {isDropdownOpen && (
+                        <div
+                          className="absolute left-0 top-[54px] z-20 min-w-[280px] pt-3"
+                          style={dropdownEnterStyle}
+                        >
+                          <div className="rounded-sm border border-white/10 bg-[#2B3036] py-3 shadow-2xl">
+                            {item.dropdown.map((dropdownItem) => (
+                              <Link
+                                key={dropdownItem.label}
+                                to={dropdownItem.to}
+                                onClick={() => setActiveDropdownKey(null)}
+                                className="block px-4 py-2 text-sm text-white transition-colors duration-200 hover:text-[#7DC242] xl:text-base"
+                              >
+                                {dropdownItem.label}
+                              </Link>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  )
+                })}
+              </nav>
+
+              <div className="flex items-center gap-3">
+                <NavLink
+                  to="/contact"
+                  onClick={() => setActiveDropdownKey(null)}
+                  className={`rounded border px-4 py-2 text-sm font-medium transition-colors duration-200 xl:text-base ${
+                    isContactActive
+                      ? 'border-[#7DC242] text-[#7DC242]'
+                      : 'border-white text-white hover:border-[#7DC242] hover:text-[#7DC242]'
+                  }`}
+                >
+                  Contact
+                </NavLink>
+
+                <button
+                  type="button"
+                  aria-label="Open search"
+                  onClick={handleSearchToggle}
+                  className="rounded p-2 text-white transition-colors duration-200 hover:text-[#7DC242]"
+                >
+                  <MagnifyingGlassIcon className="h-5 w-5" />
+                </button>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-2 lg:hidden">
               <button
                 type="button"
-                aria-label="Open search"
+                aria-label="Toggle search"
                 onClick={handleSearchToggle}
-                className="rounded p-2 text-lg text-white transition-colors duration-200 hover:text-[#7DC242]"
+                className="rounded p-2 text-white transition-colors duration-200 hover:text-[#7DC242]"
               >
                 <MagnifyingGlassIcon className="h-5 w-5" />
               </button>
+              <button
+                type="button"
+                aria-label="Toggle menu"
+                onClick={handleMobileMenuToggle}
+                className="rounded p-2 text-white transition-colors duration-200 hover:text-[#7DC242]"
+              >
+                <Bars3Icon className="h-6 w-6" />
+              </button>
             </div>
           </div>
-        </div>
-      </header>
+        </header>
+      </div>
+
+      <div
+        aria-hidden={!isMobileMenuOpen}
+        className={`fixed inset-0 z-[60] transition-opacity duration-300 lg:hidden ${
+          isMobileMenuOpen ? 'opacity-100' : 'pointer-events-none opacity-0'
+        }`}
+      >
+        <button
+          type="button"
+          aria-label="Close menu overlay"
+          onClick={handleMobileMenuClose}
+          className="absolute inset-0 bg-black/55"
+        />
+
+        <aside
+          className={`absolute right-0 top-0 h-full w-[90vw] max-w-[30rem] overflow-y-auto border-l border-white/10 bg-[#1F2328] p-4 transition-transform duration-300 ${
+            isMobileMenuOpen ? 'translate-x-0' : 'translate-x-full'
+          }`}
+        >
+          <div className="mb-4 flex items-center justify-between">
+            <p className="text-sm font-semibold tracking-[0.12em] text-white/75">MENU</p>
+            <button
+              type="button"
+              aria-label="Close menu"
+              onClick={handleMobileMenuClose}
+              className="rounded p-1 text-white transition-colors hover:text-[#7DC242]"
+            >
+              <XMarkIcon className="h-6 w-6" />
+            </button>
+          </div>
+
+          <nav className="space-y-2">
+            {NAV_ITEMS.map((item) => {
+              const isOpen = mobileOpenKey === item.key
+              const isActive = activeMainKey === item.key
+
+              return (
+                <div key={item.key} className="rounded-sm border border-white/10 bg-[#2B3036]">
+                  <div className="flex items-center justify-between">
+                    <NavLink
+                      to={item.to}
+                      onClick={handleMobileMenuClose}
+                      className={`block px-3 py-2 text-sm font-medium ${isActive ? 'text-[#7DC242]' : 'text-white'}`}
+                    >
+                      {item.label}
+                    </NavLink>
+                    <button
+                      type="button"
+                      aria-label={`Toggle ${item.label} submenu`}
+                      onClick={() =>
+                        setMobileOpenKey((prev) => (prev === item.key ? null : item.key))
+                      }
+                      className="px-3 py-2 text-white"
+                    >
+                      <ChevronDownIcon
+                        className={`h-4 w-4 transition-transform ${isOpen ? 'rotate-180' : 'rotate-0'}`}
+                      />
+                    </button>
+                  </div>
+
+                  <div
+                    className={`overflow-hidden border-t border-white/10 bg-[#252A31] transition-all duration-200 ${
+                      isOpen ? 'max-h-80 py-1' : 'max-h-0'
+                    }`}
+                  >
+                    {item.dropdown.map((dropdownItem) => (
+                      <Link
+                        key={dropdownItem.label}
+                        to={dropdownItem.to}
+                        onClick={handleMobileMenuClose}
+                        className="block px-4 py-2 text-sm text-white/90 hover:text-[#7DC242]"
+                      >
+                        {dropdownItem.label}
+                      </Link>
+                    ))}
+                  </div>
+                </div>
+              )
+            })}
+          </nav>
+
+          <NavLink
+            to="/contact"
+            onClick={handleMobileMenuClose}
+            className={`mt-4 inline-flex w-full justify-center rounded border px-4 py-2 text-sm font-medium transition-colors duration-200 ${
+              isContactActive
+                ? 'border-[#7DC242] text-[#7DC242]'
+                : 'border-white text-white hover:border-[#7DC242] hover:text-[#7DC242]'
+            }`}
+          >
+            Contact
+          </NavLink>
+        </aside>
+      </div>
 
       <div
         aria-hidden={!isSearchOpen}
@@ -301,21 +448,24 @@ const Header = () => {
             : 'pointer-events-none max-h-0 -translate-y-1 opacity-0'
         }`}
       >
-        <div className="border-b border-white/10 bg-[#2B3036] px-6 py-3">
-          <form onSubmit={handleSearchSubmit} className="mx-auto flex w-full max-w-[110rem] items-center gap-3">
+        <div className="border-b border-white/10 bg-[#2B3036] px-4 py-3 sm:px-6">
+          <form
+            onSubmit={handleSearchSubmit}
+            className="mx-auto flex w-full max-w-[110rem] items-center gap-2 sm:gap-3"
+          >
             <input
               type="search"
               value={searchKeyword}
               onChange={(event) => setSearchKeyword(event.target.value)}
               placeholder="Search..."
-              className="w-full border-b border-white/20 bg-transparent py-2 text-lg text-white placeholder:text-white/60 focus:border-[#7DC242] focus:outline-none"
+              className="w-full border-b border-white/20 bg-transparent py-2 text-base text-white placeholder:text-white/60 focus:border-[#7DC242] focus:outline-none sm:text-lg"
             />
 
             <button
               type="button"
               aria-label="Close search"
               onClick={handleSearchClose}
-              className="px-3 py-2 text-lg text-white transition-colors duration-200 hover:border-[#7DC242] hover:text-[#7DC242]"
+              className="px-3 py-2 text-base text-white transition-colors duration-200 hover:border-[#7DC242] hover:text-[#7DC242] sm:text-lg"
             >
               X
             </button>

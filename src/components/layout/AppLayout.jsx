@@ -4,13 +4,13 @@ import Footer from './Footer'
 
 const AppLayout = () => {
   return (
-    <>
+    <div className="min-h-screen overflow-x-hidden bg-[#171A1F]">
       <Header />
-      <main>
+      <main className="w-full">
         <Outlet />
       </main>
       <Footer />
-    </>
+    </div>
   )
 }
 
