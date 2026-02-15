@@ -55,7 +55,7 @@ const LeadFormSection = ({ config }) => {
   }
 
   return (
-    <section className="py-12 text-black md:py-16">
+    <section className="py-12 text-black md:py-16 bg-white">
       <div className="mx-auto w-full max-w-7xl px-4 sm:px-6">
         <div className="rounded-sm p-2 sm:p-4 md:p-8">
           <h2 className="text-3xl font-extrabold text-emerald-600 sm:text-4xl lg:text-6xl">

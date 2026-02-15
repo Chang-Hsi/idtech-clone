@@ -2,6 +2,7 @@ import { createBrowserRouter } from 'react-router-dom'
 import AppLayout from '../components/layout/AppLayout'
 import HomePage from '../pages/Home/HomePage'
 import ProductsPage from '../pages/Products/ProductsPage'
+import ProductCollectionPage from '../pages/Products/ProductCollectionPage'
 import ProductDetailPage from '../pages/Products/ProductDetailPage'
 import SolutionsPage from '../pages/Solutions/SolutionsPage'
 import SolutionDetailPage from '../pages/Solutions/SolutionDetailPage'
@@ -21,10 +22,6 @@ import ContactPage from '../pages/Contact/ContactPage'
 import PrivacyPolicyPage from '../pages/Legal/PrivacyPolicyPage'
 import NotFoundPage from '../pages/NotFound/NotFoundPage'
 
-const slugLoader = ({ params }) => {
-  return { slug: params.slug }
-}
-
 const router = createBrowserRouter(
   [
     {
@@ -34,13 +31,14 @@ const router = createBrowserRouter(
         { index: true, element: <HomePage /> },
 
         { path: 'products', element: <ProductsPage /> },
-        { path: 'products/:slug', element: <ProductDetailPage />, loader: slugLoader },
+        { path: 'products/collections/:collectionSlug', element: <ProductCollectionPage /> },
+        { path: 'products/:productSlug', element: <ProductDetailPage /> },
 
         { path: 'solutions', element: <SolutionsPage /> },
-        { path: 'solutions/:slug', element: <SolutionDetailPage />, loader: slugLoader },
+        { path: 'solutions/:slug', element: <SolutionDetailPage /> },
 
         { path: 'use-cases', element: <SolutionsPage /> },
-        { path: 'use-cases/:slug', element: <SolutionDetailPage />, loader: slugLoader },
+        { path: 'use-cases/:slug', element: <SolutionDetailPage /> },
 
         { path: 'software-services', element: <SoftwareServicesPage /> },
 

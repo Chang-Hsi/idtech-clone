@@ -1,6 +1,6 @@
-# ID TECH-Style Website (React + Redux + Tailwind)
+# NEXA-Style Website (React + Redux + Tailwind)
 
-> A portfolio-oriented static website project inspired by ID TECH’s official website structure.
+> A portfolio-oriented static website project inspired by NEXA’s official website structure.
 > Built to practice React architecture, Redux state management, routing design, SEO basics, testing strategy, and performance optimization.
 
 ---
@@ -9,12 +9,12 @@
 
 This project is designed to:
 
-* Recreate a **corporate-level product website structure**
-* Practice **React + Redux Toolkit** in a real-world scenario
-* Implement clean routing architecture
-* Apply SEO fundamentals
-* Add testing and performance optimization
-* Serve as an interview-ready portfolio project
+- Recreate a **corporate-level product website structure**
+- Practice **React + Redux Toolkit** in a real-world scenario
+- Implement clean routing architecture
+- Apply SEO fundamentals
+- Add testing and performance optimization
+- Serve as an interview-ready portfolio project
 
 ⚠️ All content and images are self-written or placeholder-based to avoid copyright issues.
 
@@ -22,13 +22,13 @@ This project is designed to:
 
 # 🧱 Tech Stack
 
-* React (Vite)
-* React Router v6
-* Redux Toolkit
-* Tailwind CSS
-* Vitest + Testing Library
-* Playwright (E2E)
-* Lighthouse / Web Vitals
+- React (Vite)
+- React Router v6
+- Redux Toolkit
+- Tailwind CSS
+- Vitest + Testing Library
+- Playwright (E2E)
+- Lighthouse / Web Vitals
 
 ---
 
@@ -59,7 +59,9 @@ npm i -D tailwindcss @tailwindcss/cli @tailwindcss/postcss postcss
 ```
 
 ### 需注意，這裡改為v4版本指令，無需額外建立 tailwind.config.js
+
 ### 根目錄 postcss.config.js
+
 ```js
 export default {
   plugins: {
@@ -71,7 +73,7 @@ export default {
 ### src/index.css
 
 ```css
-@import "tailwindcss";
+@import 'tailwindcss';
 ```
 
 Start development:
@@ -98,7 +100,7 @@ Designed to reflect a professional product website structure.
 |     |-- /solutions/countertop
 |     |-- /solutions/oem
 |
-|-- /software-services 
+|-- /software-services
 |
 |-- /support （Support hub：KB、Product Updates、Request Help、Contact）
 |     |-- /support/knowledge-base （可做成「導向/列表頁」）
@@ -176,34 +178,34 @@ Redux is used for **cross-page shared state**, not for trivial local UI state.
 
 Global UI states:
 
-* theme (light/dark)
-* mobile navigation toggle
-* header variant
-* toast system
+- theme (light/dark)
+- mobile navigation toggle
+- header variant
+- toast system
 
 ## Catalog Slice
 
-* products list
-* loading status
-* filters
-* sorting
-* pagination
+- products list
+- loading status
+- filters
+- sorting
+- pagination
 
 Used in:
 
-* `/products`
-* `/products/:slug`
+- `/products`
+- `/products/:slug`
 
 ## Compare Slice
 
-* compareIds array
-* cross-page product comparison system
+- compareIds array
+- cross-page product comparison system
 
 ## Search Slice
 
-* global search query
-* search results
-* recent searches
+- global search query
+- search results
+- recent searches
 
 ---
 
@@ -211,14 +213,14 @@ Used in:
 
 Phase 1:
 
-* Use local JSON under `/data`
+- Use local JSON under `/data`
 
 Phase 2 (optional):
 
-* json-server
-* Express API
-* Contact form backend
-* Device/product API simulation
+- json-server
+- Express API
+- Contact form backend
+- Device/product API simulation
 
 ---
 
@@ -226,35 +228,35 @@ Phase 2 (optional):
 
 ## Unit Testing (Vitest)
 
-* slug utilities
-* filter logic
-* format helpers
+- slug utilities
+- filter logic
+- format helpers
 
 ## Component Testing
 
-* ProductCard
-* FilterPanel
-* Header search
+- ProductCard
+- FilterPanel
+- Header search
 
 ## E2E Testing (Playwright)
 
 Test scenarios:
 
-* Navigate Home → Products → Detail
-* Add to compare
-* State persistence
-* 404 route
+- Navigate Home → Products → Detail
+- Add to compare
+- State persistence
+- 404 route
 
 ---
 
 # ⚡ 7. Performance Optimization
 
-* Route-based lazy loading
-* React.lazy + Suspense
-* Image lazy loading
-* Lighthouse audit
-* Bundle size analysis
-* Web Vitals logging
+- Route-based lazy loading
+- React.lazy + Suspense
+- Image lazy loading
+- Lighthouse audit
+- Bundle size analysis
+- Web Vitals logging
 
 ---
 
@@ -262,15 +264,15 @@ Test scenarios:
 
 Each page includes:
 
-* Dynamic `<title>`
-* Meta description
-* OpenGraph tags
-* Canonical links
+- Dynamic `<title>`
+- Meta description
+- OpenGraph tags
+- Canonical links
 
 Static files:
 
-* robots.txt
-* sitemap.xml
+- robots.txt
+- sitemap.xml
 
 ---
 
@@ -278,12 +280,12 @@ Static files:
 
 Implemented without UI libraries:
 
-* Product filtering
-* Sorting system
-* Comparison drawer
-* FAQ accordion
-* Sticky product spec panel
-* Responsive mobile navigation
+- Product filtering
+- Sorting system
+- Comparison drawer
+- FAQ accordion
+- Sticky product spec panel
+- Responsive mobile navigation
 
 ---
 
@@ -291,12 +293,12 @@ Implemented without UI libraries:
 
 This project demonstrates:
 
-* Clear sitemap design
-* Modular router architecture
-* Structured Redux state tree
-* Testing coverage
-* Performance audit results
-* SEO implementation
+- Clear sitemap design
+- Modular router architecture
+- Structured Redux state tree
+- Testing coverage
+- Performance audit results
+- SEO implementation
 
 ---
 
@@ -304,10 +306,10 @@ This project demonstrates:
 
 This project simulates:
 
-* Real-world B2B product website structure
-* Scalable React architecture
-* State management beyond toy examples
-* Interview-ready engineering depth
+- Real-world B2B product website structure
+- Scalable React architecture
+- State management beyond toy examples
+- Interview-ready engineering depth
 
 ---
 
@@ -317,17 +319,17 @@ This project simulates:
 
 目前專案把入場動畫集中在 `src/index.css`，包含：
 
-* `zoom-in-title`
-* `slide-left-in` / `slide-right-in` / `slide-up-in` / `slide-down-in`
-* `fade-left-in` / `fade-right-in` / `fade-up-in` / `fade-down-in`
+- `zoom-in-title`
+- `slide-left-in` / `slide-right-in` / `slide-up-in` / `slide-down-in`
+- `fade-left-in` / `fade-right-in` / `fade-up-in` / `fade-down-in`
 
 這些 class 都吃同一組 CSS 變數，讓每個組件可用 `style` 局部調整：
 
-* `--anim-distance`：位移幅度
-* `--anim-duration`：動畫時間
-* `--anim-delay`：延遲時間（可做 stagger）
-* `--anim-ease`：速度曲線
-* `--zoom-start` / `--zoom-duration`：給 zoom 動畫用
+- `--anim-distance`：位移幅度
+- `--anim-duration`：動畫時間
+- `--anim-delay`：延遲時間（可做 stagger）
+- `--anim-ease`：速度曲線
+- `--zoom-start` / `--zoom-duration`：給 zoom 動畫用
 
 元件使用方式（範例）：
 
@@ -350,15 +352,15 @@ This project simulates:
 
 為了避免頁面一載入就把動畫跑完，專案新增 `useInViewOnce`：
 
-* 基於 `IntersectionObserver`
-* 元件未進入視窗前：維持 `opacity-0`
-* 進入視窗後：切換成動畫 class（例如 `slide-right-in`）
-* 播放後 `unobserve`，因此只觸發一次
+- 基於 `IntersectionObserver`
+- 元件未進入視窗前：維持 `opacity-0`
+- 進入視窗後：切換成動畫 class（例如 `slide-right-in`）
+- 播放後 `unobserve`，因此只觸發一次
 
 Hook 回傳：
 
-* `ref`：綁在 section 或容器上
-* `isInView`：是否已進入視圖（且已觸發）
+- `ref`：綁在 section 或容器上
+- `isInView`：是否已進入視圖（且已觸發）
 
 元件整合範例：
 

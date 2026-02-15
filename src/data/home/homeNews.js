@@ -5,7 +5,7 @@ import news3Image from '../../assets/home/News3.jpg'
 export const homeNews = [
   {
     id: 'news-1',
-    title: 'ID TECH Expands Device Portfolio for Self-Service Payments',
+    title: 'NEXA Expands Device Portfolio for Self-Service Payments',
     excerpt:
       'New device line improves speed, maintainability, and certification readiness for unattended deployments.',
     date: 'January 15, 2026',

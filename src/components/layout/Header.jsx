@@ -15,10 +15,10 @@ const NAV_ITEMS = [
     to: '/products',
     dropdown: [
       { label: 'Full Product Catalog', to: '/products' },
-      { label: 'NEO 3 Platform of Products', to: '/products/neo3' },
+      { label: 'NEO 3 Platform of Products', to: '/products/collections/neo-3' },
       { label: 'EMV Common Kernel', to: '/products/emv-kernel' },
-      { label: 'Unattended Payment Solutions', to: '/products/unattended' },
-      { label: 'Mobile Payment Devices', to: '/products/mobile' },
+      { label: 'Unattended Payment Solutions', to: '/products/collections/unattended-solutions' },
+      { label: 'Mobile Payment Devices', to: '/products/collections/mobile-payment' },
       { label: 'Countertop Solutions', to: '/products/countertop' },
       { label: 'OEM Payment Products', to: '/products/oem' },
       { label: 'Legacy Products', to: '/products/legacy' },
@@ -246,7 +246,7 @@ const Header = () => {
             >
               <img
                 src={logo}
-                alt="ID TECH logo"
+                alt="NEXA logo"
                 className={`w-auto object-contain transition-all duration-300 ${
                   isCompact ? 'h-16 md:h-32' : 'h-32 md:h-56'
                 }`}
