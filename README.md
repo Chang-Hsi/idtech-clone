@@ -242,6 +242,51 @@ Used in:
 
 ---
 
+# 🗂️ 12. Jira 與 GitHub（入門）
+
+Jira 可以理解成「有流程與自動化能力的任務看板系統」。
+
+## Jira 是什麼
+
+- 用來管理需求、任務、Bug、版本進度
+- 常見層級：
+  - Epic（大功能）
+  - Story / Task（開發項目）
+  - Bug（缺陷）
+- 常見狀態：
+  - To Do
+  - In Progress
+  - In Review
+  - Done
+
+## 與 Google Sheet 的差異
+
+- Sheet：自由但全靠人工維護
+- Jira：可定義流程規則、責任人、優先級、Sprint、報表，適合團隊協作
+
+## Jira 與 GitHub 可以連動嗎？
+
+可以，且實務上很常見。
+
+常見連動方式：
+
+- Commit / PR 關聯 Jira issue
+  - 在 branch、commit、PR 標題加入 Jira key（例如 `IDT-42`）
+- Jira 顯示開發紀錄
+  - 可看到對應分支、commit、PR、合併狀態
+- 自動更新 issue 狀態（可選）
+  - 例如 PR merge 後，自動把 issue 從 `In Review` 改成 `Done`
+
+## 實務命名建議（可直接套用）
+
+- Branch：`feature/IDT-42-usecases-detail-page`
+- Commit：`IDT-42 build use case detail sections`
+- PR Title：`IDT-42: Build UseCasesDetailPage skeleton`
+
+這樣 Jira 與 GitHub 會更容易自動關聯，追蹤成本也最低。
+
+---
+
 # 🖥️ 5. Data Strategy
 
 Phase 1:
