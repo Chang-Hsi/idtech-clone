@@ -4,8 +4,8 @@ import HomePage from '../pages/Home/HomePage'
 import ProductsPage from '../pages/Products/ProductsPage'
 import ProductCollectionPage from '../pages/Products/ProductCollectionPage'
 import ProductDetailPage from '../pages/Products/ProductDetailPage'
-import SolutionsPage from '../pages/Solutions/SolutionsPage'
-import SolutionDetailPage from '../pages/Solutions/SolutionDetailPage'
+import UseCasesPage from '../pages/UseCases/UseCasesPage'
+import UseCasesDetailPage from '../pages/UseCases/UseCasesDetailPage'
 import SoftwareServicesPage from '../pages/SoftwareServices/SoftwareServicesPage'
 import SupportHubPage from '../pages/Support/SupportHubPage'
 import KnowledgeBasePage from '../pages/Support/KnowledgeBasePage'
@@ -34,11 +34,8 @@ const router = createBrowserRouter(
         { path: 'products/collections/:collectionSlug', element: <ProductCollectionPage /> },
         { path: 'products/:productSlug', element: <ProductDetailPage /> },
 
-        { path: 'solutions', element: <SolutionsPage /> },
-        { path: 'solutions/:slug', element: <SolutionDetailPage /> },
-
-        { path: 'use-cases', element: <SolutionsPage /> },
-        { path: 'use-cases/:slug', element: <SolutionDetailPage /> },
+        { path: 'use-cases', element: <UseCasesPage /> },
+        { path: 'use-cases/:slug', element: <UseCasesDetailPage /> },
 
         { path: 'software-services', element: <SoftwareServicesPage /> },
 

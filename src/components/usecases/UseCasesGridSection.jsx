@@ -1,23 +1,21 @@
 import { Link } from 'react-router-dom'
-import { useSelector } from 'react-redux'
 import useInViewOnce from '../../hooks/useInViewOnce'
-import { selectAllCollections } from '../../features/catalog/catalogSelectors'
+import { homeUseCases } from '../../data/home/homeUseCases'
 
-const ProductsCollectionsGridSection = () => {
-  const collections = useSelector(selectAllCollections)
+const UseCasesGridSection = () => {
   const { ref, isInView } = useInViewOnce({
-    threshold: 0.01,
-    rootMargin: '0px 0px 20% 0px',
+    threshold: 0,
+    rootMargin: '0px 0px 85% 0px',
   })
 
   return (
     <section ref={ref} className="bg-white py-12 text-black md:py-16">
       <div className="mx-auto w-full max-w-7xl">
         <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
-          {collections.map((collection, index) => (
+          {homeUseCases.map((item, index) => (
             <Link
-              key={collection.slug}
-              to={`/products/collections/${collection.slug}`}
+              key={item.id}
+              to={item.to}
               className={`${isInView ? 'zoom-in-title' : 'opacity-0'} group relative h-[320px] min-w-[360px] overflow-hidden rounded-sm border border-black/10`}
               style={{
                 '--zoom-start': '0.86',
@@ -25,10 +23,10 @@ const ProductsCollectionsGridSection = () => {
                 animationDelay: `${index * 120}ms`,
               }}
             >
-              {collection.media?.heroImageUrl ? (
+              {item.imageUrl ? (
                 <img
-                  src={collection.media.heroImageUrl}
-                  alt={collection.name}
+                  src={item.imageUrl}
+                  alt={item.title}
                   className="h-full w-full object-cover transition-transform duration-500 ease-out group-hover:scale-125"
                 />
               ) : (
@@ -37,7 +35,7 @@ const ProductsCollectionsGridSection = () => {
 
               <div className="absolute inset-0 bg-black/55 transition-colors duration-300 group-hover:bg-black/45" />
               <div className="absolute inset-0 flex items-center justify-center px-5 text-center">
-                <h3 className="text-3xl font-etrabold text-white">{collection.name}</h3>
+                <h3 className="text-3xl font-semibold text-white">{item.title}</h3>
               </div>
             </Link>
           ))}
@@ -47,4 +45,4 @@ const ProductsCollectionsGridSection = () => {
   )
 }
 
-export default ProductsCollectionsGridSection
+export default UseCasesGridSection

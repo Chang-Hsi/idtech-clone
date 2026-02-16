@@ -2,6 +2,17 @@ import neo3Image from '../../assets/home/Products2.jpg'
 import vp3300Image from '../../assets/home/Products1.webp'
 import unattendedImage from '../../assets/home/Products4.jpg'
 import kernelImage from '../../assets/home/Products3.jpg'
+import Products5 from '../../assets/home/Products5.jpg'
+import Products6 from '../../assets/home/Products6.jpg'
+import Products7 from '../../assets/home/Products7.jpg'
+import Products8 from '../../assets/home/Products8.jpg'
+import Products9 from '../../assets/home/Products9.jpg'
+import Products10 from '../../assets/home/Products10.jpg'
+import Products11 from '../../assets/home/Products11.jpg'
+import Products12 from '../../assets/home/Products12.jpg'
+import Products13 from '../../assets/home/Products13.jpg'
+import Products14 from '../../assets/home/Products14.jpg'
+import Products15 from '../../assets/home/Products15.jpg'
 import fullWidthImage1 from '../../assets/products/fullWidthImage1.jpg'
 import fullWidthImage2 from '../../assets/products/fullWidthImage2.jpg'
 
@@ -367,6 +378,402 @@ export const products = [
     relatedSlugs: ['emv-kernel', 'neo3'],
     detail: {
       fullWidthImageUrl: fullWidthImage1,
+    },
+  },
+  {
+    id: 'prod-vp3350',
+    slug: 'vp3350',
+    name: 'VP3350',
+    tagline: 'Wireless payment terminal for mobile and hybrid checkout journeys.',
+    shortDescription:
+      'A robust handheld payment device designed for flexible mobile workflows and semi-fixed environments.',
+    bullets: ['Wireless-first operation', 'Compact handheld profile', 'Secure card-present acceptance'],
+    collectionSlugs: ['mobile-payment', 'neo-3'],
+    useCases: ['mobile', 'retail'],
+    downloads: {
+      datasheetUrl: '/resources/whitepapers',
+      kbUrl: '/support/knowledge-base',
+    },
+    media: {
+      heroImageUrl: Products5,
+      gallery: [Products5],
+    },
+    specs: [
+      { key: 'Interfaces', value: 'Bluetooth LE, USB-C' },
+      { key: 'Display', value: 'Integrated monochrome status display' },
+      { key: 'Operating Temperatures', value: '0 deg C to 50 deg C' },
+      { key: 'Dimensions', value: '122 mm x 70 mm x 21 mm' },
+    ],
+    features: [
+      'Portable form factor for on-the-go checkout',
+      'Low-latency wireless pairing and reconnection',
+      'Secure key management support',
+      'Designed for mobile line-busting operations',
+      'SDK-friendly integration path',
+    ],
+    relatedSlugs: ['vp3300', 'mobile'],
+    detail: {
+      fullWidthImageUrl: fullWidthImage2,
+    },
+  },
+  {
+    id: 'prod-vp6825',
+    slug: 'vp6825',
+    name: 'VP6825',
+    tagline: 'All-in-one unattended terminal for self-service endpoints.',
+    shortDescription:
+      'An unattended-ready payment terminal with integrated display for kiosks, parking, and vending use cases.',
+    bullets: ['Unattended deployment profile', 'Integrated UI screen', 'Secure multi-interface acceptance'],
+    collectionSlugs: ['unattended-solutions'],
+    useCases: ['unattended', 'parking'],
+    downloads: {
+      datasheetUrl: '/resources/whitepapers',
+      kbUrl: '/support/request-help',
+    },
+    media: {
+      heroImageUrl: Products6,
+      gallery: [Products6],
+    },
+    specs: [
+      { key: 'Reader Type', value: 'Contact, contactless, and magstripe support' },
+      { key: 'Display', value: 'High-brightness kiosk display module' },
+      { key: 'Ingress Profile', value: 'Commercial unattended enclosure ready' },
+      { key: 'Operating Temperatures', value: '-10 deg C to 55 deg C' },
+    ],
+    features: [
+      'Purpose-built for unattended operations',
+      'High durability for outdoor-adjacent environments',
+      'Remote monitoring and update compatibility',
+      'Flexible mounting options',
+      'Supports kiosk and parking deployment patterns',
+    ],
+    relatedSlugs: ['unattended', 'vp7200'],
+    detail: {
+      fullWidthImageUrl: fullWidthImage1,
+    },
+  },
+  {
+    id: 'prod-ap6800',
+    slug: 'ap6800',
+    name: 'AP6800',
+    tagline: 'Android unattended terminal for advanced self-service experiences.',
+    shortDescription:
+      'A smart unattended terminal with Android capabilities for richer payment interaction scenarios.',
+    bullets: ['Android operating environment', 'Self-service optimized design', 'Flexible peripheral support'],
+    collectionSlugs: ['unattended-solutions'],
+    useCases: ['unattended', 'ev-charging'],
+    downloads: {
+      datasheetUrl: '/resources/whitepapers',
+      kbUrl: '/support/request-help',
+    },
+    media: {
+      heroImageUrl: Products7,
+      gallery: [Products7],
+    },
+    specs: [
+      { key: 'OS', value: 'Android-based unattended platform' },
+      { key: 'Connectivity', value: 'Ethernet, Wi-Fi, optional cellular module' },
+      { key: 'Display', value: 'Integrated touch display' },
+      { key: 'Operating Temperatures', value: '-10 deg C to 50 deg C' },
+    ],
+    features: [
+      'App-capable unattended architecture',
+      'Supports richer UI-based payment flows',
+      'Remote fleet management compatibility',
+      'Designed for scalable unattended programs',
+      'Peripheral expansion support',
+    ],
+    relatedSlugs: ['vp6825', 'unattended'],
+    detail: {
+      fullWidthImageUrl: fullWidthImage2,
+    },
+  },
+  {
+    id: 'prod-kiosk-v',
+    slug: 'kiosk-v',
+    name: 'Kiosk V',
+    tagline: 'Compact contactless reader for modern unattended and loyalty flows.',
+    shortDescription:
+      'A lightweight contactless reader that supports secure tap payments across kiosk and embedded scenarios.',
+    bullets: ['Contactless-first reader', 'Compact footprint', 'Loyalty-ready interaction support'],
+    collectionSlugs: ['neo-3', 'unattended-solutions'],
+    useCases: ['unattended', 'oem'],
+    downloads: {
+      datasheetUrl: '/resources/whitepapers',
+      kbUrl: '/support/request-help',
+    },
+    media: {
+      heroImageUrl: Products8,
+      gallery: [Products8],
+    },
+    specs: [
+      { key: 'Reader Type', value: 'NFC/contactless acceptance' },
+      { key: 'Interfaces', value: 'USB and serial options' },
+      { key: 'Operating Temperatures', value: '-10 deg C to 55 deg C' },
+      { key: 'Dimensions', value: '95 mm x 62 mm x 16 mm' },
+    ],
+    features: [
+      'Fast tap-and-go transaction handling',
+      'Suitable for compact enclosures',
+      'Consistent kernel-aligned behavior',
+      'Loyalty and stored-value flow compatibility',
+      'Easy integration for kiosk OEM teams',
+    ],
+    relatedSlugs: ['vp7200', 'oem'],
+    detail: {
+      fullWidthImageUrl: fullWidthImage1,
+    },
+  },
+  {
+    id: 'prod-vp7200',
+    slug: 'vp7200',
+    name: 'VP7200',
+    tagline: 'Rugged unattended reader for kiosk and parking deployments.',
+    shortDescription:
+      'A durable unattended reader designed for consistent performance in high-volume self-service environments.',
+    bullets: ['Self-service optimized', 'Rugged hardware profile', 'Multi-interface acceptance support'],
+    collectionSlugs: ['unattended-solutions'],
+    useCases: ['unattended', 'transit'],
+    downloads: {
+      datasheetUrl: '/resources/whitepapers',
+      kbUrl: '/support/request-help',
+    },
+    media: {
+      heroImageUrl: Products9,
+      gallery: [Products9],
+    },
+    specs: [
+      { key: 'Reader Type', value: 'Contactless + optional scanner integration' },
+      { key: 'Connectivity', value: 'USB, serial, Ethernet' },
+      { key: 'Operating Temperatures', value: '-15 deg C to 55 deg C' },
+      { key: 'Protection', value: 'Designed for harsh commercial operation' },
+    ],
+    features: [
+      'High uptime profile for unattended deployments',
+      'Supports kiosk and transit-adjacent use cases',
+      'Durable enclosure and field reliability',
+      'Fast transaction response characteristics',
+      'Flexible integration with host systems',
+    ],
+    relatedSlugs: ['unattended', 'vp6825'],
+    detail: {
+      fullWidthImageUrl: fullWidthImage2,
+    },
+  },
+  {
+    id: 'prod-ct100',
+    slug: 'ct100',
+    name: 'CT100',
+    tagline: 'Compact countertop unit for fixed checkout lanes.',
+    shortDescription:
+      'A practical countertop terminal for daily card-present payment operations in retail environments.',
+    bullets: ['Countertop-optimized design', 'Reliable day-to-day operation', 'POS-friendly integration'],
+    collectionSlugs: ['countertop-systems'],
+    useCases: ['countertop', 'retail'],
+    downloads: {
+      datasheetUrl: '/resources/whitepapers',
+      kbUrl: '/support/knowledge-base',
+    },
+    media: {
+      heroImageUrl: Products10,
+      gallery: [Products10],
+    },
+    specs: [
+      { key: 'Interfaces', value: 'USB, serial' },
+      { key: 'Operating Temperatures', value: '0 deg C to 40 deg C' },
+      { key: 'Mounting', value: 'Countertop stand and fixed mount options' },
+      { key: 'Dimensions', value: '128 mm x 82 mm x 26 mm' },
+    ],
+    features: [
+      'Designed for fixed lane stability',
+      'Simple onboarding for cashier operations',
+      'Secure card-present transaction behavior',
+      'Consistent UX for customers',
+      'Low maintenance deployment profile',
+    ],
+    relatedSlugs: ['countertop', 'ct200'],
+    detail: {
+      fullWidthImageUrl: fullWidthImage1,
+    },
+  },
+  {
+    id: 'prod-ct200',
+    slug: 'ct200',
+    name: 'CT200',
+    tagline: 'Enhanced countertop terminal with customer-facing ergonomics.',
+    shortDescription:
+      'An upgraded countertop terminal built for enterprise checkout lanes requiring reliability and clarity.',
+    bullets: ['Enhanced checkout ergonomics', 'Durable construction', 'Enterprise lane compatibility'],
+    collectionSlugs: ['countertop-systems'],
+    useCases: ['countertop', 'enterprise'],
+    downloads: {
+      datasheetUrl: '/resources/whitepapers',
+      kbUrl: '/support/knowledge-base',
+    },
+    media: {
+      heroImageUrl: Products11,
+      gallery: [Products11],
+    },
+    specs: [
+      { key: 'Interfaces', value: 'USB, LAN, serial' },
+      { key: 'Display', value: 'Customer-facing display panel' },
+      { key: 'Operating Temperatures', value: '0 deg C to 45 deg C' },
+      { key: 'Dimensions', value: '136 mm x 86 mm x 30 mm' },
+    ],
+    features: [
+      'Improved customer interaction visibility',
+      'Enterprise-ready checkout durability',
+      'Seamless POS middleware integration',
+      'Consistent lane behavior at scale',
+      'Strong day-to-day operational stability',
+    ],
+    relatedSlugs: ['ct100', 'countertop'],
+    detail: {
+      fullWidthImageUrl: fullWidthImage2,
+    },
+  },
+  {
+    id: 'prod-tapone',
+    slug: 'tapone',
+    name: 'TapOne',
+    tagline: 'Fast tap endpoint for transit gates and mobility checkpoints.',
+    shortDescription:
+      'A rapid-response reader designed for high-throughput transit and mobility validation workflows.',
+    bullets: ['Low-latency tap response', 'Transit deployment ready', 'High-throughput profile'],
+    collectionSlugs: ['transit-mobility'],
+    useCases: ['transit', 'mobile'],
+    downloads: {
+      datasheetUrl: '/resources/whitepapers',
+      kbUrl: '/support/request-help',
+    },
+    media: {
+      heroImageUrl: Products12,
+      gallery: [Products12],
+    },
+    specs: [
+      { key: 'Reader Type', value: 'Contactless transit-grade acceptance' },
+      { key: 'Latency Profile', value: 'Optimized for rapid tap throughput' },
+      { key: 'Connectivity', value: 'Ethernet and serial integration options' },
+      { key: 'Operating Temperatures', value: '-20 deg C to 55 deg C' },
+    ],
+    features: [
+      'Transit-oriented tap performance',
+      'Resilient operation in high-traffic zones',
+      'Designed for station and onboard validation',
+      'Simple host-system integration',
+      'Scalable deployment for mobility networks',
+    ],
+    relatedSlugs: ['mobile', 'vp7200'],
+    detail: {
+      fullWidthImageUrl: fullWidthImage1,
+    },
+  },
+  {
+    id: 'prod-mobility-x',
+    slug: 'mobility-x',
+    name: 'Mobility X',
+    tagline: 'Compact mobility reader for route-based payment operations.',
+    shortDescription:
+      'A lightweight payment reader tailored for transit and field mobility environments.',
+    bullets: ['Compact route-ready design', 'Mobile network compatibility', 'High reliability profile'],
+    collectionSlugs: ['transit-mobility', 'mobile-payment'],
+    useCases: ['transit', 'mobile'],
+    downloads: {
+      datasheetUrl: '/resources/whitepapers',
+      kbUrl: '/support/request-help',
+    },
+    media: {
+      heroImageUrl: Products13,
+      gallery: [Products13],
+    },
+    specs: [
+      { key: 'Form Factor', value: 'Compact mobile transit reader' },
+      { key: 'Connectivity', value: 'Bluetooth LE, optional cellular gateway mode' },
+      { key: 'Operating Temperatures', value: '-10 deg C to 50 deg C' },
+      { key: 'Mounting', value: 'Vehicle and handheld mounting options' },
+    ],
+    features: [
+      'Built for movement-heavy payment scenarios',
+      'Stable transaction performance in transit routes',
+      'Flexible mounting for onboard operations',
+      'Easy pairing with mobile host applications',
+      'Optimized for distributed fleet deployment',
+    ],
+    relatedSlugs: ['tapone', 'vp3350'],
+    detail: {
+      fullWidthImageUrl: fullWidthImage2,
+    },
+  },
+  {
+    id: 'prod-embed-a',
+    slug: 'embed-a',
+    name: 'Embed A',
+    tagline: 'Low-profile OEM module for compact custom devices.',
+    shortDescription:
+      'An embedded payment module designed for manufacturers needing minimal footprint and secure acceptance.',
+    bullets: ['Compact OEM integration', 'Secure embedded acceptance', 'Flexible host interface options'],
+    collectionSlugs: ['oem-modules'],
+    useCases: ['oem', 'unattended'],
+    downloads: {
+      datasheetUrl: '/resources/whitepapers',
+      kbUrl: '/support/request-help',
+    },
+    media: {
+      heroImageUrl: Products14,
+      gallery: [Products14],
+    },
+    specs: [
+      { key: 'Module Size', value: 'Ultra-compact embedded form factor' },
+      { key: 'Host Interfaces', value: 'USB, UART' },
+      { key: 'Power Profile', value: 'Low-power embedded operation' },
+      { key: 'Operating Temperatures', value: '-10 deg C to 60 deg C' },
+    ],
+    features: [
+      'Small footprint for constrained enclosures',
+      'Secure payment acceptance building blocks',
+      'Fast OEM onboarding support',
+      'Long lifecycle supply planning',
+      'Designed for custom product integration',
+    ],
+    relatedSlugs: ['oem', 'embed-b'],
+    detail: {
+      fullWidthImageUrl: fullWidthImage1,
+    },
+  },
+  {
+    id: 'prod-embed-b',
+    slug: 'embed-b',
+    name: 'Embed B',
+    tagline: 'Mid-range embedded module for scalable OEM programs.',
+    shortDescription:
+      'A balanced OEM module option for teams scaling custom hardware with secure payment capability.',
+    bullets: ['Balanced performance profile', 'OEM scaling support', 'Flexible integration pathways'],
+    collectionSlugs: ['oem-modules'],
+    useCases: ['oem', 'enterprise'],
+    downloads: {
+      datasheetUrl: '/resources/whitepapers',
+      kbUrl: '/support/request-help',
+    },
+    media: {
+      heroImageUrl: Products15,
+      gallery: [Products15],
+    },
+    specs: [
+      { key: 'Module Type', value: 'Embedded mid-range payment module' },
+      { key: 'Host Interfaces', value: 'USB, UART, SPI' },
+      { key: 'Security', value: 'Embedded key and encryption support' },
+      { key: 'Operating Temperatures', value: '-10 deg C to 60 deg C' },
+    ],
+    features: [
+      'Designed for scalable OEM product lines',
+      'Secure embedded payment processing',
+      'Consistent integration model across variants',
+      'Supports long-term maintenance planning',
+      'Suitable for custom enterprise deployments',
+    ],
+    relatedSlugs: ['embed-a', 'oem'],
+    detail: {
+      fullWidthImageUrl: fullWidthImage2,
     },
   },
 ]

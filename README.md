@@ -207,6 +207,39 @@ Used in:
 - search results
 - recent searches
 
+## 為什麼目前還會 `import data` 靜態資料？
+
+目前 `catalogSlice` 會從 `src/data/products/*.js` 讀入初始資料，這樣做是刻意的：
+
+- 文案與內容好維護：產品敘述、規格、圖片路徑集中在 data 檔，可由非前端角色協作調整。
+- 前端頁面先完整開發：在沒有後端 API 前，先把路由、元件、狀態流都打通。
+- 方便未來切 API：元件只讀 selector，不直接耦合 data 檔，來源可從「本地 data」平滑切換成「遠端 API」。
+
+## 未來要串接 API 的建議做法（Redux 方向）
+
+建議採用 Redux Toolkit 官方路線：
+
+- 第一階段：`createAsyncThunk` + `extraReducers`
+  - 在 `catalog` feature 內新增 async thunk 請求 API。
+  - 成功後更新 `state`（或 dispatch `setCatalogData`）。
+- 進階階段：RTK Query（更推薦）
+  - 直接在 Redux 生態內處理快取、loading、error、重抓策略。
+  - 元件改用 query hooks 讀資料，維持清晰資料流。
+
+## `import { createEntityAdapter, createSlice } from '@reduxjs/toolkit'` 是做什麼？
+
+可以理解為：引入 Redux Toolkit 提供的「建立 slice 與管理資料集合」工具。
+
+- `createSlice`
+  - 用來定義一個 Redux 模組（name / initialState / reducers）。
+  - 會自動幫你產生 action creators 與 reducer。
+- `createEntityAdapter`
+  - 用來管理「列表型資料」（例如 products）。
+  - 內部會把資料標準化成 `{ ids, entities }`，查詢與更新效率較好。
+  - 也會幫你產生常用 selectors（如 selectAll、selectById）。
+
+所以它不是「只是在 import Redux 本體」，而是載入 RTK 的高階工具，讓 Redux 寫法更簡潔且可維護。
+
 ---
 
 # 🖥️ 5. Data Strategy

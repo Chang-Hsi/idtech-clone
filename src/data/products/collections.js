@@ -34,14 +34,14 @@ export const collections = [
       'Faster deployment with reusable integration patterns',
       'Operational consistency for multi-location rollouts',
     ],
-    featuredSlugs: ['neo3', 'vp3300', 'countertop', 'unattended'],
+    featuredSlugs: ['neo3-display-vp3350', 'vp3300', 'vp3350', 'kiosk-v', 'vp7200', 'countertop'],
     hasFeaturedProductsSection: true,
     exploreDesc:
       'The Kiodk Platform collection is built for teams that need one stable product family across multiple payment environments. This series emphasizes shared integration patterns, predictable lifecycle maintenance, and faster rollout execution by minimizing duplicated implementation work between mobile, countertop, and unattended deployments. By standardizing hardware behavior and software touchpoints, organizations can shorten pilot cycles, simplify regional expansion, and improve long-term operational consistency.',
     displayProducts: [
       {
         slug: 'neo3-display-kiosk-v',
-        targetSlug: 'neo3',
+        targetSlug: 'kiosk-v',
         name: 'Kiosk V',
         shortDescription:
           'Our newest contactless card reader supporting mobile payments and loyalty programs.',
@@ -49,18 +49,25 @@ export const collections = [
       },
       {
         slug: 'neo3-display-vp3350',
-        targetSlug: 'vp3300',
+        targetSlug: 'vp3350',
         name: 'VP3350',
         shortDescription: 'Robust wireless device ready for mobile and business payment use cases.',
         media: { heroImageUrl: collectionImage2 },
       },
       {
         slug: 'neo3-display-vp7200',
-        targetSlug: 'unattended',
+        targetSlug: 'vp7200',
         name: 'VP7200',
         shortDescription:
           'Smart NFC reader with integrated scanner support for self-service flows.',
         media: { heroImageUrl: collectionImage3 },
+      },
+      {
+        slug: 'neo3-display-vp3300',
+        targetSlug: 'vp3300',
+        name: 'VP3300',
+        shortDescription: 'Compact mobile reader for secure card-present acceptance.',
+        media: { heroImageUrl: collectionImage2 },
       },
     ],
     resources: [
@@ -88,7 +95,7 @@ export const collections = [
       'Secure card-present acceptance with EMV support',
       'Consistent SDK approach for mobile app teams',
     ],
-    featuredSlugs: ['vp3300', 'mobile'],
+    featuredSlugs: ['vp3300', 'vp3350', 'mobile', 'kiosk-v'],
     hasFeaturedProductsSection: false,
     exploreDesc: '',
     displayProducts: [
@@ -101,7 +108,7 @@ export const collections = [
       },
       {
         slug: 'mobile-display-vp3350',
-        targetSlug: 'vp3300',
+        targetSlug: 'vp3350',
         name: 'VP3350',
         shortDescription: 'Wireless checkout terminal for on-the-go transaction handling.',
         media: { heroImageUrl: collectionImage2 },
@@ -112,6 +119,21 @@ export const collections = [
         name: 'Flex Go',
         shortDescription: 'Portable payment terminal optimized for field and mobile sales teams.',
         media: { heroImageUrl: collectionImage3 },
+      },
+      {
+        slug: 'neo3-display-kiosk-v',
+        targetSlug: 'kiosk-v',
+        name: 'Kiosk V',
+        shortDescription:
+          'Our newest contactless card reader supporting mobile payments and loyalty programs.',
+        media: { heroImageUrl: collectionImage1 },
+      },
+      {
+        slug: 'neo3-display-vp3350',
+        targetSlug: 'vp3350',
+        name: 'VP3350',
+        shortDescription: 'Robust wireless device ready for mobile and business payment use cases.',
+        media: { heroImageUrl: collectionImage2 },
       },
     ],
     resources: [{ title: 'Mobile Buyer Guide', url: '/resources/whitepapers' }],
@@ -137,7 +159,7 @@ export const collections = [
       'Reduced certification and maintenance overhead',
       'Aligned integration workflow for product teams',
     ],
-    featuredSlugs: ['emv-kernel', 'neo3'],
+    featuredSlugs: ['emv-kernel', 'neo3-display-vp3350', 'kiosk-v'],
     hasFeaturedProductsSection: true,
     exploreDesc:
       'The EMV Common Kernel collection focuses on software-level consistency for card-present payment flows. It is designed for product teams that want a reusable transaction foundation that can be applied across multiple device categories without re-implementing core payment behavior each time. This approach helps reduce certification friction, improves release quality through shared validation workflows, and creates a clearer upgrade path for future feature expansion.',
@@ -161,6 +183,29 @@ export const collections = [
         targetSlug: 'emv-kernel',
         name: 'Kernel Ops',
         shortDescription: 'Operational support layer for lifecycle updates and maintenance.',
+        media: { heroImageUrl: collectionImage3 },
+      },
+      {
+        slug: 'neo3-display-kiosk-v',
+        targetSlug: 'kiosk-v',
+        name: 'Kiosk V',
+        shortDescription:
+          'Our newest contactless card reader supporting mobile payments and loyalty programs.',
+        media: { heroImageUrl: collectionImage1 },
+      },
+      {
+        slug: 'neo3-display-vp3350',
+        targetSlug: 'neo3-display-vp3350',
+        name: 'VP3350',
+        shortDescription: 'Robust wireless device ready for mobile and business payment use cases.',
+        media: { heroImageUrl: collectionImage2 },
+      },
+      {
+        slug: 'neo3-display-vp7200',
+        targetSlug: 'vp7200',
+        name: 'VP7200',
+        shortDescription:
+          'Smart NFC reader with integrated scanner support for self-service flows.',
         media: { heroImageUrl: collectionImage3 },
       },
     ],
@@ -187,31 +232,54 @@ export const collections = [
       'Integration flexibility for OEM and enterprise use cases',
       'Security-focused design with long-term support',
     ],
-    featuredSlugs: ['unattended', 'emv-kernel'],
+    featuredSlugs: ['unattended', 'vp7200', 'vp6825', 'ap6800', 'emv-kernel', 'kiosk-v'],
     hasFeaturedProductsSection: true,
     exploreDesc:
       'Unattended Payment Solutions are tailored for self-service environments where reliability, uptime, and deployment resilience are critical. This collection supports kiosk, vending, parking, and charging scenarios with products that can withstand high-volume use while remaining integration-friendly for OEM and enterprise programs. The overall goal is to provide dependable unattended acceptance with maintainable software and hardware operations over long deployment cycles.',
     displayProducts: [
       {
         slug: 'unattended-display-vp7200',
-        targetSlug: 'unattended',
+        targetSlug: 'vp7200',
         name: 'VP7200',
         shortDescription: 'Compact unattended reader for kiosks and parking terminals.',
         media: { heroImageUrl: collectionImage3 },
       },
       {
         slug: 'unattended-display-vp6825',
-        targetSlug: 'unattended',
+        targetSlug: 'vp6825',
         name: 'VP6825',
         shortDescription: 'All-in-one kiosk terminal with robust unattended performance profile.',
         media: { heroImageUrl: collectionImage1 },
       },
       {
         slug: 'unattended-display-ap6800',
-        targetSlug: 'unattended',
+        targetSlug: 'ap6800',
         name: 'AP6800',
         shortDescription: 'Android-based unattended unit with flexible deployment options.',
         media: { heroImageUrl: collectionImage2 },
+      },
+      {
+        slug: 'neo3-display-kiosk-v',
+        targetSlug: 'kiosk-v',
+        name: 'Kiosk V',
+        shortDescription:
+          'Our newest contactless card reader supporting mobile payments and loyalty programs.',
+        media: { heroImageUrl: collectionImage1 },
+      },
+      {
+        slug: 'neo3-display-vp3350',
+        targetSlug: 'vp3350',
+        name: 'VP3350',
+        shortDescription: 'Robust wireless device ready for mobile and business payment use cases.',
+        media: { heroImageUrl: collectionImage2 },
+      },
+      {
+        slug: 'neo3-display-vp7200',
+        targetSlug: 'vp7200',
+        name: 'VP7200',
+        shortDescription:
+          'Smart NFC reader with integrated scanner support for self-service flows.',
+        media: { heroImageUrl: collectionImage3 },
       },
     ],
     resources: [{ title: 'Unattended Deployment Checklist', url: '/support/request-help' }],
@@ -236,20 +304,20 @@ export const collections = [
       'Supports stable day-to-day operations',
       'Flexible deployment options',
     ],
-    featuredSlugs: ['countertop', 'neo3'],
+    featuredSlugs: ['countertop', 'ct100', 'ct200', 'neo3-display-vp3350'],
     hasFeaturedProductsSection: false,
     exploreDesc: '',
     displayProducts: [
       {
         slug: 'countertop-display-ct100',
-        targetSlug: 'countertop',
+        targetSlug: 'ct100',
         name: 'CT100',
         shortDescription: 'Compact countertop terminal for daily checkout operations.',
         media: { heroImageUrl: collectionImage4 },
       },
       {
         slug: 'countertop-display-ct200',
-        targetSlug: 'countertop',
+        targetSlug: 'ct200',
         name: 'CT200',
         shortDescription: 'Customer-facing unit with durable housing and stable performance.',
         media: { heroImageUrl: collectionImage5 },
@@ -260,6 +328,29 @@ export const collections = [
         name: 'CT Pro',
         shortDescription: 'High-throughput countertop option for enterprise checkout lanes.',
         media: { heroImageUrl: collectionImage6 },
+      },
+      {
+        slug: 'neo3-display-kiosk-v',
+        targetSlug: 'kiosk-v',
+        name: 'Kiosk V',
+        shortDescription:
+          'Our newest contactless card reader supporting mobile payments and loyalty programs.',
+        media: { heroImageUrl: collectionImage1 },
+      },
+      {
+        slug: 'neo3-display-vp3350',
+        targetSlug: 'vp3350',
+        name: 'VP3350',
+        shortDescription: 'Robust wireless device ready for mobile and business payment use cases.',
+        media: { heroImageUrl: collectionImage2 },
+      },
+      {
+        slug: 'neo3-display-vp7200',
+        targetSlug: 'vp7200',
+        name: 'VP7200',
+        shortDescription:
+          'Smart NFC reader with integrated scanner support for self-service flows.',
+        media: { heroImageUrl: collectionImage3 },
       },
     ],
     resources: [{ title: 'Countertop Deployment Guide', url: '/support/knowledge-base' }],
@@ -283,21 +374,21 @@ export const collections = [
       'Scalable roadmap support',
       'Consistent payment acceptance layer',
     ],
-    featuredSlugs: ['oem', 'emv-kernel'],
+    featuredSlugs: ['oem', 'embed-a', 'embed-b', 'emv-kernel'],
     hasFeaturedProductsSection: true,
     exploreDesc:
       'OEM Modules are intended for manufacturers and platform builders who need embedded payment capabilities without sacrificing product-specific design flexibility. This series supports custom enclosure constraints, integration control, and scalable rollout planning while keeping payment acceptance behavior aligned with broader platform standards. It is especially useful for teams balancing bespoke hardware requirements with long-term maintainability and compliance goals.',
     displayProducts: [
       {
         slug: 'oem-display-embed-a',
-        targetSlug: 'oem',
+        targetSlug: 'embed-a',
         name: 'Embed A',
         shortDescription: 'Low-profile module for compact OEM payment designs.',
         media: { heroImageUrl: collectionImage7 },
       },
       {
         slug: 'oem-display-embed-b',
-        targetSlug: 'oem',
+        targetSlug: 'embed-b',
         name: 'Embed B',
         shortDescription: 'Mid-range embedded device with flexible hardware integration options.',
         media: { heroImageUrl: collectionImage9 },
@@ -308,6 +399,29 @@ export const collections = [
         name: 'Embed C',
         shortDescription: 'Advanced module for high-volume and custom OEM deployment scenarios.',
         media: { heroImageUrl: collectionImage8 },
+      },
+      {
+        slug: 'neo3-display-kiosk-v',
+        targetSlug: 'kiosk-v',
+        name: 'Kiosk V',
+        shortDescription:
+          'Our newest contactless card reader supporting mobile payments and loyalty programs.',
+        media: { heroImageUrl: collectionImage1 },
+      },
+      {
+        slug: 'neo3-display-vp3350',
+        targetSlug: 'vp3350',
+        name: 'VP3350',
+        shortDescription: 'Robust wireless device ready for mobile and business payment use cases.',
+        media: { heroImageUrl: collectionImage2 },
+      },
+      {
+        slug: 'neo3-display-vp7200',
+        targetSlug: 'vp7200',
+        name: 'VP7200',
+        shortDescription:
+          'Smart NFC reader with integrated scanner support for self-service flows.',
+        media: { heroImageUrl: collectionImage3 },
       },
     ],
     resources: [{ title: 'OEM Integration Starter Pack', url: '/support/request-help' }],
@@ -331,20 +445,20 @@ export const collections = [
       'Cross-region consistency strategies',
       'Operational governance patterns',
     ],
-    featuredSlugs: ['neo3', 'unattended'],
+    featuredSlugs: ['neo3-display-vp3350', 'unattended', 'software-services', 'vp3350'],
     hasFeaturedProductsSection: false,
     exploreDesc: '',
     displayProducts: [
       {
         slug: 'enterprise-display-control',
-        targetSlug: 'neo3',
+        targetSlug: 'neo3-display-vp3350',
         name: 'Control Hub',
         shortDescription: 'Centralized rollout control panel for multi-site deployment programs.',
         media: { heroImageUrl: collectionImage10 },
       },
       {
         slug: 'enterprise-display-ops',
-        targetSlug: 'unattended',
+        targetSlug: 'vp6825',
         name: 'Ops Suite',
         shortDescription: 'Operations visibility toolkit for enterprise support workflows.',
         media: { heroImageUrl: collectionImage3 },
@@ -355,6 +469,29 @@ export const collections = [
         name: 'Govern Core',
         shortDescription: 'Policy and governance layer for region-based rollout standards.',
         media: { heroImageUrl: collectionImage2 },
+      },
+      {
+        slug: 'neo3-display-kiosk-v',
+        targetSlug: 'kiosk-v',
+        name: 'Kiosk V',
+        shortDescription:
+          'Our newest contactless card reader supporting mobile payments and loyalty programs.',
+        media: { heroImageUrl: collectionImage1 },
+      },
+      {
+        slug: 'neo3-display-vp3350',
+        targetSlug: 'vp3350',
+        name: 'VP3350',
+        shortDescription: 'Robust wireless device ready for mobile and business payment use cases.',
+        media: { heroImageUrl: collectionImage2 },
+      },
+      {
+        slug: 'neo3-display-vp7200',
+        targetSlug: 'vp7200',
+        name: 'VP7200',
+        shortDescription:
+          'Smart NFC reader with integrated scanner support for self-service flows.',
+        media: { heroImageUrl: collectionImage3 },
       },
     ],
     resources: [{ title: 'Enterprise Rollout Checklist', url: '/resources/case-studies' }],
@@ -378,7 +515,7 @@ export const collections = [
       'Architecture support',
       'Lifecycle planning and updates',
     ],
-    featuredSlugs: ['software-services', 'emv-kernel'],
+    featuredSlugs: ['software-services', 'emv-kernel', 'neo3-display-vp3350'],
     hasFeaturedProductsSection: true,
     exploreDesc:
       'Software Services in this collection are structured to accelerate implementation while reducing architecture and maintenance risk. The focus is on practical onboarding, integration guidance, and lifecycle support that helps teams move from prototype to production with stronger technical foundations. These offerings are designed to complement product deployments with consistent engineering practices, release planning discipline, and operational continuity support.',
@@ -403,6 +540,29 @@ export const collections = [
         name: 'Lifecycle Care',
         shortDescription: 'Ongoing update and support framework for long-term maintainability.',
         media: { heroImageUrl: collectionImage6 },
+      },
+      {
+        slug: 'neo3-display-kiosk-v',
+        targetSlug: 'kiosk-v',
+        name: 'Kiosk V',
+        shortDescription:
+          'Our newest contactless card reader supporting mobile payments and loyalty programs.',
+        media: { heroImageUrl: collectionImage1 },
+      },
+      {
+        slug: 'neo3-display-vp3350',
+        targetSlug: 'vp3350',
+        name: 'VP3350',
+        shortDescription: 'Robust wireless device ready for mobile and business payment use cases.',
+        media: { heroImageUrl: collectionImage2 },
+      },
+      {
+        slug: 'neo3-display-vp7200',
+        targetSlug: 'vp7200',
+        name: 'VP7200',
+        shortDescription:
+          'Smart NFC reader with integrated scanner support for self-service flows.',
+        media: { heroImageUrl: collectionImage3 },
       },
     ],
     resources: [{ title: 'Service Overview', url: '/software-services' }],
@@ -473,14 +633,14 @@ export const collections = [
       'Durable deployment profile',
       'Operational consistency in motion-heavy environments',
     ],
-    featuredSlugs: ['unattended', 'mobile'],
+    featuredSlugs: ['tapone', 'mobility-x', 'vp7200', 'mobile'],
     hasFeaturedProductsSection: true,
     exploreDesc:
       'Transit & Mobility products are optimized for speed-sensitive payment interactions and operational robustness in transportation use cases. This collection addresses environments where quick taps, repeated throughput, and distributed deployment management are essential. It combines compact hardware options with scalable operational patterns so teams can support real-world mobility workflows while maintaining reliable payment performance.',
     displayProducts: [
       {
         slug: 'transit-display-tapone',
-        targetSlug: 'unattended',
+        targetSlug: 'tapone',
         name: 'TapOne',
         shortDescription:
           'Fast transaction endpoint for transit gate and onboard validation flows.',
@@ -488,7 +648,7 @@ export const collections = [
       },
       {
         slug: 'transit-display-mobilityx',
-        targetSlug: 'mobile',
+        targetSlug: 'mobility-x',
         name: 'Mobility X',
         shortDescription: 'Compact mobility reader designed for route-based payment scenarios.',
         media: { heroImageUrl: collectionImage11 },
@@ -499,6 +659,29 @@ export const collections = [
         name: 'Transit Hub',
         shortDescription: 'Back-office integration layer for mobility payment operations.',
         media: { heroImageUrl: collectionImage1 },
+      },
+      {
+        slug: 'neo3-display-kiosk-v',
+        targetSlug: 'kiosk-v',
+        name: 'Kiosk V',
+        shortDescription:
+          'Our newest contactless card reader supporting mobile payments and loyalty programs.',
+        media: { heroImageUrl: collectionImage1 },
+      },
+      {
+        slug: 'neo3-display-vp3350',
+        targetSlug: 'vp3350',
+        name: 'VP3350',
+        shortDescription: 'Robust wireless device ready for mobile and business payment use cases.',
+        media: { heroImageUrl: collectionImage2 },
+      },
+      {
+        slug: 'neo3-display-vp7200',
+        targetSlug: 'vp7200',
+        name: 'VP7200',
+        shortDescription:
+          'Smart NFC reader with integrated scanner support for self-service flows.',
+        media: { heroImageUrl: collectionImage3 },
       },
     ],
     resources: [{ title: 'Transit Deployment Overview', url: '/resources/whitepapers' }],
