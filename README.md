@@ -285,6 +285,46 @@ Jira 可以理解成「有流程與自動化能力的任務看板系統」。
 
 這樣 Jira 與 GitHub 會更容易自動關聯，追蹤成本也最低。
 
+## 具體操作流程（一步一步）
+
+以下以 `IDT-1` 為例：
+
+1. 在 Jira 建立一張 issue  
+   - 例如：`IDT-1 把專案與 Jira/GitHub 整合並補 README`
+
+2. 在本機建立分支（分支名帶 Jira key）
+
+```bash
+git checkout -b feature/IDT-1-jira-github-link
+```
+
+3. 完成程式碼修改後提交（commit 訊息帶 Jira key）
+
+```bash
+git add README.md
+git commit -m "IDT-1 add Jira and GitHub integration notes to README"
+```
+
+4. 推送分支到 GitHub
+
+```bash
+git push -u origin feature/IDT-1-jira-github-link
+```
+
+5. 到 GitHub Repository 首頁點 `Compare & pull request`
+
+6. 建立 PR 時，Title 一定要帶 Jira key  
+   - 例：`IDT-1: Add Jira and GitHub integration notes to README`
+
+7. 建立 PR 後回 Jira 打開 `IDT-1` 詳細頁  
+   - 在右側 `開發` 區塊可看到：
+     - 分支（Branch）
+     - 提交（Commit）
+     - 提取要求（Pull Request）
+
+8. （可選）Merge PR 後回 Jira 再看一次  
+   - PR 狀態會從 `OPEN` 變成已合併，形成完整任務追蹤鏈。
+
 ---
 
 # 🖥️ 5. Data Strategy
