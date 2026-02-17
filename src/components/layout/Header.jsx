@@ -8,6 +8,8 @@ const dropdownEnterStyle = {
   animation: 'headerDropdownSlideDown 300ms cubic-bezier(0.56, 1, 0.3, 1) both',
 }
 
+const isExternalUrl = (url) => /^https?:\/\//.test(url)
+
 const NAV_ITEMS = [
   {
     key: 'products',
@@ -40,12 +42,10 @@ const NAV_ITEMS = [
   {
     key: 'support',
     label: 'Support',
-    to: '/support',
+    to: 'https://github.com/Chang-Hsi/idtech-clone',
     dropdown: [
-      { label: 'Support Hub', to: '/support' },
-      { label: 'Knowledge Base', to: '/support/knowledge-base' },
-      { label: 'Product Updates', to: '/support/product-updates' },
-      { label: 'Request Help', to: '/support/request-help' },
+      { label: 'Support Hub', to: 'https://github.com/Chang-Hsi/idtech-clone' },
+      { label: 'Knowledge Base', to: 'https://chang-hsi.github.io/react-basic/' },
     ],
   },
   {
@@ -266,15 +266,27 @@ const Header = () => {
                       onMouseEnter={() => handleNavMouseEnter(item.key)}
                       onMouseLeave={handleNavMouseLeave}
                     >
-                      <NavLink
-                        to={item.to}
-                        onClick={() => setActiveDropdownKey(null)}
-                        className={`text-base font-medium tracking-wide transition-colors duration-200 hover:text-[#7DC242] xl:text-lg ${
-                          isActive ? 'text-[#7DC242]' : 'text-white'
-                        }`}
-                      >
-                        {item.label}
-                      </NavLink>
+                      {isExternalUrl(item.to) ? (
+                        <a
+                          href={item.to}
+                          target="_blank"
+                          rel="noreferrer"
+                          onClick={() => setActiveDropdownKey(null)}
+                          className="text-base font-medium tracking-wide text-white transition-colors duration-200 hover:text-[#7DC242] xl:text-lg"
+                        >
+                          {item.label}
+                        </a>
+                      ) : (
+                        <NavLink
+                          to={item.to}
+                          onClick={() => setActiveDropdownKey(null)}
+                          className={`text-base font-medium tracking-wide transition-colors duration-200 hover:text-[#7DC242] xl:text-lg ${
+                            isActive ? 'text-[#7DC242]' : 'text-white'
+                          }`}
+                        >
+                          {item.label}
+                        </NavLink>
+                      )}
 
                       {isDropdownOpen && (
                         <div
@@ -282,16 +294,29 @@ const Header = () => {
                           style={dropdownEnterStyle}
                         >
                           <div className="rounded-sm border border-white/10 bg-[#2B3036] py-3 shadow-2xl">
-                            {item.dropdown.map((dropdownItem) => (
-                              <Link
-                                key={dropdownItem.label}
-                                to={dropdownItem.to}
-                                onClick={() => setActiveDropdownKey(null)}
-                                className="block px-4 py-2 text-sm text-white transition-colors duration-200 hover:text-[#7DC242] xl:text-base"
-                              >
-                                {dropdownItem.label}
-                              </Link>
-                            ))}
+                            {item.dropdown.map((dropdownItem) =>
+                              isExternalUrl(dropdownItem.to) ? (
+                                <a
+                                  key={dropdownItem.label}
+                                  href={dropdownItem.to}
+                                  target="_blank"
+                                  rel="noreferrer"
+                                  onClick={() => setActiveDropdownKey(null)}
+                                  className="block px-4 py-2 text-sm text-white transition-colors duration-200 hover:text-[#7DC242] xl:text-base"
+                                >
+                                  {dropdownItem.label}
+                                </a>
+                              ) : (
+                                <Link
+                                  key={dropdownItem.label}
+                                  to={dropdownItem.to}
+                                  onClick={() => setActiveDropdownKey(null)}
+                                  className="block px-4 py-2 text-sm text-white transition-colors duration-200 hover:text-[#7DC242] xl:text-base"
+                                >
+                                  {dropdownItem.label}
+                                </Link>
+                              ),
+                            )}
                           </div>
                         </div>
                       )}
@@ -384,13 +409,25 @@ const Header = () => {
               return (
                 <div key={item.key} className="rounded-sm border border-white/10 bg-[#2B3036]">
                   <div className="flex items-center justify-between">
-                    <NavLink
-                      to={item.to}
-                      onClick={handleMobileMenuClose}
-                      className={`block px-3 py-2 text-sm font-medium ${isActive ? 'text-[#7DC242]' : 'text-white'}`}
-                    >
-                      {item.label}
-                    </NavLink>
+                    {isExternalUrl(item.to) ? (
+                      <a
+                        href={item.to}
+                        target="_blank"
+                        rel="noreferrer"
+                        onClick={handleMobileMenuClose}
+                        className="block px-3 py-2 text-sm font-medium text-white"
+                      >
+                        {item.label}
+                      </a>
+                    ) : (
+                      <NavLink
+                        to={item.to}
+                        onClick={handleMobileMenuClose}
+                        className={`block px-3 py-2 text-sm font-medium ${isActive ? 'text-[#7DC242]' : 'text-white'}`}
+                      >
+                        {item.label}
+                      </NavLink>
+                    )}
                     <button
                       type="button"
                       aria-label={`Toggle ${item.label} submenu`}
@@ -410,16 +447,29 @@ const Header = () => {
                       isOpen ? 'max-h-80 py-1' : 'max-h-0'
                     }`}
                   >
-                    {item.dropdown.map((dropdownItem) => (
-                      <Link
-                        key={dropdownItem.label}
-                        to={dropdownItem.to}
-                        onClick={handleMobileMenuClose}
-                        className="block px-4 py-2 text-sm text-white/90 hover:text-[#7DC242]"
-                      >
-                        {dropdownItem.label}
-                      </Link>
-                    ))}
+                    {item.dropdown.map((dropdownItem) =>
+                      isExternalUrl(dropdownItem.to) ? (
+                        <a
+                          key={dropdownItem.label}
+                          href={dropdownItem.to}
+                          target="_blank"
+                          rel="noreferrer"
+                          onClick={handleMobileMenuClose}
+                          className="block px-4 py-2 text-sm text-white/90 hover:text-[#7DC242]"
+                        >
+                          {dropdownItem.label}
+                        </a>
+                      ) : (
+                        <Link
+                          key={dropdownItem.label}
+                          to={dropdownItem.to}
+                          onClick={handleMobileMenuClose}
+                          className="block px-4 py-2 text-sm text-white/90 hover:text-[#7DC242]"
+                        >
+                          {dropdownItem.label}
+                        </Link>
+                      ),
+                    )}
                   </div>
                 </div>
               )
