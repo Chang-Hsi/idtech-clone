@@ -52,12 +52,7 @@ const NAV_ITEMS = [
     key: 'resources',
     label: 'Resources',
     to: '/resources',
-    dropdown: [
-      { label: 'All Resources', to: '/resources' },
-      { label: 'Whitepapers', to: '/resources/whitepapers' },
-      { label: 'Case Studies', to: '/resources/case-studies' },
-      { label: 'Press Releases', to: '/resources/press-releases' },
-    ],
+    dropdown: [{ label: 'Blog', to: 'https://chang-hsi.github.io/my-blog/' }],
   },
   {
     key: 'company',
@@ -315,7 +310,7 @@ const Header = () => {
                                 >
                                   {dropdownItem.label}
                                 </Link>
-                              ),
+                              )
                             )}
                           </div>
                         </div>
@@ -468,7 +463,7 @@ const Header = () => {
                         >
                           {dropdownItem.label}
                         </Link>
-                      ),
+                      )
                     )}
                   </div>
                 </div>
