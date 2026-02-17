@@ -12,6 +12,7 @@ import KnowledgeBasePage from '../pages/Support/KnowledgeBasePage'
 import ProductUpdatesPage from '../pages/Support/ProductUpdatesPage'
 import RequestHelpPage from '../pages/Support/RequestHelpPage'
 import ResourcesPage from '../pages/Resources/ResourcesPage'
+import ResourceArticlePage from '../pages/Resources/ResourceArticlePage'
 import WhitepapersPage from '../pages/Resources/WhitepapersPage'
 import CaseStudiesPage from '../pages/Resources/CaseStudiesPage'
 import PressReleasesPage from '../pages/Resources/PressReleasesPage'
@@ -45,6 +46,7 @@ const router = createBrowserRouter(
         { path: 'support/request-help', element: <RequestHelpPage /> },
 
         { path: 'resources', element: <ResourcesPage /> },
+        { path: 'resources/:articleSlug', element: <ResourceArticlePage /> },
         { path: 'resources/whitepapers', element: <WhitepapersPage /> },
         { path: 'resources/case-studies', element: <CaseStudiesPage /> },
         { path: 'resources/press-releases', element: <PressReleasesPage /> },
