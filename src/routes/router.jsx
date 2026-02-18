@@ -19,6 +19,7 @@ import PressReleasesPage from '../pages/Resources/PressReleasesPage'
 import CompanyPage from '../pages/Company/CompanyPage'
 import AboutUsPage from '../pages/Company/AboutUsPage'
 import CareersPage from '../pages/Company/CareersPage'
+import CareerDetailPage from '../pages/Company/CareerDetailPage'
 import ContactPage from '../pages/Contact/ContactPage'
 import PrivacyPolicyPage from '../pages/Legal/PrivacyPolicyPage'
 import NotFoundPage from '../pages/NotFound/NotFoundPage'
@@ -54,6 +55,7 @@ const router = createBrowserRouter(
         { path: 'company', element: <CompanyPage /> },
         { path: 'company/about-us', element: <AboutUsPage /> },
         { path: 'company/careers', element: <CareersPage /> },
+        { path: 'company/careers/:jobSlug', element: <CareerDetailPage /> },
 
         { path: 'contact', element: <ContactPage /> },
 

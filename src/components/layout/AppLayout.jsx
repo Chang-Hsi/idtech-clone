@@ -5,10 +5,10 @@ import ScrollToTopOnRouteChange from './ScrollToTopOnRouteChange'
 
 const AppLayout = () => {
   return (
-    <div className="min-h-screen overflow-x-hidden bg-[#171A1F]">
+    <div className="min-h-screen bg-[#171A1F]">
       <ScrollToTopOnRouteChange />
       <Header />
-      <main className="w-full">
+      <main className="w-full overflow-x-hidden">
         <Outlet />
       </main>
       <Footer />
