@@ -6,6 +6,25 @@ import './index.css'
 import store from './app/store'
 import router from './routes/router'
 
+const restoreGithubPagesRedirect = () => {
+  const url = new URL(window.location.href)
+  const redirect = url.searchParams.get('__redirect')
+  if (!redirect) return
+
+  url.searchParams.delete('__redirect')
+  const remainingSearch = url.searchParams.toString()
+  const normalizedBase = import.meta.env.BASE_URL.endsWith('/')
+    ? import.meta.env.BASE_URL.slice(0, -1)
+    : import.meta.env.BASE_URL
+  const normalizedRedirect = redirect.startsWith('/') ? redirect : `/${redirect}`
+  const targetUrl = `${normalizedBase}${normalizedRedirect}`
+  const finalUrl = remainingSearch ? `${targetUrl}${targetUrl.includes('?') ? '&' : '?'}${remainingSearch}` : targetUrl
+
+  window.history.replaceState(null, '', finalUrl)
+}
+
+restoreGithubPagesRedirect()
+
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     <Provider store={store}>
