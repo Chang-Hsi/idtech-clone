@@ -123,6 +123,43 @@ Designed to reflect a professional product website structure.
 
 ---
 
+# 🔎 2.1 SEO v1 Plan (Current)
+
+To align with the current project state, SEO v1 will include:
+
+- `robots.txt`
+- `sitemap.xml`
+- Per-page base meta:
+  - `title`
+  - `description`
+  - `canonical`
+  - Open Graph basic tags
+
+## GitHub Pages Notes
+
+- Current site URL: `https://chang-hsi.github.io/idtech-clone/`
+- Current Vite production `base`: `/idtech-clone/`
+- SPA fallback is handled by `public/404.html` + redirect restore logic in `src/main.jsx`
+
+## Sitemap Inclusion Rules (v1)
+
+- Include static pages (`/`, `/products`, `/use-cases`, `/resources`, `/company`, etc.)
+- Include dynamic detail routes from local data:
+  - products (`/products/:productSlug`)
+  - product collections (`/products/collections/:collectionSlug`)
+  - use cases (`/use-cases/:slug`)
+  - resources articles (`/resources/:articleSlug`)
+  - careers detail (`/company/careers/:jobSlug`)
+- Exclude temporary/testing paths
+
+## Non-Goals (v1)
+
+- SSR migration
+- Full schema.org coverage
+- `hreflang` multilingual SEO
+
+---
+
 # 📁 3. Project Structure
 
 ```
