@@ -1,7 +1,9 @@
-import products1Image from '../../assets/home/Products1.webp'
-import products2Image from '../../assets/home/Products2.jpg'
-import products3Image from '../../assets/home/Products3.jpg'
-import products4Image from '../../assets/home/Products4.jpg'
+import { imageUrls } from '../../assets/imageUrlMap'
+
+const products1Image = imageUrls.home.Products1
+const products2Image = imageUrls.home.Products2
+const products3Image = imageUrls.home.Products3
+const products4Image = imageUrls.home.Products4
 
 export const homeFeaturedProducts = [
   {

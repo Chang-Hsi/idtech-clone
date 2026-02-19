@@ -1,5 +1,7 @@
-import company1 from '../../assets/company/company1.jpg'
-import company2 from '../../assets/company/company2.jpg'
+import { imageUrls } from '../../assets/imageUrlMap'
+
+const company1 = imageUrls.company.company1
+const company2 = imageUrls.company.company2
 
 export const companyPageContent = {
   hero: {

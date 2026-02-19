@@ -1,6 +1,6 @@
 import { useEffect, useMemo } from 'react'
 import { Link, Navigate, useParams } from 'react-router-dom'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import LeadFormSection from '../../components/home/LeadFormSection'
 import ProductDetailFullImageSection from '../../components/products/detail/ProductDetailFullImageSection'
 import ProductDetailHeroSection from '../../components/products/detail/ProductDetailHeroSection'
@@ -11,15 +11,24 @@ import {
   selectAllCollections,
   selectAllProducts,
   selectCollectionBySlug,
+  selectProductDetailBySlug,
+  selectProductDetailStatusBySlug,
   selectProductBySlug,
 } from '../../features/catalog/catalogSelectors'
+import { loadProductDetailBySlugFromApi } from '../../features/catalog/catalogSlice'
 import useLoadProductsOnPage from '../../features/catalog/useLoadProductsOnPage'
 
 const ProductDetailPage = () => {
   const { productSlug } = useParams()
+  const dispatch = useDispatch()
   useLoadProductsOnPage([productSlug])
 
-  const product = useSelector((state) => selectProductBySlug(state, productSlug))
+  const localProduct = useSelector((state) => selectProductBySlug(state, productSlug))
+  const productFromApi = useSelector((state) => selectProductDetailBySlug(state, productSlug))
+  const productDetailStatus = useSelector((state) =>
+    selectProductDetailStatusBySlug(state, productSlug)
+  )
+  const product = productFromApi ?? localProduct
   const collectionAlias = useSelector((state) => selectCollectionBySlug(state, productSlug))
   const allProducts = useSelector(selectAllProducts)
   const allCollections = useSelector(selectAllCollections)
@@ -53,11 +62,18 @@ const ProductDetailPage = () => {
   const displayProductAliasTarget = validAliasCandidates[0] ?? null
 
   useEffect(() => {
+    if (!productSlug) return
+    if (productDetailStatus === 'loading' || productDetailStatus === 'success') return
+    dispatch(loadProductDetailBySlugFromApi(productSlug))
+  }, [dispatch, productDetailStatus, productSlug])
+
+  useEffect(() => {
     if (!import.meta.env.DEV) return
 
     console.groupCollapsed('[ProductDetail Debug]')
     console.log('routeSlug:', productSlug)
-    console.log('productFound:', Boolean(product), product?.slug ?? null)
+    console.log('productFound:', Boolean(localProduct), localProduct?.slug ?? null)
+    console.log('productFromApiFound:', Boolean(productFromApi), productFromApi?.slug ?? null)
     console.log('collectionAliasFound:', Boolean(collectionAlias), collectionAlias?.slug ?? null)
     console.log('aliasCollection:', aliasCollection?.slug ?? null)
     console.log('aliasItem:', aliasItem)
@@ -73,7 +89,8 @@ const ProductDetailPage = () => {
     allProductSlugs,
     collectionAlias,
     displayProductAliasTarget,
-    product,
+    localProduct,
+    productFromApi,
     productSlug,
     validAliasCandidates,
   ])

@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom'
 import useInViewOnce from '../../hooks/useInViewOnce'
 import { homeUseCases } from '../../data/home/homeUseCases'
 
-const UseCasesGridSection = () => {
+const UseCasesGridSection = ({ items = homeUseCases }) => {
   const { ref, isInView } = useInViewOnce({
     threshold: 0,
     rootMargin: '0px 0px 85% 0px',
@@ -12,7 +12,7 @@ const UseCasesGridSection = () => {
     <section ref={ref} className="bg-white py-12 text-black md:py-16">
       <div className="mx-auto w-full max-w-7xl">
         <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
-          {homeUseCases.map((item, index) => (
+          {items.map((item, index) => (
             <Link
               key={item.id}
               to={item.to}

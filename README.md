@@ -294,6 +294,8 @@ Used in:
 
 - `GET /api/products`（按頁載入，回傳 products-page 所需聚合資料）
 - `GET /api/collections`（後續可拆分）
+- `GET /api/products/collections/:collectionSlug`（ProductCollectionPage 詳細資料）
+- `GET /api/products/:productSlug`（ProductDetailPage 詳細資料）
 - `GET /api/resources/articles`（列表）
 - `GET /api/resources/articles/:slug`（按頁）
 - `GET /api/careers/jobs`（列表）

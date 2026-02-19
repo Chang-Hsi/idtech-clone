@@ -1,7 +1,9 @@
-import heroImage from '../../assets/company/company1.jpg'
-import introImage from '../../assets/company/company2.jpg'
-import innovation from '../../assets/company/innovation.svg'
-import target from '../../assets/company/target.svg'
+import { imageUrls } from '../../assets/imageUrlMap'
+
+const heroImage = imageUrls.company.company1
+const introImage = imageUrls.company.company2
+const innovation = imageUrls.company.innovation
+const target = imageUrls.company.target
 
 export const aboutUsPageContent = {
   hero: {

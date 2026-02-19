@@ -1,33 +1,32 @@
-import news1Image from '../../assets/home/News1.jpg'
-import news2Image from '../../assets/home/News2.jpg'
-import news3Image from '../../assets/home/News3.jpg'
-
 export const homeNews = [
   {
-    id: 'news-1',
-    title: 'NEXA Expands Device Portfolio for Self-Service Payments',
-    excerpt:
-      'New device line improves speed, maintainability, and certification readiness for unattended deployments.',
-    date: 'January 15, 2026',
-    to: '/resources/press-releases',
-    imageUrl: news1Image,
+    id: 'resource-emv-part-1',
+    slug: 'developing-for-emv-part-1',
+    publishedAt: '2018-09-04',
+    previewTitle: 'Developing for EMV, Part I',
+    coverImageUrl:
+      'https://xlkyrgrurqlqxzjbrtzb.supabase.co/storage/v1/object/public/idtech-images/resources/EMV.png',
+    previewExcerpt:
+      'Part I introduces EMV fundamentals, reader communication options, three transaction stages, and why Tag 9F26 matters.',
   },
   {
-    id: 'news-2',
-    title: 'Software Services Team Launches Integration Accelerator Program',
-    excerpt:
-      'Partners can now onboard faster with implementation workshops and architecture support.',
-    date: 'December 2, 2025',
-    to: '/resources/press-releases',
-    imageUrl: news2Image,
+    id: 'resource-emv-part-2',
+    slug: 'developing-for-emv-part-2',
+    publishedAt: '2018-09-11',
+    previewTitle: 'Developing for EMV, Part II',
+    coverImageUrl:
+      'https://xlkyrgrurqlqxzjbrtzb.supabase.co/storage/v1/object/public/idtech-images/resources/EMV.png',
+    previewExcerpt:
+      'Part II focuses on cryptogram types, authorization outcomes, and practical handling of transaction states.',
   },
   {
-    id: 'news-3',
-    title: 'Knowledge Base Update: EMV Migration Best Practices',
-    excerpt:
-      'A refreshed technical guide helps teams plan migration paths and reduce deployment risk.',
-    date: 'October 20, 2025',
-    to: '/support/knowledge-base',
-    imageUrl: news3Image,
+    id: 'resource-emv-part-3',
+    slug: 'developing-for-emv-part-3',
+    publishedAt: '2018-09-18',
+    previewTitle: 'Developing for EMV, Part III',
+    coverImageUrl:
+      'https://xlkyrgrurqlqxzjbrtzb.supabase.co/storage/v1/object/public/idtech-images/resources/EMV.png',
+    previewExcerpt:
+      'Part III summarizes deployment practices, risk controls, and long-term maintenance guidance.',
   },
 ]

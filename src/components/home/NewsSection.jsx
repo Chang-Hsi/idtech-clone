@@ -51,10 +51,10 @@ const NewsSection = ({ items }) => {
           ))}
         </div>
         <Link
-          to="/resources/press-releases"
+          to="/resources"
           className="rounded-sm border border-white/30 px-4 py-2 text-sm font-medium hover:border-[#7DC242] hover:text-[#7DC242]"
         >
-          View All News
+          View All Resources
         </Link>
       </div>
     </section>

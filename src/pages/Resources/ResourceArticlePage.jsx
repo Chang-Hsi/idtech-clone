@@ -1,7 +1,17 @@
 import { useEffect } from 'react'
 import { Link, useParams, useSearchParams } from 'react-router-dom'
+import { useDispatch, useSelector } from 'react-redux'
 import ResourceArticleContentSection from '../../components/resources/detail/ResourceArticleContentSection'
-import { resourceArticles } from '../../data/resources/articles'
+import {
+  selectResourceArticleBySlug,
+  selectResourceArticleStatusBySlug,
+  selectResourcesPageContent,
+  selectResourcesPageStatus,
+} from '../../features/catalog/catalogSelectors'
+import {
+  loadResourceArticleBySlugFromApi,
+  loadResourcesPageFromApi,
+} from '../../features/catalog/catalogSlice'
 
 const LANGS = ['zh', 'en']
 
@@ -12,19 +22,34 @@ const normalizeLang = (lang) => {
 
 const ResourceArticlePage = () => {
   const { articleSlug } = useParams()
+  const dispatch = useDispatch()
   const [searchParams, setSearchParams] = useSearchParams()
-  const article = resourceArticles.find((item) => item.slug === articleSlug)
+  const resourcesPage = useSelector(selectResourcesPageContent)
+  const resourcesPageStatus = useSelector(selectResourcesPageStatus)
+  const article = useSelector((state) => selectResourceArticleBySlug(state, articleSlug))
+  const articleStatus = useSelector((state) => selectResourceArticleStatusBySlug(state, articleSlug))
+  const orderedArticles = resourcesPage?.items ?? []
   const requestedLang = searchParams.get('lang')
   const storedLang =
     typeof window !== 'undefined' ? window.localStorage.getItem('resources-article-lang') : null
   const activeLang = normalizeLang(requestedLang ?? storedLang ?? 'en')
   const translation = article?.translations?.[activeLang] ?? article?.translations?.en ?? null
-  const currentIndex = resourceArticles.findIndex((item) => item.slug === articleSlug)
-  const prevArticle = currentIndex > 0 ? resourceArticles[currentIndex - 1] : null
+  const currentIndex = orderedArticles.findIndex((item) => item.slug === articleSlug)
+  const prevArticle = currentIndex > 0 ? orderedArticles[currentIndex - 1] : null
   const nextArticle =
-    currentIndex >= 0 && currentIndex < resourceArticles.length - 1
-      ? resourceArticles[currentIndex + 1]
+    currentIndex >= 0 && currentIndex < orderedArticles.length - 1
+      ? orderedArticles[currentIndex + 1]
       : null
+
+  useEffect(() => {
+    if (!articleSlug) return
+    if (resourcesPageStatus !== 'loading' && resourcesPageStatus !== 'success') {
+      dispatch(loadResourcesPageFromApi())
+    }
+    if (articleStatus !== 'loading' && articleStatus !== 'success') {
+      dispatch(loadResourceArticleBySlugFromApi(articleSlug))
+    }
+  }, [articleSlug, articleStatus, dispatch, resourcesPageStatus])
 
   useEffect(() => {
     if (typeof window === 'undefined') return
@@ -71,8 +96,7 @@ const ResourceArticlePage = () => {
           ? {
               href: withLang(prevArticle.slug),
               title:
-                prevArticle.translations?.[activeLang]?.title ??
-                prevArticle.translations?.en?.title ??
+                prevArticle.previewTitle ??
                 prevArticle.slug,
             }
           : null
@@ -82,8 +106,7 @@ const ResourceArticlePage = () => {
           ? {
               href: withLang(nextArticle.slug),
               title:
-                nextArticle.translations?.[activeLang]?.title ??
-                nextArticle.translations?.en?.title ??
+                nextArticle.previewTitle ??
                 nextArticle.slug,
             }
           : null

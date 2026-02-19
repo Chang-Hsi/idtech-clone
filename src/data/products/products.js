@@ -1,20 +1,22 @@
-import neo3Image from '../../assets/home/Products2.jpg'
-import vp3300Image from '../../assets/home/Products1.webp'
-import unattendedImage from '../../assets/home/Products4.jpg'
-import kernelImage from '../../assets/home/Products3.jpg'
-import Products5 from '../../assets/home/Products5.jpg'
-import Products6 from '../../assets/home/Products6.jpg'
-import Products7 from '../../assets/home/Products7.jpg'
-import Products8 from '../../assets/home/Products8.jpg'
-import Products9 from '../../assets/home/Products9.jpg'
-import Products10 from '../../assets/home/Products10.jpg'
-import Products11 from '../../assets/home/Products11.jpg'
-import Products12 from '../../assets/home/Products12.jpg'
-import Products13 from '../../assets/home/Products13.jpg'
-import Products14 from '../../assets/home/Products14.jpg'
-import Products15 from '../../assets/home/Products15.jpg'
-import fullWidthImage1 from '../../assets/products/fullWidthImage1.jpg'
-import fullWidthImage2 from '../../assets/products/fullWidthImage2.jpg'
+import { imageUrls } from '../../assets/imageUrlMap'
+
+const neo3Image = imageUrls.home.Products2
+const vp3300Image = imageUrls.home.Products1
+const unattendedImage = imageUrls.home.Products4
+const kernelImage = imageUrls.home.Products3
+const Products5 = imageUrls.home.Products5
+const Products6 = imageUrls.home.Products6
+const Products7 = imageUrls.home.Products7
+const Products8 = imageUrls.home.Products8
+const Products9 = imageUrls.home.Products9
+const Products10 = imageUrls.home.Products10
+const Products11 = imageUrls.home.Products11
+const Products12 = imageUrls.home.Products12
+const Products13 = imageUrls.home.Products13
+const Products14 = imageUrls.home.Products14
+const Products15 = imageUrls.home.Products15
+const fullWidthImage1 = imageUrls.products.fullWidthImage1
+const fullWidthImage2 = imageUrls.products.fullWidthImage2
 
 export const products = [
   {

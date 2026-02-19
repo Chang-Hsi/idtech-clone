@@ -20,6 +20,56 @@ export const selectAllCollections = createSelector(selectCatalogState, (catalog)
 export const selectCollectionBySlug = (state, collectionSlug) =>
   state.catalog.collectionsBySlug[collectionSlug] ?? null
 
+export const selectCollectionDetailBySlug = (state, collectionSlug) =>
+  state.catalog.collectionDetailsBySlug[collectionSlug] ?? null
+
+export const selectCollectionDetailStatusBySlug = (state, collectionSlug) =>
+  state.catalog.collectionDetailStatusBySlug[collectionSlug] ?? 'idle'
+
+export const selectProductDetailBySlug = (state, productSlug) =>
+  state.catalog.productDetailsBySlug[productSlug] ?? null
+
+export const selectProductDetailStatusBySlug = (state, productSlug) =>
+  state.catalog.productDetailStatusBySlug[productSlug] ?? 'idle'
+
+export const selectUseCasesPageContent = (state) => state.catalog.useCasesPage
+
+export const selectUseCasesPageStatus = (state) => state.catalog.useCasesPageStatus
+
+export const selectUseCaseDetailBySlug = (state, slug) =>
+  state.catalog.useCaseDetailsBySlug[slug] ?? null
+
+export const selectUseCaseDetailStatusBySlug = (state, slug) =>
+  state.catalog.useCaseDetailStatusBySlug[slug] ?? 'idle'
+
+export const selectResourcesPageContent = (state) => state.catalog.resourcesPage
+
+export const selectResourcesPageStatus = (state) => state.catalog.resourcesPageStatus
+
+export const selectResourceArticleBySlug = (state, articleSlug) =>
+  state.catalog.resourceArticlesBySlug[articleSlug] ?? null
+
+export const selectResourceArticleStatusBySlug = (state, articleSlug) =>
+  state.catalog.resourceArticleStatusBySlug[articleSlug] ?? 'idle'
+
+export const selectHomePageContent = (state) => state.catalog.homePage
+export const selectHomePageStatus = (state) => state.catalog.homePageStatus
+
+export const selectCompanyPageContent = (state) => state.catalog.companyPage
+export const selectCompanyPageStatus = (state) => state.catalog.companyPageStatus
+
+export const selectAboutUsPageContent = (state) => state.catalog.aboutUsPage
+export const selectAboutUsPageStatus = (state) => state.catalog.aboutUsPageStatus
+
+export const selectCareersPageContent = (state) => state.catalog.careersPage
+export const selectCareersPageStatus = (state) => state.catalog.careersPageStatus
+
+export const selectCareerDetailBySlug = (state, jobSlug) =>
+  state.catalog.careerDetailsBySlug[jobSlug] ?? null
+
+export const selectCareerDetailStatusBySlug = (state, jobSlug) =>
+  state.catalog.careerDetailStatusBySlug[jobSlug] ?? 'idle'
+
 // 依產品頁路由 slug（/products/:productSlug）查單筆產品。
 export const selectProductBySlug = createSelector(
   [selectAllProducts, (_, productSlug) => productSlug],

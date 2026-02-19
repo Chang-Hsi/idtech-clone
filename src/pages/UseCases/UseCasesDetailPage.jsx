@@ -1,20 +1,33 @@
+import { useEffect } from 'react'
 import { Link, useParams } from 'react-router-dom'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import LeadFormSection from '../../components/home/LeadFormSection'
 import UseCaseDetailFeaturedProductsSection from '../../components/usecases/detail/UseCaseDetailFeaturedProductsSection'
 import UseCaseDetailHeroSection from '../../components/usecases/detail/UseCaseDetailHeroSection'
 import UseCaseDetailIntroSection from '../../components/usecases/detail/UseCaseDetailIntroSection'
 import { homeLeadForm } from '../../data/home/homeLeadForm'
-import { useCases } from '../../data/usecases/useCases'
-import { selectAllProducts } from '../../features/catalog/catalogSelectors'
+import {
+  selectAllProducts,
+  selectUseCaseDetailBySlug,
+  selectUseCaseDetailStatusBySlug,
+} from '../../features/catalog/catalogSelectors'
+import { loadUseCaseDetailBySlugFromApi } from '../../features/catalog/catalogSlice'
 import useLoadProductsOnPage from '../../features/catalog/useLoadProductsOnPage'
 
 const UseCasesDetailPage = () => {
   const { slug } = useParams()
+  const dispatch = useDispatch()
   useLoadProductsOnPage([slug])
 
   const allProducts = useSelector(selectAllProducts)
-  const useCase = useCases.find((item) => item.slug === slug)
+  const useCase = useSelector((state) => selectUseCaseDetailBySlug(state, slug))
+  const useCaseStatus = useSelector((state) => selectUseCaseDetailStatusBySlug(state, slug))
+
+  useEffect(() => {
+    if (!slug) return
+    if (useCaseStatus === 'loading' || useCaseStatus === 'success') return
+    dispatch(loadUseCaseDetailBySlugFromApi(slug))
+  }, [dispatch, slug, useCaseStatus])
 
   if (!useCase) {
     return (

@@ -1,10 +1,12 @@
-import EMV from '../../assets/resources/EMV.png'
+import { imageUrls } from '../../assets/imageUrlMap'
 import emvPart1Zh from '../../content/resources/developing-for-emv-part-1.zh.md?raw'
 import emvPart1En from '../../content/resources/developing-for-emv-part-1.en.md?raw'
 import emvPart2Zh from '../../content/resources/developing-for-emv-part-2.zh.md?raw'
 import emvPart2En from '../../content/resources/developing-for-emv-part-2.en.md?raw'
 import emvPart3Zh from '../../content/resources/developing-for-emv-part-3.zh.md?raw'
 import emvPart3En from '../../content/resources/developing-for-emv-part-3.en.md?raw'
+
+const EMV = imageUrls.resources.EMV
 
 export const resourceArticles = [
   {
