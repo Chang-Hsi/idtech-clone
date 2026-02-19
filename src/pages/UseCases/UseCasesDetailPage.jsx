@@ -7,9 +7,12 @@ import UseCaseDetailIntroSection from '../../components/usecases/detail/UseCaseD
 import { homeLeadForm } from '../../data/home/homeLeadForm'
 import { useCases } from '../../data/usecases/useCases'
 import { selectAllProducts } from '../../features/catalog/catalogSelectors'
+import useLoadProductsOnPage from '../../features/catalog/useLoadProductsOnPage'
 
 const UseCasesDetailPage = () => {
   const { slug } = useParams()
+  useLoadProductsOnPage([slug])
+
   const allProducts = useSelector(selectAllProducts)
   const useCase = useCases.find((item) => item.slug === slug)
 

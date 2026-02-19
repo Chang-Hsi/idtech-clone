@@ -11,9 +11,12 @@ import {
   selectCollectionBySlug,
   selectProductsByCollection,
 } from '../../features/catalog/catalogSelectors'
+import useLoadProductsOnPage from '../../features/catalog/useLoadProductsOnPage'
 
 const ProductCollectionPage = () => {
   const { collectionSlug } = useParams()
+  useLoadProductsOnPage([collectionSlug])
+
   const collection = useSelector((state) => selectCollectionBySlug(state, collectionSlug))
   const allProducts = useSelector(selectAllProducts)
   const collectionProducts = useSelector((state) =>

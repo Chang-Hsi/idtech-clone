@@ -1,11 +1,24 @@
-import { createEntityAdapter, createSlice } from '@reduxjs/toolkit'
+import { createAsyncThunk, createEntityAdapter, createSlice } from '@reduxjs/toolkit'
 import { collections } from '../../data/products/collections'
 import { products } from '../../data/products/products'
+import { fetchProductsFromApi } from '../../api/catalogApi'
+
+const fallbackProductsPage = {
+  hero: {
+    eyebrow: 'PRODUCTS',
+    title: 'NEXA empowers payments in every type of business',
+    description: "Explore NEXA's range of payment solutions for any payment situation.",
+  },
+  leadForm: {
+    heading: 'Talk to Our Team',
+    desc: 'Share your project goals and our payment experts will get back to you shortly.',
+    regions: ['North America', 'Latin America', 'Europe', 'Asia-Pacific', 'Middle East & Africa'],
+  },
+}
 
 // Entity adapter 用來管理產品清單：
 // - ids：產品 id 陣列
 // - entities：以 id 為 key 的產品映射
-// 並且可自動產生常用 selectors。
 const productsAdapter = createEntityAdapter({
   selectId: (product) => product.id,
   sortComparer: (a, b) => a.name.localeCompare(b.name),
@@ -18,12 +31,65 @@ const toCollectionMap = (collectionList) =>
     return acc
   }, {})
 
+const mapApiProductsToCatalog = (apiProducts, localProducts) => {
+  const localBySlug = new Map(localProducts.map((item) => [item.slug, item]))
+  const merged = localProducts.map((item) => {
+    const remote = apiProducts.find((product) => product.slug === item.slug)
+    if (!remote) return item
+
+    return {
+      ...item,
+      name: remote.name,
+      shortDescription: remote.shortDescription ?? item.shortDescription,
+      apiId: remote.id,
+      createdAt: remote.createdAt,
+      updatedAt: remote.updatedAt,
+    }
+  })
+
+  const appended = apiProducts
+    .filter((product) => !localBySlug.has(product.slug))
+    .map((product) => ({
+      id: `api-${product.id}`,
+      slug: product.slug,
+      name: product.name,
+      shortDescription: product.shortDescription ?? '',
+      collectionSlugs: [],
+      useCases: [],
+      bullets: [],
+      media: { gallery: [] },
+      specs: [],
+      features: [],
+      relatedSlugs: [],
+      detail: {},
+      apiId: product.id,
+      createdAt: product.createdAt,
+      updatedAt: product.updatedAt,
+    }))
+
+  return [...merged, ...appended]
+}
+
+export const loadProductsFromApi = createAsyncThunk(
+  'catalog/loadProductsFromApi',
+  async (_, { rejectWithValue }) => {
+    try {
+      return await fetchProductsFromApi()
+    } catch (error) {
+      return rejectWithValue(error.message || 'Unable to fetch products API')
+    }
+  }
+)
+
 // 以本地靜態資料初始化 catalog state。
 const buildInitialState = () => {
   const state = productsAdapter.getInitialState({
     collectionsBySlug: toCollectionMap(collections),
+    productsPage: fallbackProductsPage,
     status: 'success',
     error: null,
+    dataSource: 'local',
+    lastSyncedAt: null,
   })
   return productsAdapter.setAll(state, products)
 }
@@ -40,12 +106,40 @@ const catalogSlice = createSlice({
       state.collectionsBySlug = toCollectionMap(nextCollections)
       state.status = 'success'
       state.error = null
+      state.dataSource = 'manual'
+      state.lastSyncedAt = new Date().toISOString()
     },
+  },
+  extraReducers: (builder) => {
+    builder
+      .addCase(loadProductsFromApi.pending, (state) => {
+        state.status = 'loading'
+        state.error = null
+      })
+      .addCase(loadProductsFromApi.fulfilled, (state, action) => {
+        const currentProducts = state.ids.map((id) => state.entities[id]).filter(Boolean)
+        const mergedProducts = mapApiProductsToCatalog(action.payload.products, currentProducts)
+
+        productsAdapter.setAll(state, mergedProducts)
+        if (action.payload.collections.length > 0) {
+          state.collectionsBySlug = toCollectionMap(action.payload.collections)
+        }
+        if (action.payload.productsPage) {
+          state.productsPage = action.payload.productsPage
+        }
+        state.status = 'success'
+        state.error = null
+        state.dataSource = 'api'
+        state.lastSyncedAt = new Date().toISOString()
+      })
+      .addCase(loadProductsFromApi.rejected, (state, action) => {
+        state.status = 'fallback'
+        state.error = action.payload || action.error.message || 'Unable to fetch products API'
+      })
   },
 })
 
 export const { setCatalogData } = catalogSlice.actions
-// 將 adapter selectors 綁定在 state.catalog 節點下。
 export const catalogProductSelectors = productsAdapter.getSelectors((state) => state.catalog)
 
 export default catalogSlice.reducer

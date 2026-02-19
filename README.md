@@ -252,30 +252,56 @@ Used in:
 - 前端頁面先完整開發：在沒有後端 API 前，先把路由、元件、狀態流都打通。
 - 方便未來切 API：元件只讀 selector，不直接耦合 data 檔，來源可從「本地 data」平滑切換成「遠端 API」。
 
-## 未來要串接 API 的建議做法（Redux 方向）
+## 目前 API 串接進度（Products）
 
-建議採用 Redux Toolkit 官方路線：
+目前已進入實作階段，流程如下：
 
-- 第一階段：`createAsyncThunk` + `extraReducers`
-  - 在 `catalog` feature 內新增 async thunk 請求 API。
-  - 成功後更新 `state`（或 dispatch `setCatalogData`）。
-- 進階階段：RTK Query（更推薦）
-  - 直接在 Redux 生態內處理快取、loading、error、重抓策略。
-  - 元件改用 query hooks 讀資料，維持清晰資料流。
+- 在需要 catalog 資料的頁面進入時 dispatch `loadProductsFromApi()`
+  - 例如：`/products`、`/products/collections/:collectionSlug`、`/products/:productSlug`、`/use-cases/:slug`
+- `catalog` 使用 `createAsyncThunk` 呼叫 `GET /api/products`
+- API 成功時：以 `slug` 對齊，將後端欄位覆蓋到既有本地 product（保留原本頁面需要的 detail/media 欄位）
+- API 失敗時：維持本地 data 作為 fallback，不阻斷頁面渲染
 
-## `import { createEntityAdapter, createSlice } from '@reduxjs/toolkit'` 是做什麼？
+目前用途：先驗證「按頁載入 API」的行為可被明確觀察（Network 可直接看到每次進頁請求），並確認 Redux 資料流可平滑切換來源，再擴到 `collections`、`resources/articles`。
 
-可以理解為：引入 Redux Toolkit 提供的「建立 slice 與管理資料集合」工具。
+## 下一步：API 具體策略（按頁載入 + 過渡到 RTK Query）
 
-- `createSlice`
-  - 用來定義一個 Redux 模組（name / initialState / reducers）。
-  - 會自動幫你產生 action creators 與 reducer。
-- `createEntityAdapter`
-  - 用來管理「列表型資料」（例如 products）。
-  - 內部會把資料標準化成 `{ ids, entities }`，查詢與更新效率較好。
-  - 也會幫你產生常用 selectors（如 selectAll、selectById）。
+### 按頁載入策略（目前到 RTK Query 前）
 
-所以它不是「只是在 import Redux 本體」，而是載入 RTK 的高階工具，讓 Redux 寫法更簡潔且可維護。
+- 所有 API 請求都由頁面進入時觸發，不在 `main.jsx` 做全域預載。
+- 每個頁面都需呈現 `loading / error / success` 狀態，便於展示 API 串接成效。
+- API 失敗時保留 fallback（本地 data）確保頁面可用。
+
+### 為什麼採用按頁載入
+
+- Demo/作品展示時，能直接看到每次進頁的 API 請求與狀態切換。
+- 首屏不會因全域預載而被額外請求拖慢。
+- 方便逐頁驗證 API 行為與錯誤處理。
+
+### RTK Query 過渡步驟
+
+1. 新增 `catalogApi`（RTK Query）先接 `products`。
+2. 保留既有 selectors，讓頁面先維持現有渲染邏輯。
+3. 將 `collections` 併入 RTK Query，減少手動 thunk/merge 邏輯。
+4. `resources/articles`、`careers` 改為頁面層 query hook（按頁抓取）。
+5. 最後收斂舊的 `createAsyncThunk` 路徑，只保留必要 fallback。
+
+### API 目標分層（建議）
+
+- `GET /api/products`（全域預載）
+- `GET /api/collections`（全域預載）
+- `GET /api/resources/articles`（列表）
+- `GET /api/resources/articles/:slug`（按頁）
+- `GET /api/careers/jobs`（列表）
+- `GET /api/careers/jobs/:slug`（按頁）
+
+## 為什麼仍保留 `createEntityAdapter` + `createSlice`
+
+- `createSlice`：維持 catalog 狀態與 reducer 定義集中管理
+- `createEntityAdapter`：維持 products 的 `ids + entities` 標準化結構與 selectors
+- `createAsyncThunk`：負責非同步 API 請求與 loading/error 狀態管理
+
+這樣的組合可以讓我們先安全接上第一支 API，再逐步擴充到完整後端資料來源。
 
 ---
 

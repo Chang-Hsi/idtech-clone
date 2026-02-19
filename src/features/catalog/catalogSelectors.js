@@ -8,6 +8,8 @@ export const selectCatalogState = (state) => state.catalog
 export const selectAllProducts = catalogProductSelectors.selectAll
 export const selectProductEntities = catalogProductSelectors.selectEntities
 export const selectCatalogStatus = (state) => state.catalog.status
+export const selectCatalogDataSource = (state) => state.catalog.dataSource
+export const selectProductsPageContent = (state) => state.catalog.productsPage
 
 // collections 在 state 內是物件，這裡轉為陣列供元件遍歷。
 export const selectAllCollections = createSelector(selectCatalogState, (catalog) =>
