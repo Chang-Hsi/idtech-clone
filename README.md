@@ -259,6 +259,10 @@ Used in:
 - 在需要 catalog 資料的頁面進入時 dispatch `loadProductsFromApi()`
   - 例如：`/products`、`/products/collections/:collectionSlug`、`/products/:productSlug`、`/use-cases/:slug`
 - `catalog` 使用 `createAsyncThunk` 呼叫 `GET /api/products`
+- `GET /api/products` 採用統一 envelope：
+  - `code`: `0` 代表成功，非 `0` 代表業務錯誤
+  - `message`: 後端訊息
+  - `data`: 實際資料（目前含 `collections`、`productsPage`）
 - API 成功時：以 `slug` 對齊，將後端欄位覆蓋到既有本地 product（保留原本頁面需要的 detail/media 欄位）
 - API 失敗時：維持本地 data 作為 fallback，不阻斷頁面渲染
 
@@ -288,12 +292,40 @@ Used in:
 
 ### API 目標分層（建議）
 
-- `GET /api/products`（全域預載）
-- `GET /api/collections`（全域預載）
+- `GET /api/products`（按頁載入，回傳 products-page 所需聚合資料）
+- `GET /api/collections`（後續可拆分）
 - `GET /api/resources/articles`（列表）
 - `GET /api/resources/articles/:slug`（按頁）
 - `GET /api/careers/jobs`（列表）
 - `GET /api/careers/jobs/:slug`（按頁）
+
+### API 回傳規範（前後端對齊）
+
+成功（HTTP 2xx）：
+
+```json
+{
+  "code": 0,
+  "message": "success",
+  "data": {}
+}
+```
+
+失敗（HTTP 4xx/5xx）：
+
+```json
+{
+  "code": 1001,
+  "message": "request invalid",
+  "error": {}
+}
+```
+
+原則：
+
+- 仍使用正確 HTTP status（不要把錯誤都包成 200）
+- 前端先判斷 HTTP status，再判斷 `code`
+- `data` 欄位必須語意明確，不放測試殘留資料
 
 ## 為什麼仍保留 `createEntityAdapter` + `createSlice`
 

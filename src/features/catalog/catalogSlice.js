@@ -74,7 +74,11 @@ export const loadProductsFromApi = createAsyncThunk(
   'catalog/loadProductsFromApi',
   async (_, { rejectWithValue }) => {
     try {
-      return await fetchProductsFromApi()
+      const response = await fetchProductsFromApi()
+      if (response.code !== 0) {
+        return rejectWithValue(response.message || 'Products API returned a non-zero code')
+      }
+      return response
     } catch (error) {
       return rejectWithValue(error.message || 'Unable to fetch products API')
     }
