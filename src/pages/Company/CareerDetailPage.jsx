@@ -1,11 +1,25 @@
+import { useEffect } from 'react'
 import { Link, useParams } from 'react-router-dom'
+import { useDispatch, useSelector } from 'react-redux'
 import CareerDetailApplyCard from '../../components/company/careers/detail/CareerDetailApplyCard'
 import CareerDetailMainSection from '../../components/company/careers/detail/CareerDetailMainSection'
-import { careersJobs } from '../../data/company/careers'
+import {
+  selectCareerDetailBySlug,
+  selectCareerDetailStatusBySlug,
+} from '../../features/catalog/catalogSelectors'
+import { loadCareerDetailBySlugFromApi } from '../../features/catalog/catalogSlice'
 
 const CareerDetailPage = () => {
   const { jobSlug } = useParams()
-  const job = careersJobs.find((item) => item.slug === jobSlug)
+  const dispatch = useDispatch()
+  const job = useSelector((state) => selectCareerDetailBySlug(state, jobSlug))
+  const jobStatus = useSelector((state) => selectCareerDetailStatusBySlug(state, jobSlug))
+
+  useEffect(() => {
+    if (!jobSlug) return
+    if (jobStatus === 'loading' || jobStatus === 'success') return
+    dispatch(loadCareerDetailBySlugFromApi(jobSlug))
+  }, [dispatch, jobSlug, jobStatus])
 
   if (!job) {
     return (

@@ -1,8 +1,10 @@
-import heroImage from '../../assets/company/company2.jpg'
-import SRE from '../../assets/company/SRE.jpg'
-import salesmanager from '../../assets/company/sales-manager.jpg'
-import salesmanager2 from '../../assets/company/sales-manager2.jpg'
-import salesmanager3 from '../../assets/company/sales-manager3.jpg'
+import { imageUrls } from '../../assets/imageUrlMap'
+
+const heroImage = imageUrls.company.company2
+const SRE = imageUrls.company.SRE
+const salesmanager = imageUrls.company.salesManager
+const salesmanager2 = imageUrls.company.salesManager2
+const salesmanager3 = imageUrls.company.salesManager3
 
 export const careersPageContent = {
   hero: {

@@ -1,4 +1,5 @@
-import { useSelector } from 'react-redux'
+import { useEffect } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import { useParams } from 'react-router-dom'
 import LeadFormSection from '../../components/home/LeadFormSection'
 import CollectionFeaturedProductsSection from '../../components/products/collection/CollectionFeaturedProductsSection'
@@ -9,19 +10,34 @@ import { homeLeadForm } from '../../data/home/homeLeadForm'
 import {
   selectAllProducts,
   selectCollectionBySlug,
+  selectCollectionDetailBySlug,
+  selectCollectionDetailStatusBySlug,
   selectProductsByCollection,
 } from '../../features/catalog/catalogSelectors'
+import { loadProductCollectionBySlugFromApi } from '../../features/catalog/catalogSlice'
 import useLoadProductsOnPage from '../../features/catalog/useLoadProductsOnPage'
 
 const ProductCollectionPage = () => {
   const { collectionSlug } = useParams()
+  const dispatch = useDispatch()
   useLoadProductsOnPage([collectionSlug])
 
-  const collection = useSelector((state) => selectCollectionBySlug(state, collectionSlug))
+  const collectionFromCatalog = useSelector((state) => selectCollectionBySlug(state, collectionSlug))
+  const collectionFromApi = useSelector((state) => selectCollectionDetailBySlug(state, collectionSlug))
+  const collectionDetailStatus = useSelector((state) =>
+    selectCollectionDetailStatusBySlug(state, collectionSlug)
+  )
   const allProducts = useSelector(selectAllProducts)
   const collectionProducts = useSelector((state) =>
     selectProductsByCollection(state, collectionSlug)
   )
+  const collection = collectionFromApi ?? collectionFromCatalog
+
+  useEffect(() => {
+    if (!collectionSlug) return
+    if (collectionDetailStatus === 'loading' || collectionDetailStatus === 'success') return
+    dispatch(loadProductCollectionBySlugFromApi(collectionSlug))
+  }, [collectionSlug, collectionDetailStatus, dispatch])
 
   if (!collection) {
     return (

@@ -1,24 +1,26 @@
-import carouselInsideImage from '../../assets/home/CarouseInside.jpg'
-import useCase1Image from '../../assets/home/UseCase1.jpg'
-import useCase2Image from '../../assets/home/UseCase2.jpg'
-import useCase3Image from '../../assets/home/UseCase3.jpg'
-import useCase4Image from '../../assets/home/UseCase4.jpg'
-import useCase5Image from '../../assets/home/UseCase5.jpg'
-import useCase6Image from '../../assets/home/UseCase6.jpg'
-import useCase7Image from '../../assets/home/UseCase7.jpg'
-import useCase8Image from '../../assets/home/UseCase8.jpg'
-import collectionImage1 from '../../assets/collection/Collection1.jpg'
-import collectionImage2 from '../../assets/collection/Collection2.jpg'
-import collectionImage3 from '../../assets/collection/Collection3.jpg'
-import collectionImage4 from '../../assets/collection/Collection4.jpg'
-import collectionImage5 from '../../assets/collection/Collection5.jpg'
-import collectionImage6 from '../../assets/collection/Collection6.jpg'
-import collectionImage7 from '../../assets/collection/Collection7.jpg'
-import collectionImage8 from '../../assets/collection/Collection8.jpg'
-import collectionImage9 from '../../assets/collection/Collection9.jpg'
-import collectionImage10 from '../../assets/collection/Collection10.jpg'
-import collectionImage11 from '../../assets/collection/Collection11.jpg'
-import collectionImage12 from '../../assets/collection/Collection12.jpg'
+import { imageUrls } from '../../assets/imageUrlMap'
+
+const carouselInsideImage = imageUrls.home.CarouseInside
+const useCase1Image = imageUrls.home.UseCase1
+const useCase2Image = imageUrls.home.UseCase2
+const useCase3Image = imageUrls.home.UseCase3
+const useCase4Image = imageUrls.home.UseCase4
+const useCase5Image = imageUrls.home.UseCase5
+const useCase6Image = imageUrls.home.UseCase6
+const useCase7Image = imageUrls.home.UseCase7
+const useCase8Image = imageUrls.home.UseCase8
+const collectionImage1 = imageUrls.collection.Collection1
+const collectionImage2 = imageUrls.collection.Collection2
+const collectionImage3 = imageUrls.collection.Collection3
+const collectionImage4 = imageUrls.collection.Collection4
+const collectionImage5 = imageUrls.collection.Collection5
+const collectionImage6 = imageUrls.collection.Collection6
+const collectionImage7 = imageUrls.collection.Collection7
+const collectionImage8 = imageUrls.collection.Collection8
+const collectionImage9 = imageUrls.collection.Collection9
+const collectionImage10 = imageUrls.collection.Collection10
+const collectionImage11 = imageUrls.collection.Collection11
+const collectionImage12 = imageUrls.collection.Collection12
 
 export const collections = [
   {

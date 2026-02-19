@@ -1,16 +1,19 @@
 import { useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 import useInViewOnce from '../../../hooks/useInViewOnce'
-import { selectOpenJobsByTab } from '../../../data/company/careers'
 
-const CareersOpeningsSection = ({ tabs = [] }) => {
+const CareersOpeningsSection = ({ tabs = [], jobs = [] }) => {
   const [activeTab, setActiveTab] = useState(tabs[0]?.key ?? 'all')
   const { ref, isInView } = useInViewOnce({
     threshold: 0,
     rootMargin: '0px 0px 85% 0px',
   })
 
-  const jobs = useMemo(() => selectOpenJobsByTab(activeTab), [activeTab])
+  const filteredJobs = useMemo(() => {
+    const openJobs = jobs.filter((job) => job?.isOpen)
+    if (activeTab === 'all') return openJobs
+    return openJobs.filter((job) => job.countryCode === activeTab)
+  }, [activeTab, jobs])
 
   return (
     <section ref={ref} className="bg-[#fff] py-12 text-emerald-500 md:py-16">
@@ -39,9 +42,9 @@ const CareersOpeningsSection = ({ tabs = [] }) => {
           ))}
         </div>
 
-        {jobs.length ? (
+        {filteredJobs.length ? (
           <div className="mt-8 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
-            {jobs.map((job, index) => (
+            {filteredJobs.map((job, index) => (
               <Link
                 key={job.id}
                 to={`/company/careers/${job.slug}`}

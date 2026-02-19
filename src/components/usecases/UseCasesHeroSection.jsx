@@ -1,6 +1,13 @@
 import useInViewOnce from '../../hooks/useInViewOnce'
 
-const UseCasesHeroSection = () => {
+const fallbackHero = {
+  eyebrow: 'USE CASES',
+  title: 'Payment Solutions by Scenario',
+  description:
+    'Explore deployment scenarios across unattended, mobile, countertop, and OEM environments.',
+}
+
+const UseCasesHeroSection = ({ hero = fallbackHero }) => {
   const { ref, isInView } = useInViewOnce()
 
   return (
@@ -10,20 +17,20 @@ const UseCasesHeroSection = () => {
           className={`${isInView ? 'fade-left-in' : 'opacity-0'} text-xl font-semibold tracking-[0.5em] text-[#00B388]`}
           style={{ '--anim-distance': '30px', '--anim-duration': '650ms', '--anim-delay': '80ms' }}
         >
-          USE CASES
+          {hero.eyebrow}
         </p>
         <h1
           className={`${isInView ? 'fade-left-in' : 'opacity-0'} mt-8 max-w-4xl text-4xl font-semibold leading-tight sm:text-5xl lg:text-6xl`}
           style={{ '--anim-distance': '36px', '--anim-duration': '700ms', '--anim-delay': '220ms' }}
         >
-          Payment Solutions by Scenario
+          {hero.title}
         </h1>
         <div className="mt-10 h-[2px] w-24 bg-[#00B388]" />
         <p
           className={`${isInView ? 'fade-left-in' : 'opacity-0'} mt-8 max-w-3xl text-base text-white/80 sm:text-2xl`}
           style={{ '--anim-distance': '30px', '--anim-duration': '700ms', '--anim-delay': '360ms' }}
         >
-          Explore deployment scenarios across unattended, mobile, countertop, and OEM environments.
+          {hero.description}
         </p>
       </div>
     </section>

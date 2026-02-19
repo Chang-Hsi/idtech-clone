@@ -1,7 +1,9 @@
-import carousel1Image from '../../assets/home/Carouse1.jpg'
-import carousel3Image from '../../assets/home/Carouse3.jpg'
-import carousel4Image from '../../assets/home/Carouse4.jpg'
-import carouselInsideImage from '../../assets/home/CarouseInside.jpg'
+import { imageUrls } from '../../assets/imageUrlMap'
+
+const carousel1Image = imageUrls.home.Carouse1
+const carousel3Image = imageUrls.home.Carouse3
+const carousel4Image = imageUrls.home.Carouse4
+const carouselInsideImage = imageUrls.home.CarouseInside
 
 export const homeHeroSlides = [
   {

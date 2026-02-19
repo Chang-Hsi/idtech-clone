@@ -1,9 +1,11 @@
-import useCase1Image from '../../assets/home/UseCase1.jpg'
-import useCase2Image from '../../assets/home/UseCase2.jpg'
-import useCase3Image from '../../assets/home/UseCase3.jpg'
-import useCase4Image from '../../assets/home/UseCase4.jpg'
-import useCase5Image from '../../assets/home/UseCase5.jpg'
-import useCase6Image from '../../assets/home/UseCase6.jpg'
+import { imageUrls } from '../../assets/imageUrlMap'
+
+const useCase1Image = imageUrls.home.UseCase1
+const useCase2Image = imageUrls.home.UseCase2
+const useCase3Image = imageUrls.home.UseCase3
+const useCase4Image = imageUrls.home.UseCase4
+const useCase5Image = imageUrls.home.UseCase5
+const useCase6Image = imageUrls.home.UseCase6
 
 export const homeUseCases = [
   {
