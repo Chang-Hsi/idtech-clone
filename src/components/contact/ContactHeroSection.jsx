@@ -11,17 +11,17 @@ const ContactHeroSection = ({ hero }) => {
   const { ref, isInView } = useInViewOnce()
 
   return (
-    <section ref={ref} className="h-[90vh] bg-slate-100">
-      <div className="grid h-full w-full grid-cols-1 gap-0 lg:grid-cols-[minmax(0,1.35fr)_minmax(0,1fr)]">
+    <section ref={ref} className="bg-slate-100 lg:h-[90vh]">
+      <div className="grid w-full grid-cols-1 gap-0 lg:h-full lg:grid-cols-[minmax(0,1.35fr)_minmax(0,1fr)]">
         <div
-          className={`${isInView ? 'fade-left-in' : 'opacity-0'} overflow-hidden bg-black`}
+          className={`${isInView ? 'fade-left-in' : 'opacity-0'} h-[40vh] min-h-[260px] overflow-hidden bg-black sm:h-[48vh] lg:h-full`}
           style={{ '--anim-distance': '30px', '--anim-duration': '700ms', '--anim-delay': '80ms' }}
         >
           <img src={hero.imageUrl} alt={hero.imageAlt} className="h-full w-full object-cover" />
         </div>
 
         <aside
-          className={`${isInView ? 'fade-left-in' : 'opacity-0'} flex h-full flex-col justify-center bg-[#101218] p-8 text-white sm:p-10 lg:p-14`}
+          className={`${isInView ? 'fade-left-in' : 'opacity-0'} flex flex-col justify-center bg-[#101218] p-8 text-white sm:p-10 lg:h-full lg:p-14`}
           style={{ '--anim-distance': '30px', '--anim-duration': '700ms', '--anim-delay': '160ms' }}
         >
           <p className="text-sm font-semibold tracking-[0.42em] text-[#00B388] sm:text-base">
