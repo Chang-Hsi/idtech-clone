@@ -303,7 +303,7 @@ const Header = () => {
                 onClick={() => setActiveDropdownKey(null)}
                 className={`rounded border px-4 py-2 text-sm font-medium transition-colors duration-200 xl:text-base ${
                   isContactActive
-                    ? 'border-[#fed431] text-emerald-500'
+                    ? 'border-emerald-500 text-emerald-500'
                     : 'border-white text-white hover:border-[#7DC242] hover:text-emerald-500'
                 }`}
               >
@@ -452,7 +452,7 @@ const Header = () => {
             onClick={handleMobileMenuClose}
             className={`mt-4 inline-flex w-full justify-center rounded border px-4 py-2 text-sm font-medium transition-colors duration-200 ${
               isContactActive
-                ? 'border-[#fed431] text-emerald-500'
+                ? 'border-emerald-500 text-emerald-500'
                 : 'border-white text-white hover:border-[#7DC242] hover:text-emerald-500'
             }`}
           >
