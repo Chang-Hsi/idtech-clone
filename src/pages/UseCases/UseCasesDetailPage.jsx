@@ -42,15 +42,14 @@ const UseCasesDetailPage = () => {
     )
   }
 
-  const featuredProductsByUseCase = allProducts.filter((product) =>
-    (product.useCases ?? []).includes(useCase.slug)
-  )
   const featuredProductsBySlug = (useCase.featuredProductSlugs ?? [])
     .map((productSlug) => allProducts.find((product) => product.slug === productSlug))
     .filter(Boolean)
-  const featuredProducts = featuredProductsByUseCase.length
-    ? featuredProductsByUseCase
-    : featuredProductsBySlug
+  const featuredProductsByUseCase = allProducts.filter((product) =>
+    (product.useCases ?? []).includes(useCase.slug)
+  )
+  const featuredProducts =
+    featuredProductsBySlug.length > 0 ? featuredProductsBySlug : featuredProductsByUseCase
 
   return (
     <>

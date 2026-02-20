@@ -135,3 +135,14 @@ export async function fetchCareerDetailBySlugFromApi(jobSlug) {
     job: data?.job ?? null,
   }
 }
+
+export async function fetchPrivacyPolicyFromApi() {
+  const payload = await request('/api/legal/privacy-policy', { cache: 'no-store' })
+  const data = payload?.data ?? {}
+
+  return {
+    code: typeof payload?.code === 'number' ? payload.code : -1,
+    message: payload?.message ?? '',
+    privacyPolicy: data?.privacyPolicy ?? null,
+  }
+}
