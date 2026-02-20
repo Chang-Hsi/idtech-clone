@@ -1,9 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
-import { submitLeadFormToApi } from '../../api/leadApi'
-
-const TURNSTILE_SCRIPT_ID = 'cf-turnstile-script'
-const TURNSTILE_SCRIPT_SRC = 'https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit'
-const TURNSTILE_SITE_KEY = import.meta.env.VITE_TURNSTILE_SITE_KEY
+import { useState } from 'react'
 
 const INITIAL_FORM = {
   firstName: '',
@@ -16,113 +11,26 @@ const INITIAL_FORM = {
   website: '',
 }
 
-const loadTurnstileScript = () =>
-  new Promise((resolve, reject) => {
-    if (window.turnstile) {
-      resolve(window.turnstile)
-      return
-    }
-
-    const existingScript = document.getElementById(TURNSTILE_SCRIPT_ID)
-    if (existingScript) {
-      existingScript.addEventListener('load', () => resolve(window.turnstile), { once: true })
-      existingScript.addEventListener(
-        'error',
-        () => reject(new Error('Failed to load Turnstile script')),
-        {
-          once: true,
-        }
-      )
-      return
-    }
-
-    const script = document.createElement('script')
-    script.id = TURNSTILE_SCRIPT_ID
-    script.src = TURNSTILE_SCRIPT_SRC
-    script.async = true
-    script.defer = true
-    script.onload = () => resolve(window.turnstile)
-    script.onerror = () => reject(new Error('Failed to load Turnstile script'))
-    document.head.appendChild(script)
-  })
-
 const LeadFormSection = ({ config }) => {
   const [formData, setFormData] = useState(INITIAL_FORM)
   const [errors, setErrors] = useState({})
   const [submitState, setSubmitState] = useState('idle')
   const [statusMessage, setStatusMessage] = useState('')
-  const [turnstileToken, setTurnstileToken] = useState('')
-  const [captchaReady, setCaptchaReady] = useState(false)
-  const turnstileContainerRef = useRef(null)
-  const turnstileWidgetIdRef = useRef(null)
-
-  useEffect(() => {
-    let mounted = true
-
-    const setupTurnstile = async () => {
-      if (!TURNSTILE_SITE_KEY || !turnstileContainerRef.current) return
-
-      try {
-        const turnstile = await loadTurnstileScript()
-        if (!mounted || !turnstile || !turnstileContainerRef.current) return
-
-        if (turnstileWidgetIdRef.current !== null) {
-          turnstile.remove(turnstileWidgetIdRef.current)
-          turnstileWidgetIdRef.current = null
-        }
-
-        turnstileWidgetIdRef.current = turnstile.render(turnstileContainerRef.current, {
-          sitekey: TURNSTILE_SITE_KEY,
-          theme: 'light',
-          callback: (token) => {
-            if (!mounted) return
-            setTurnstileToken(token)
-            setErrors((prev) => {
-              if (!prev.humanCheck) return prev
-              const next = { ...prev }
-              delete next.humanCheck
-              return next
-            })
-          },
-          'expired-callback': () => {
-            if (!mounted) return
-            setTurnstileToken('')
-          },
-          'error-callback': () => {
-            if (!mounted) return
-            setTurnstileToken('')
-            setErrors((prev) => ({
-              ...prev,
-              humanCheck: 'Captcha verification failed. Please retry.',
-            }))
-          },
-        })
-
-        setCaptchaReady(true)
-      } catch (error) {
-        if (!mounted) return
-        setCaptchaReady(false)
-        setErrors((prev) => ({
-          ...prev,
-          humanCheck: 'Captcha is unavailable. Please retry later.',
-        }))
-        console.log(error)
-      }
-    }
-
-    setupTurnstile()
-
-    return () => {
-      mounted = false
-      if (window.turnstile && turnstileWidgetIdRef.current !== null) {
-        window.turnstile.remove(turnstileWidgetIdRef.current)
-      }
-    }
-  }, [])
+  const [isHumanChecked, setIsHumanChecked] = useState(false)
 
   const handleChange = (event) => {
     const { name, value } = event.target
     setFormData((prev) => ({ ...prev, [name]: value }))
+  }
+
+  const handleHumanCheck = (event) => {
+    setIsHumanChecked(event.target.checked)
+    setErrors((prev) => {
+      if (!prev.humanCheck) return prev
+      const next = { ...prev }
+      delete next.humanCheck
+      return next
+    })
   }
 
   const validate = () => {
@@ -131,20 +39,14 @@ const LeadFormSection = ({ config }) => {
     if (!formData.firstName.trim()) nextErrors.firstName = 'This field is required.'
     if (!formData.lastName.trim()) nextErrors.lastName = 'This field is required.'
     if (!formData.email.trim()) nextErrors.email = 'This field is required.'
-    if (formData.email.trim() && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email))
+    if (formData.email.trim() && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
       nextErrors.email = 'Invalid email'
+    }
     if (!formData.region.trim()) nextErrors.region = 'This field is required.'
     if (!formData.message.trim()) nextErrors.message = 'This field is required.'
-    if (!TURNSTILE_SITE_KEY) nextErrors.humanCheck = 'Captcha is not configured.'
-    else if (!turnstileToken) nextErrors.humanCheck = 'Please complete captcha verification.'
+    if (!isHumanChecked) nextErrors.humanCheck = 'Please verify you are not a robot.'
 
     return nextErrors
-  }
-
-  const resetCaptcha = () => {
-    if (!window.turnstile || turnstileWidgetIdRef.current === null) return
-    window.turnstile.reset(turnstileWidgetIdRef.current)
-    setTurnstileToken('')
   }
 
   const handleSubmit = async (event) => {
@@ -154,35 +56,25 @@ const LeadFormSection = ({ config }) => {
 
     if (Object.keys(nextErrors).length > 0) return
 
+    if (formData.website.trim()) {
+      setSubmitState('error')
+      setStatusMessage('Unable to submit right now.')
+      return
+    }
+
     setSubmitState('submitting')
     setStatusMessage('Submitting...')
 
-    try {
-      await submitLeadFormToApi({
-        firstName: formData.firstName.trim(),
-        lastName: formData.lastName.trim(),
-        email: formData.email.trim(),
-        company: formData.company.trim(),
-        phone: formData.phone.trim(),
-        region: formData.region.trim(),
-        message: formData.message.trim(),
-        captchaToken: turnstileToken,
-        website: formData.website.trim(),
-      })
+    await new Promise((resolve) => setTimeout(resolve, 450))
 
-      setSubmitState('success')
-      setStatusMessage('Message sent successfully.')
-      setFormData(INITIAL_FORM)
-      resetCaptcha()
-    } catch (error) {
-      setSubmitState('error')
-      setStatusMessage(error.message || 'Unable to submit right now.')
-      resetCaptcha()
-    }
+    setSubmitState('success')
+    setStatusMessage('Message sent successfully.')
+    setFormData(INITIAL_FORM)
+    setIsHumanChecked(false)
   }
 
   return (
-    <section className="py-12 text-black md:py-16 bg-white">
+    <section className="bg-white py-12 text-black md:py-16">
       <div className="mx-auto w-full max-w-7xl px-4 sm:px-6">
         <div className="rounded-sm p-2 sm:p-4 md:p-8">
           <h2 className="text-3xl font-extrabold text-emerald-600 sm:text-4xl lg:text-6xl">
@@ -209,7 +101,7 @@ const LeadFormSection = ({ config }) => {
                 onChange={handleChange}
                 className="w-full rounded-sm border border-black/20 bg-[#fff] px-3 py-2 outline-none focus:border-[#7DC242]"
               />
-              {errors.firstName && <span className="text-xs text-red-300">{errors.firstName}</span>}
+              {errors.firstName && <span className="text-xs text-red-500">{errors.firstName}</span>}
             </label>
 
             <label className="space-y-2 text-sm">
@@ -220,7 +112,7 @@ const LeadFormSection = ({ config }) => {
                 onChange={handleChange}
                 className="w-full rounded-sm border border-black/20 bg-[#fff] px-3 py-2 outline-none focus:border-[#7DC242]"
               />
-              {errors.lastName && <span className="text-xs text-red-300">{errors.lastName}</span>}
+              {errors.lastName && <span className="text-xs text-red-500">{errors.lastName}</span>}
             </label>
 
             <label className="space-y-2 text-sm">
@@ -232,7 +124,7 @@ const LeadFormSection = ({ config }) => {
                 onChange={handleChange}
                 className="w-full rounded-sm border border-black/20 bg-[#fff] px-3 py-2 outline-none focus:border-[#7DC242]"
               />
-              {errors.email && <span className="text-xs text-red-300">{errors.email}</span>}
+              {errors.email && <span className="text-xs text-red-500">{errors.email}</span>}
             </label>
 
             <label className="space-y-2 text-sm">
@@ -270,7 +162,7 @@ const LeadFormSection = ({ config }) => {
                   </option>
                 ))}
               </select>
-              {errors.region && <span className="text-xs text-red-300">{errors.region}</span>}
+              {errors.region && <span className="text-xs text-red-500">{errors.region}</span>}
             </label>
 
             <label className="space-y-2 text-sm md:col-span-2">
@@ -282,29 +174,35 @@ const LeadFormSection = ({ config }) => {
                 onChange={handleChange}
                 className="w-full rounded-sm border border-black/20 bg-[#fff] px-3 py-2 outline-none focus:border-[#7DC242]"
               />
-              {errors.message && <span className="text-xs text-red-300">{errors.message}</span>}
+              {errors.message && <span className="text-xs text-red-500">{errors.message}</span>}
             </label>
 
             <div className="md:col-span-2">
-              <div
-                className={`rounded-sm border px-4 py-3 ${
-                  errors.humanCheck ? 'border-red-300 bg-red-50/30' : 'border-black/20 bg-white'
+              <label
+                htmlFor="lead-human-check"
+                className={`flex w-full max-w-[380px] cursor-pointer items-center justify-between rounded-sm border px-4 py-3 transition ${
+                  errors.humanCheck ? 'border-red-300 bg-red-50' : 'border-black/20 bg-white hover:border-black/35'
                 }`}
               >
-                <div ref={turnstileContainerRef} />
-                {!captchaReady && TURNSTILE_SITE_KEY ? (
-                  <p className="mt-2 text-xs text-black/50">Loading captcha...</p>
-                ) : null}
-              </div>
-              {errors.humanCheck && (
-                <p className="mt-2 text-xs text-red-300">{errors.humanCheck}</p>
-              )}
+                <span className="flex items-center gap-3 text-sm text-black/80">
+                  <input
+                    id="lead-human-check"
+                    type="checkbox"
+                    checked={isHumanChecked}
+                    onChange={handleHumanCheck}
+                    className="h-4 w-4 rounded border-black/30 accent-[#7DC242]"
+                  />
+                  I'm not a robot
+                </span>
+                <span className="text-[11px] uppercase tracking-wide text-black/40">Simulated</span>
+              </label>
+              {errors.humanCheck && <p className="mt-2 text-xs text-red-500">{errors.humanCheck}</p>}
             </div>
 
             <div className="flex flex-col gap-3 md:col-span-2 md:flex-row md:items-center md:justify-between">
               <button
                 type="submit"
-                disabled={submitState === 'submitting' || !TURNSTILE_SITE_KEY}
+                disabled={submitState === 'submitting'}
                 className="rounded-sm bg-[#7DC242] px-5 py-3 text-sm font-medium text-[#121417] hover:bg-[#93d25b] disabled:cursor-not-allowed disabled:bg-[#7DC242]/40 disabled:text-[#121417]/60"
               >
                 {submitState === 'submitting' ? 'Submitting...' : 'Submit'}
@@ -313,9 +211,9 @@ const LeadFormSection = ({ config }) => {
                 <p
                   className={`text-sm ${
                     submitState === 'success'
-                      ? 'text-[#7DC242]'
+                      ? 'text-[#2f7f18]'
                       : submitState === 'error'
-                        ? 'text-red-400'
+                        ? 'text-red-500'
                         : 'text-black/60'
                   }`}
                 >
