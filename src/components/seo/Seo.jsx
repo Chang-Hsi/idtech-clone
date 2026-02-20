@@ -1,13 +1,25 @@
 import { useEffect, useMemo } from 'react'
+import { useSelector } from 'react-redux'
 import { matchPath, useLocation } from 'react-router-dom'
-import { careersJobs } from '../../data/company/careers'
-import { collections } from '../../data/products/collections'
-import { products } from '../../data/products/products'
-import { resourceArticles } from '../../data/resources/articles'
-import { useCases } from '../../data/usecases/useCases'
+import {
+  selectAboutUsPageContent,
+  selectCareerDetailBySlug,
+  selectCareersPageContent,
+  selectCollectionDetailBySlug,
+  selectCompanyPageContent,
+  selectHomePageContent,
+  selectProductBySlug,
+  selectProductDetailBySlug,
+  selectProductsPageContent,
+  selectResourceArticleBySlug,
+  selectResourcesPageContent,
+  selectUseCaseDetailBySlug,
+  selectUseCasesPageContent,
+} from '../../features/catalog/catalogSelectors'
 
 const SITE_ORIGIN = 'https://chang-hsi.github.io'
 const SITE_BASE_PATH = '/idtech-clone'
+const SITE_NAME = 'IDTECH Clone'
 
 const DEFAULT_META = {
   title: 'IDTECH Clone',
@@ -101,6 +113,11 @@ const upsertMeta = (selector, attrs) => {
   el.setAttribute('content', attrs.content)
 }
 
+const removeMeta = (selector) => {
+  const el = document.head.querySelector(selector)
+  if (el) el.remove()
+}
+
 const upsertCanonical = (href) => {
   let link = document.head.querySelector('link[rel="canonical"]')
   if (!link) {
@@ -111,94 +128,137 @@ const upsertCanonical = (href) => {
   link.setAttribute('href', href)
 }
 
+const upsertJsonLd = (id, data) => {
+  let script = document.head.querySelector(`script[data-seo-jsonld="${id}"]`)
+  if (!script) {
+    script = document.createElement('script')
+    script.type = 'application/ld+json'
+    script.setAttribute('data-seo-jsonld', id)
+    document.head.appendChild(script)
+  }
+  script.textContent = JSON.stringify(data)
+}
+
+const removeJsonLd = (id) => {
+  const script = document.head.querySelector(`script[data-seo-jsonld="${id}"]`)
+  if (script) script.remove()
+}
+
 const getCanonicalUrl = (pathname) => {
   const normalizedPath = pathname === '/' ? '' : pathname
   return `${SITE_ORIGIN}${SITE_BASE_PATH}${normalizedPath}`
 }
 
-const getDynamicMeta = (pathname) => {
-  const productMatch = matchPath('/products/:productSlug', pathname)
-  if (productMatch) {
-    const product = products.find((item) => item.slug === productMatch.params.productSlug)
-    if (product) {
-      return {
-        title: `${product.name} | Products`,
-        description: product.shortDescription,
-      }
-    }
+const getBreadcrumbItems = (pathname) => {
+  const segments = pathname.split('/').filter(Boolean)
+  const items = [{ name: 'Home', path: '/' }]
+
+  let accum = ''
+  for (const segment of segments) {
+    accum += `/${segment}`
+    items.push({
+      name: segment
+        .split('-')
+        .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+        .join(' '),
+      path: accum,
+    })
   }
 
-  const collectionMatch = matchPath('/products/collections/:collectionSlug', pathname)
-  if (collectionMatch) {
-    const collection = collections.find((item) => item.slug === collectionMatch.params.collectionSlug)
-    if (collection) {
-      return {
-        title: `${collection.name} | Product Collection`,
-        description: collection.seo?.description ?? collection.intro,
-      }
-    }
-  }
-
-  const useCaseMatch = matchPath('/use-cases/:slug', pathname)
-  if (useCaseMatch) {
-    const useCase = useCases.find((item) => item.slug === useCaseMatch.params.slug)
-    if (useCase) {
-      return {
-        title: `${useCase.title} | Use Cases`,
-        description: useCase.description,
-      }
-    }
-  }
-
-  const articleMatch = matchPath('/resources/:articleSlug', pathname)
-  if (articleMatch) {
-    const article = resourceArticles.find((item) => item.slug === articleMatch.params.articleSlug)
-    const title = article?.translations?.en?.title ?? article?.translations?.zh?.title
-    const excerpt = article?.translations?.en?.excerpt ?? article?.translations?.zh?.excerpt
-    if (title || excerpt) {
-      return {
-        title: `${title ?? 'Article'} | Resources`,
-        description: excerpt ?? DEFAULT_META.description,
-        type: 'article',
-      }
-    }
-  }
-
-  const careerMatch = matchPath('/company/careers/:jobSlug', pathname)
-  if (careerMatch) {
-    const job = careersJobs.find((item) => item.slug === careerMatch.params.jobSlug)
-    if (job) {
-      return {
-        title: `${job.title} | Careers`,
-        description: job.summary,
-      }
-    }
-  }
-
-  return null
+  return items
 }
 
 const Seo = () => {
   const { pathname } = useLocation()
 
+  const productSlug = matchPath('/products/:productSlug', pathname)?.params?.productSlug ?? null
+  const collectionSlug =
+    matchPath('/products/collections/:collectionSlug', pathname)?.params?.collectionSlug ?? null
+  const useCaseSlug = matchPath('/use-cases/:slug', pathname)?.params?.slug ?? null
+  const articleSlug = matchPath('/resources/:articleSlug', pathname)?.params?.articleSlug ?? null
+  const jobSlug = matchPath('/company/careers/:jobSlug', pathname)?.params?.jobSlug ?? null
+
+  const homePage = useSelector(selectHomePageContent)
+  const productsPage = useSelector(selectProductsPageContent)
+  const useCasesPage = useSelector(selectUseCasesPageContent)
+  const resourcesPage = useSelector(selectResourcesPageContent)
+  const companyPage = useSelector(selectCompanyPageContent)
+  const aboutUsPage = useSelector(selectAboutUsPageContent)
+  const careersPage = useSelector(selectCareersPageContent)
+  const collectionDetail = useSelector((state) =>
+    collectionSlug ? selectCollectionDetailBySlug(state, collectionSlug) : null
+  )
+  const productDetail = useSelector((state) =>
+    productSlug ? selectProductDetailBySlug(state, productSlug) : null
+  )
+  const productCard = useSelector((state) => (productSlug ? selectProductBySlug(state, productSlug) : null))
+  const useCaseDetail = useSelector((state) =>
+    useCaseSlug ? selectUseCaseDetailBySlug(state, useCaseSlug) : null
+  )
+  const resourceArticle = useSelector((state) =>
+    articleSlug ? selectResourceArticleBySlug(state, articleSlug) : null
+  )
+  const careerDetail = useSelector((state) =>
+    jobSlug ? selectCareerDetailBySlug(state, jobSlug) : null
+  )
+
+  const routeSeo = useMemo(() => {
+    if (pathname === '/') return homePage?.seo ?? null
+    if (pathname === '/products') return productsPage?.seo ?? null
+    if (pathname === '/use-cases') return useCasesPage?.seo ?? null
+    if (pathname === '/resources') return resourcesPage?.seo ?? null
+    if (pathname === '/company') return companyPage?.seo ?? null
+    if (pathname === '/company/about-us') return aboutUsPage?.seo ?? null
+    if (pathname === '/company/careers') return careersPage?.seo ?? null
+    if (pathname === '/contact') return null
+    if (pathname === '/legal/privacy-policy') return null
+    if (collectionSlug) return collectionDetail?.seo ?? null
+    if (productSlug) return productDetail?.seo ?? productCard?.seo ?? null
+    if (useCaseSlug) return useCaseDetail?.seo ?? null
+    if (articleSlug) return resourceArticle?.seo ?? null
+    if (jobSlug) return careerDetail?.seo ?? null
+    return null
+  }, [
+    aboutUsPage?.seo,
+    articleSlug,
+    careerDetail?.seo,
+    careersPage?.seo,
+    collectionDetail?.seo,
+    collectionSlug,
+    companyPage?.seo,
+    homePage?.seo,
+    jobSlug,
+    pathname,
+    productCard?.seo,
+    productDetail?.seo,
+    productSlug,
+    productsPage?.seo,
+    resourceArticle?.seo,
+    resourcesPage?.seo,
+    useCaseDetail?.seo,
+    useCaseSlug,
+    useCasesPage?.seo,
+  ])
+
   const meta = useMemo(() => {
     const exact = STATIC_META[pathname]
-    const dynamic = getDynamicMeta(pathname)
-    const merged = {
+    const hasDynamicRoute = Boolean(collectionSlug || productSlug || useCaseSlug || articleSlug || jobSlug)
+    const hasKnownPage = Boolean(exact || routeSeo || hasDynamicRoute)
+    const noindex = Boolean(routeSeo?.noindex ?? !hasKnownPage)
+
+    return {
       ...DEFAULT_META,
       ...(exact ?? {}),
-      ...(dynamic ?? {}),
+      ...(routeSeo ?? {}),
+      noindex,
+      robots: routeSeo?.robots ?? (noindex ? 'noindex,nofollow' : 'index,follow'),
+      canonicalPath: routeSeo?.canonicalPath ?? pathname,
     }
-    const hasKnownPage = Boolean(exact || dynamic)
-    return {
-      ...merged,
-      noindex: hasKnownPage ? false : true,
-    }
-  }, [pathname])
+  }, [articleSlug, collectionSlug, jobSlug, pathname, productSlug, routeSeo, useCaseSlug])
 
   useEffect(() => {
     const fullTitle = `${meta.title} | IDTECH Clone`
-    const canonical = getCanonicalUrl(pathname)
+    const canonical = getCanonicalUrl(meta.canonicalPath ?? pathname)
 
     document.title = fullTitle
     upsertCanonical(canonical)
@@ -211,12 +271,131 @@ const Seo = () => {
     })
     upsertMeta('meta[property="og:type"]', { property: 'og:type', content: meta.type })
     upsertMeta('meta[property="og:url"]', { property: 'og:url', content: canonical })
+    if (meta.ogImageUrl) {
+      upsertMeta('meta[property="og:image"]', { property: 'og:image', content: meta.ogImageUrl })
+    } else {
+      removeMeta('meta[property="og:image"]')
+    }
     upsertMeta('meta[name="twitter:card"]', { name: 'twitter:card', content: 'summary_large_image' })
+    upsertMeta('meta[name="twitter:title"]', { name: 'twitter:title', content: fullTitle })
+    upsertMeta('meta[name="twitter:description"]', {
+      name: 'twitter:description',
+      content: meta.description,
+    })
+    if (meta.ogImageUrl) {
+      upsertMeta('meta[name="twitter:image"]', { name: 'twitter:image', content: meta.ogImageUrl })
+    } else {
+      removeMeta('meta[name="twitter:image"]')
+    }
     upsertMeta('meta[name="robots"]', {
       name: 'robots',
-      content: meta.noindex ? 'noindex,nofollow' : 'index,follow',
+      content: meta.robots,
     })
-  }, [meta, pathname])
+
+    const breadcrumbItems = getBreadcrumbItems(pathname).map((item, index) => ({
+      '@type': 'ListItem',
+      position: index + 1,
+      name: item.name,
+      item: getCanonicalUrl(item.path),
+    }))
+
+    upsertJsonLd('organization', {
+      '@context': 'https://schema.org',
+      '@type': 'Organization',
+      name: SITE_NAME,
+      url: getCanonicalUrl('/'),
+      logo: `${SITE_ORIGIN}${SITE_BASE_PATH}/logo.jpg`,
+      contactPoint: [
+        {
+          '@type': 'ContactPoint',
+          contactType: 'sales',
+          email: 'sales@idtechproducts.com',
+        },
+      ],
+    })
+
+    upsertJsonLd('website', {
+      '@context': 'https://schema.org',
+      '@type': 'WebSite',
+      name: SITE_NAME,
+      url: getCanonicalUrl('/'),
+      inLanguage: 'en',
+    })
+
+    upsertJsonLd('breadcrumbs', {
+      '@context': 'https://schema.org',
+      '@type': 'BreadcrumbList',
+      itemListElement: breadcrumbItems,
+    })
+
+    if (resourceArticle) {
+      const preferredTranslation =
+        resourceArticle?.translations?.en ?? resourceArticle?.translations?.zh ?? {}
+      upsertJsonLd('article', {
+        '@context': 'https://schema.org',
+        '@type': 'Article',
+        headline: preferredTranslation.title ?? meta.title,
+        description: preferredTranslation.excerpt ?? meta.description,
+        datePublished: resourceArticle.publishedAt ?? undefined,
+        mainEntityOfPage: canonical,
+        image: meta.ogImageUrl ? [meta.ogImageUrl] : undefined,
+        publisher: {
+          '@type': 'Organization',
+          name: SITE_NAME,
+          url: getCanonicalUrl('/'),
+        },
+      })
+    } else {
+      removeJsonLd('article')
+    }
+
+    if (productSlug && (productDetail || productCard)) {
+      const productEntity = productDetail ?? productCard
+      upsertJsonLd('product', {
+        '@context': 'https://schema.org',
+        '@type': 'Product',
+        name: productEntity?.name ?? meta.title,
+        description:
+          productEntity?.shortDescription ??
+          productEntity?.detail?.heroDescription ??
+          meta.description,
+        image: meta.ogImageUrl ? [meta.ogImageUrl] : undefined,
+        sku: productEntity?.slug ?? productSlug,
+        url: canonical,
+        brand: {
+          '@type': 'Brand',
+          name: SITE_NAME,
+        },
+      })
+    } else {
+      removeJsonLd('product')
+    }
+
+    if (jobSlug && careerDetail) {
+      upsertJsonLd('jobposting', {
+        '@context': 'https://schema.org',
+        '@type': 'JobPosting',
+        title: careerDetail.title ?? meta.title,
+        description: careerDetail.summary ?? meta.description,
+        datePosted: new Date().toISOString().slice(0, 10),
+        employmentType: careerDetail.employmentType ?? 'FULL_TIME',
+        hiringOrganization: {
+          '@type': 'Organization',
+          name: SITE_NAME,
+          sameAs: getCanonicalUrl('/company'),
+        },
+        jobLocation: {
+          '@type': 'Place',
+          address: {
+            '@type': 'PostalAddress',
+            addressCountry: careerDetail.region ?? 'US',
+          },
+        },
+      })
+    } else {
+      removeJsonLd('jobposting')
+    }
+  }, [careerDetail, jobSlug, meta, pathname, productCard, productDetail, productSlug, resourceArticle])
 
   return null
 }

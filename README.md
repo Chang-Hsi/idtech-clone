@@ -489,6 +489,62 @@ Static files:
 - robots.txt
 - sitemap.xml
 
+## SEO Completion Roadmap (API + Production Grade)
+
+Current status: SEO v1 is functional, but metadata is still mainly driven by frontend static config.
+
+### Phase 1 (SEO v1.5): API-aligned metadata
+
+1. Define a unified SEO contract for page APIs.
+2. Minimum fields: `title`, `description`, `canonicalPath`, `ogImage`, `robots`, `type`.
+3. Keep fallback priority: `API SEO > local page SEO > global default SEO`.
+4. Update `src/components/seo/Seo.jsx` to read from Redux/API-loaded page state first.
+5. Keep route-level defaults only as safety fallback for API failure.
+
+### Phase 2 (SEO v2): Build/runtime automation
+
+1. Generate `sitemap.xml` from backend data or build-time scripts (not hardcoded lists).
+2. Keep `robots.txt` environment-aware:
+   `production = index,follow`, `staging/dev = noindex,nofollow`.
+3. Add canonical normalization rules:
+   trailing slash, query handling, and duplicate path prevention.
+4. Add Open Graph image governance:
+   default image + page override + image size convention.
+
+### Phase 3 (SEO v2.5): Search-quality hardening
+
+1. Add structured data (JSON-LD):
+   `Organization`, `WebSite`, `BreadcrumbList`, `Article`, `JobPosting`, `Product` where applicable.
+2. Add SEO QA checks in CI:
+   title/description existence, canonical uniqueness, broken internal links, no accidental `noindex`.
+3. Wire Search Console and analytics dashboards for monitoring:
+   index coverage, top queries, CTR, and crawl issues.
+
+### Definition of Done (SEO considered complete)
+
+1. All major routes have API-driven SEO metadata and validated fallback behavior.
+2. `sitemap.xml` and `robots.txt` are auto-generated and environment-correct.
+3. Production pages expose correct canonical/meta/OG tags in final HTML output.
+4. JSON-LD is valid on key templates and passes Rich Results checks.
+5. Ongoing monitoring and regression checks are part of release workflow.
+
+### Current Automation (Implemented)
+
+1. `npm run build` now runs `prebuild` to auto-generate:
+   - `public/sitemap.xml` (API-driven dynamic routes)
+   - `public/robots.txt` (environment-aware)
+2. Generator script:
+   - `scripts/generate-seo-files.mjs`
+3. Runtime data source for sitemap generation:
+   - `/api/products`
+   - `/api/use-cases`
+   - `/api/resources`
+   - `/api/company/careers`
+4. Environment controls:
+   - `SEO_ENV=production` -> `Allow: /`
+   - `SEO_ENV=staging` (or non-production) -> `Disallow: /`
+   - Optional overrides: `SEO_SITE_ORIGIN`, `SEO_SITE_BASE_PATH`, `VITE_API_BASE_URL`
+
 ---
 
 # 🎨 9. UI/UX Enhancements
