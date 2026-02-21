@@ -68,7 +68,7 @@ const AboutUsInnovationTimelineSection = ({ timeline }) => {
       >
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(rgba(17,24,39,0.08)_1px,transparent_1px)] bg-[size:10px_10px] opacity-50" />
         <div ref={scrollRef} className="overflow-x-auto px-6 pb-4">
-          <div className="relative mx-auto min-w-[156rem] px-8 py-10">
+          <div className="relative mx-auto w-max min-w-[156rem] px-8 py-10">
             <div className="absolute left-0 right-0 top-1/2 h-[10px] -translate-y-1/2 bg-[#d0d0d0]" />
 
             <div className="relative flex items-center gap-2">

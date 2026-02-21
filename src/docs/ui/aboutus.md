@@ -1,97 +1,65 @@
-# About Us 頁面企劃（IDT-6）
+# About Us 頁面企劃（IDT-6，落地更新）
 
-## 1. 頁面目標
-- 建立 `AboutUsPage`（路由：`/company/about-us`）。
-- `AboutUsPage.jsx` 僅負責拼接，不放資料與細節 UI。
-- 延續既有架構：`pages` 拼接、`components` 呈現、`data` 管內容。
+## 1. 目標與現況
+- 路由：`/company/about-us`
+- Page 組裝：`src/pages/Company/AboutUsPage.jsx`
+- 區塊順序：Hero -> Intro -> Highlights -> Innovation Timeline -> Connect Info
+- 前台資料來源以 API 為主，靜態檔為 fallback（避免 API 異常導致白屏）。
 
-## 2. 區塊結構（固定順序）
-1. Hero
-2. Who We Are（Intro）
-3. Highlights（Mission / Innovation）
-4. Innovation Timeline
-5. Where to Find Us（Connect Info）
+## 2. 前後台整體落地做法
 
-## 3. 建議目錄
+### 2.1 前台（idtech-clone）
+- `AboutUsPage` 只負責拼接與觸發載入。
+- 透過 Redux `catalogSlice` 呼叫 `loadAboutUsPageFromApi()` 載入資料。
+- API：`/api/company/about-us`（`src/api/catalogApi.js`）。
+- 若 API 失敗，回退 `src/data/company/aboutUs.js` 既有內容。
 
-### 3.1 Page
-- `src/pages/Company/AboutUsPage.jsx`
+### 2.2 後端（idtech-clone-api）
+- 提供 About Us page payload，結構含：
+  - `hero`
+  - `intro`
+  - `highlights[]`
+  - `innovationTimeline.items[]`
+  - `connectInfo.offices[]`
+- `innovationTimeline.items[].year` 使用 decade 字串（如 `1990s`, `2000s`, `2010s`, `2020s`）。
 
-### 3.2 Components
-- `src/components/company/aboutus/AboutUsHeroSection.jsx`
-- `src/components/company/aboutus/AboutUsIntroSection.jsx`
-- `src/components/company/aboutus/AboutUsHighlightsSection.jsx`
-- `src/components/company/aboutus/AboutUsInnovationTimelineSection.jsx`
-- `src/components/company/aboutus/AboutUsConnectInfoSection.jsx`
+### 2.3 後台（idtech-clone-backstage）
+- 編輯頁：`src/components/pages/company/AboutUsPageEditor.jsx`
+- 已導入 schema-driven 驗證（依 backstage README 的機制）：
+  - `useFormValidation`
+  - `validateSchema / validateSchemaField`
+  - 專屬 schema：`src/components/pages/company/AboutUsPageEditor.schema.js`
+- Save 前做整頁驗證，錯誤顯示摘要。
 
-### 3.3 Data
-- `src/data/company/aboutUs.js`
+## 3. 後台 UI/UX 落地（本次更新）
 
-## 4. 資料模型（落地版）
-```js
-export const aboutUsPageContent = {
-  hero: {
-    eyebrow: 'ABOUT US',
-    title: '...',
-    subtitle: '...',
-    description: '...',
-    imageUrl: '...',
-  },
-  intro: {
-    title: 'Who We Are',
-    paragraphs: ['...', '...'],
-    imageUrl: '...',
-  },
-  highlights: [
-    { id: 'mission', eyebrow: 'MISSION STATEMENT', title: '...', imageUrl: '...' },
-    { id: 'innovation', eyebrow: 'COMPANY INNOVATION', title: '...', imageUrl: '...' },
-  ],
-  innovationTimeline: {
-    title: 'INNOVATION',
-    items: [
-      { year: '2017', title: '...', description: '...' },
-      { year: '2019', title: '...', description: '...' },
-    ],
-  },
-  connectInfo: {
-    title: 'Where to Find Us',
-    description: '...',
-    items: [
-      { label: 'Headquarters', value: '...' },
-      { label: 'Email', value: '...' },
-      { label: 'Phone', value: '...' },
-    ],
-    mapUrl: 'https://maps.google.com/...',
-  },
-}
-```
+### 3.1 Intro / Highlights
+- `Image URL` 後新增 `Background Preview`。
+- 預覽狀態支援：空值 / 載入中 / 載入失敗 / 成功。
 
-## 5. UI / 動畫規範
-- Hero 區塊 UI 參考：`src/components/usecases/detail/UseCaseDetailHeroSection.jsx`
-- 動畫沿用 `useInViewOnce` + `index.css`：
-  - Hero：`fade-left-in`
-  - Intro：圖片 `fade-right-in`、文字 `fade-left-in`
-  - Highlights：`fade-up-in` stagger
-  - Timeline：標題 `fade-up-in`，節點 `fade-up-in` stagger
-  - Connect Info：`fade-up-in`
-- 圖片缺失 fallback：灰格 placeholder。
+### 3.2 Innovation Timeline
+- 類表格式列表（橫向欄位 + 分隔線）取代舊 inline 表單。
+- 每列操作：Drag / Edit / Delete。
+- `Add`、`Edit` 改為彈窗流程。
+- `Year / Decade` 使用 `DropdownSelect`，只提供 decade 選項：
+  - `1990s`, `2000s`, `2010s`, `2020s`（上限為當前 decade）。
+- 保留拖曳排序限制，避免年代順序錯亂；移除 `Auto Sort by Year` 按鈕。
 
-## 6. RWD 規範
-- Hero：沿用現有 detail hero 響應式字級。
-- Intro：`lg` 雙欄、mobile 單欄。
-- Highlights：`lg` 兩欄、mobile 單欄。
-- Timeline：
-  - `lg`：橫向時間軸（含主線與節點）
-  - `mobile`：改直向卡片清單（避免橫向滾動與 scroll 攔截）
-- Connect Info：`lg` 三欄、`sm` 兩欄、mobile 單欄。
+### 3.3 Offices
+- 改為類表格式列表（欄位摘要 + 分隔線）。
+- 每列操作：Drag / Edit / Delete。
+- `Add`、`Edit` 改為彈窗編輯（不再 inline 改欄位）。
+- 彈窗含基本欄位驗證與 href 格式檢查。
 
-## 7. SEO / 文案層
-- `title`: `About Us | IDTECH Clone`
-- `description`: `Learn about our team, values, and how we build scalable payment products.`
+## 4. 前台時間軸顯示落地
+- 檔案：`src/components/company/aboutus/AboutUsInnovationTimelineSection.jsx`
+- 問題：資料筆數增加時，中軸線未延長。
+- 修正：時間軸容器改為 `w-max min-w-[156rem]`，使主線寬度可隨內容延展。
+- 結果：新增 timeline item 時，中軸線與節點可同步延長。
 
-## 8. 驗收條件
-- `/company/about-us` 可正確顯示五個區塊。
-- 所有文案與圖片皆由 `src/data/company/aboutUs.js` 提供。
-- 動畫在進入視圖時播放一次。
-- Timeline 在桌機為橫向時間軸、手機為直向清單。
-- 手機與桌機版面無明顯溢出。
+## 5. 驗收標準（更新版）
+- `/company/about-us` 五大區塊正常顯示。
+- 前台可成功讀取 API，API 異常時可 fallback。
+- 後台可新增/編輯/刪除/拖曳 Timeline 與 Offices。
+- Timeline 年代輸入只能透過 decade 下拉選單。
+- 前台時間軸新增資料後主線不截斷。
