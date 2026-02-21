@@ -1,8 +1,21 @@
 import { Link } from 'react-router-dom'
 import useInViewOnce from '../../../../hooks/useInViewOnce'
+import renderMarkdownProse from '../../../../utils/renderMarkdownProse'
+
+const toMarkdownText = (value) => {
+  if (typeof value === 'string') return value
+  if (!Array.isArray(value)) return ''
+  return value
+    .map((item) => String(item ?? '').trim())
+    .filter(Boolean)
+    .map((item) => `- ${item}`)
+    .join('\n')
+}
 
 const CareerDetailMainSection = ({ job }) => {
   const { ref, isInView } = useInViewOnce()
+  const jobDutiesMarkdown = toMarkdownText(job.jobDutiesMarkdown ?? job.jobDuties)
+  const qualificationsMarkdown = toMarkdownText(job.qualificationsMarkdown ?? job.qualifications)
 
   return (
     <article
@@ -28,20 +41,12 @@ const CareerDetailMainSection = ({ job }) => {
 
       <div className="mt-8">
         <h2 className="text-2xl font-semibold text-black">Job Duties</h2>
-        <ul className="mt-4 list-disc space-y-3 pl-5 text-base leading-7 text-black/65">
-          {job.jobDuties.map((duty) => (
-            <li key={duty}>{duty}</li>
-          ))}
-        </ul>
+        <div className="md-prose mt-4 text-black/65">{renderMarkdownProse(jobDutiesMarkdown)}</div>
       </div>
 
       <div className="mt-8">
         <h2 className="text-2xl font-semibold text-black">Qualifications</h2>
-        <ul className="mt-4 list-disc space-y-3 pl-5 text-base leading-7 text-black/65">
-          {job.qualifications.map((qualification) => (
-            <li key={qualification}>{qualification}</li>
-          ))}
-        </ul>
+        <div className="md-prose mt-4 text-black/65">{renderMarkdownProse(qualificationsMarkdown)}</div>
       </div>
     </article>
   )

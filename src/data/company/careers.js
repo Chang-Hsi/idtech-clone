@@ -45,16 +45,16 @@ export const careersJobs = [
     imageUrl: SRE,
     summary:
       'We are looking for an experienced Senior SRE Engineer with at least 3 years of cloud SRE or DevOps-related experience to strengthen platform reliability and operational resilience.',
-    jobDuties: [
-      'Incident Management: Participate in on-call support, incident investigation, diagnosis, and resolution.',
-      'Monitoring and Logging: Implement and maintain observability using Prometheus, Grafana, and Datadog.',
-      'Infrastructure Reliability: Improve deployment safety, rollout consistency, and recovery time objectives.',
-    ],
-    qualifications: [
-      '3+ years in SRE, DevOps, or infrastructure reliability engineering.',
-      'Hands-on experience with Kubernetes, CI/CD, and cloud environments.',
-      'Strong troubleshooting and cross-functional communication skills.',
-    ],
+    jobDutiesMarkdown: [
+      '- Incident Management: Participate in on-call support, incident investigation, diagnosis, and resolution.',
+      '- Monitoring and Logging: Implement and maintain observability using Prometheus, Grafana, and Datadog.',
+      '- Infrastructure Reliability: Improve deployment safety, rollout consistency, and recovery time objectives.',
+    ].join('\n'),
+    qualificationsMarkdown: [
+      '- 3+ years in SRE, DevOps, or infrastructure reliability engineering.',
+      '- Hands-on experience with Kubernetes, CI/CD, and cloud environments.',
+      '- Strong troubleshooting and cross-functional communication skills.',
+    ].join('\n'),
     applyEmail: 'careers@idtechproducts.com',
     isOpen: true,
   },
@@ -69,16 +69,16 @@ export const careersJobs = [
     imageUrl: salesmanager,
     summary:
       'Drive enterprise pipeline growth across assigned territory with strong account strategy and customer relationship management.',
-    jobDuties: [
-      'Develop territory account plans and revenue targets.',
-      'Coordinate with product and solution teams for enterprise proposals.',
-      'Lead deal progression and quarterly pipeline reporting.',
-    ],
-    qualifications: [
-      '5+ years in B2B enterprise sales.',
-      'Experience in payments, fintech, or hardware/software solution sales.',
-      'Strong presentation and negotiation capabilities.',
-    ],
+    jobDutiesMarkdown: [
+      '- Develop territory account plans and revenue targets.',
+      '- Coordinate with product and solution teams for enterprise proposals.',
+      '- Lead deal progression and quarterly pipeline reporting.',
+    ].join('\n'),
+    qualificationsMarkdown: [
+      '- 5+ years in B2B enterprise sales.',
+      '- Experience in payments, fintech, or hardware/software solution sales.',
+      '- Strong presentation and negotiation capabilities.',
+    ].join('\n'),
     applyEmail: 'careers@idtechproducts.com',
     isOpen: true,
   },
@@ -93,16 +93,16 @@ export const careersJobs = [
     imageUrl: salesmanager2,
     summary:
       'Support lead qualification, outbound engagement, and account nurture processes to improve conversion velocity.',
-    jobDuties: [
-      'Qualify inbound and outbound leads through structured discovery.',
-      'Maintain CRM hygiene and activity tracking.',
-      'Partner with field sales on handoff and follow-up.',
-    ],
-    qualifications: [
-      '2+ years in sales development or inside sales.',
-      'Comfortable with CRM tools and pipeline workflows.',
-      'Clear communication and customer-first mindset.',
-    ],
+    jobDutiesMarkdown: [
+      '- Qualify inbound and outbound leads through structured discovery.',
+      '- Maintain CRM hygiene and activity tracking.',
+      '- Partner with field sales on handoff and follow-up.',
+    ].join('\n'),
+    qualificationsMarkdown: [
+      '- 2+ years in sales development or inside sales.',
+      '- Comfortable with CRM tools and pipeline workflows.',
+      '- Clear communication and customer-first mindset.',
+    ].join('\n'),
     applyEmail: 'careers@idtechproducts.com',
     isOpen: true,
   },
@@ -117,16 +117,16 @@ export const careersJobs = [
     imageUrl: salesmanager3,
     summary:
       'Expand regional partnerships and strategic account footprint in Japan market with localized go-to-market execution.',
-    jobDuties: [
-      'Build and manage partner/channel relationships.',
-      'Drive local demand generation with marketing collaboration.',
-      'Own regional forecast and revenue accountability.',
-    ],
-    qualifications: [
-      'Business-level Japanese and English communication.',
-      'Strong enterprise sales background in technology domains.',
-      'Proven track record in quota attainment.',
-    ],
+    jobDutiesMarkdown: [
+      '- Build and manage partner/channel relationships.',
+      '- Drive local demand generation with marketing collaboration.',
+      '- Own regional forecast and revenue accountability.',
+    ].join('\n'),
+    qualificationsMarkdown: [
+      '- Business-level Japanese and English communication.',
+      '- Strong enterprise sales background in technology domains.',
+      '- Proven track record in quota attainment.',
+    ].join('\n'),
     applyEmail: 'careers@idtechproducts.com',
     isOpen: true,
   },
