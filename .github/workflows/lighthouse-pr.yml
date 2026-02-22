@@ -52,8 +52,8 @@ jobs:
             exit 1
           fi
 
-          npx lhci collect --url=http://127.0.0.1:4173 --numberOfRuns=3
-          npx lhci upload --target=temporary-public-storage
+          npx @lhci/cli@0.15.x collect --url=http://127.0.0.1:4173 --numberOfRuns=3 --settings.chromeFlags="--no-sandbox --disable-dev-shm-usage"
+          npx @lhci/cli@0.15.x upload --target=temporary-public-storage
 
       - name: Upload Lighthouse artifacts
         if: always()
@@ -74,16 +74,28 @@ jobs:
             throw new Error('Missing .lighthouseci report directory.')
           }
 
-          const reportFiles = fs
-            .readdirSync(reportDir)
-            .filter((name) => name.startsWith('lhr-') && name.endsWith('.json'))
-            .sort()
-
-          if (reportFiles.length === 0) {
-            throw new Error('No Lighthouse report json file found.')
+          const manifestPath = path.join(reportDir, 'manifest.json')
+          let reportPath = null
+          if (fs.existsSync(manifestPath)) {
+            const manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf8'))
+            const latest = Array.isArray(manifest) ? manifest[manifest.length - 1] : null
+            if (latest?.jsonPath) {
+              reportPath = path.resolve(reportDir, latest.jsonPath)
+            }
           }
 
-          const report = JSON.parse(fs.readFileSync(path.join(reportDir, reportFiles[reportFiles.length - 1]), 'utf8'))
+          if (!reportPath || !fs.existsSync(reportPath)) {
+            const reportFiles = fs
+              .readdirSync(reportDir)
+              .filter((name) => name.startsWith('lhr-') && name.endsWith('.json'))
+              .sort()
+            if (reportFiles.length === 0) {
+              throw new Error('No Lighthouse report json file found.')
+            }
+            reportPath = path.join(reportDir, reportFiles[reportFiles.length - 1])
+          }
+
+          const report = JSON.parse(fs.readFileSync(reportPath, 'utf8'))
           const audits = report.audits || {}
           const categories = report.categories || {}
 
