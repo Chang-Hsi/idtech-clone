@@ -143,50 +143,69 @@ jobs:
 
       - name: Push Lighthouse metrics to backend
         env:
-          BACKEND_BASE_URL: ${{ secrets.BACKEND_BASE_URL }}
-          LIGHTHOUSE_METRICS_INGEST_TOKEN: ${{ secrets.LIGHTHOUSE_METRICS_INGEST_TOKEN }}
+          BACKEND_BASE_URL: ${{ secrets.BACKEND_BASE_URL || vars.BACKEND_BASE_URL }}
+          LIGHTHOUSE_METRICS_INGEST_TOKEN: ${{ secrets.LIGHTHOUSE_METRICS_INGEST_TOKEN || vars.LIGHTHOUSE_METRICS_INGEST_TOKEN }}
           PR_NUMBER: ${{ github.event.pull_request.number }}
+          PERFORMANCE_SCORE: ${{ steps.summary.outputs.performance_score }}
+          ACCESSIBILITY_SCORE: ${{ steps.summary.outputs.accessibility_score }}
+          BEST_PRACTICES_SCORE: ${{ steps.summary.outputs.best_practices_score }}
+          SEO_SCORE: ${{ steps.summary.outputs.seo_score }}
+          LCP_MS: ${{ steps.summary.outputs.lcp_ms }}
+          CLS: ${{ steps.summary.outputs.cls }}
+          FID_LIKE_MS: ${{ steps.summary.outputs.fid_like_ms }}
+          INP_MS: ${{ steps.summary.outputs.inp_ms }}
+          TBT_MS: ${{ steps.summary.outputs.tbt_ms }}
+          FCP_MS: ${{ steps.summary.outputs.fcp_ms }}
+          SPEED_INDEX_MS: ${{ steps.summary.outputs.speed_index_ms }}
         run: |
           if [ -z "${BACKEND_BASE_URL}" ] || [ -z "${LIGHTHOUSE_METRICS_INGEST_TOKEN}" ]; then
             echo "Skip ingest: BACKEND_BASE_URL or LIGHTHOUSE_METRICS_INGEST_TOKEN is missing."
             exit 0
           fi
 
-          if [ -n "${PR_NUMBER}" ]; then
-            pr_number="${PR_NUMBER}"
-          else
-            pr_number="null"
-          fi
-
-          payload=$(cat <<JSON
-          {
-            "source":"github-actions",
-            "repository":"${GITHUB_REPOSITORY}",
-            "pullRequestNumber":${pr_number},
-            "branch":"${GITHUB_HEAD_REF:-${GITHUB_REF_NAME}}",
-            "commitSha":"${GITHUB_SHA}",
-            "targetUrl":"https://chang-hsi.github.io/idtech-clone/",
-            "performanceScore":${{ steps.summary.outputs.performance_score }},
-            "accessibilityScore":${{ steps.summary.outputs.accessibility_score }},
-            "bestPracticesScore":${{ steps.summary.outputs.best_practices_score }},
-            "seoScore":${{ steps.summary.outputs.seo_score }},
-            "lcpMs":${{ steps.summary.outputs.lcp_ms }},
-            "cls":${{ steps.summary.outputs.cls }},
-            "fidLikeMs":${{ steps.summary.outputs.fid_like_ms }},
-            "inpMs":${{ steps.summary.outputs.inp_ms }},
-            "tbtMs":${{ steps.summary.outputs.tbt_ms }},
-            "fcpMs":${{ steps.summary.outputs.fcp_ms }},
-            "speedIndexMs":${{ steps.summary.outputs.speed_index_ms }},
-            "runId":"${GITHUB_RUN_ID}",
-            "runUrl":"https://github.com/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}",
-            "recordedAt":"$(date -u +%Y-%m-%dT%H:%M:%S.000Z)",
-            "rawPayload": {
-              "workflow":"${GITHUB_WORKFLOW}",
-              "job":"${GITHUB_JOB}",
-              "attempt":"${GITHUB_RUN_ATTEMPT}"
+          payload=$(
+            node <<'NODE'
+            const parseNumber = (value) => {
+              const normalized = String(value ?? '').trim()
+              if (!normalized || normalized === '--') return null
+              const parsed = Number(normalized)
+              return Number.isFinite(parsed) ? parsed : null
             }
-          }
-          JSON
+            const parseInteger = (value) => {
+              const normalized = String(value ?? '').trim()
+              if (!normalized) return null
+              const parsed = Number.parseInt(normalized, 10)
+              return Number.isFinite(parsed) ? parsed : null
+            }
+            const payload = {
+              source: 'github-actions',
+              repository: process.env.GITHUB_REPOSITORY,
+              pullRequestNumber: parseInteger(process.env.PR_NUMBER),
+              branch: process.env.GITHUB_HEAD_REF || process.env.GITHUB_REF_NAME,
+              commitSha: process.env.GITHUB_SHA,
+              targetUrl: 'https://chang-hsi.github.io/idtech-clone/',
+              performanceScore: parseNumber(process.env.PERFORMANCE_SCORE),
+              accessibilityScore: parseNumber(process.env.ACCESSIBILITY_SCORE),
+              bestPracticesScore: parseNumber(process.env.BEST_PRACTICES_SCORE),
+              seoScore: parseNumber(process.env.SEO_SCORE),
+              lcpMs: parseNumber(process.env.LCP_MS),
+              cls: parseNumber(process.env.CLS),
+              fidLikeMs: parseNumber(process.env.FID_LIKE_MS),
+              inpMs: parseNumber(process.env.INP_MS),
+              tbtMs: parseNumber(process.env.TBT_MS),
+              fcpMs: parseNumber(process.env.FCP_MS),
+              speedIndexMs: parseNumber(process.env.SPEED_INDEX_MS),
+              runId: process.env.GITHUB_RUN_ID,
+              runUrl: `https://github.com/${process.env.GITHUB_REPOSITORY}/actions/runs/${process.env.GITHUB_RUN_ID}`,
+              recordedAt: new Date().toISOString(),
+              rawPayload: {
+                workflow: process.env.GITHUB_WORKFLOW,
+                job: process.env.GITHUB_JOB,
+                attempt: process.env.GITHUB_RUN_ATTEMPT,
+              },
+            }
+            process.stdout.write(JSON.stringify(payload))
+            NODE
           )
 
           http_code=$(curl --silent --show-error \
