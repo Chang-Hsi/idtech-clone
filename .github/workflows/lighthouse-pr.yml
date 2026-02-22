@@ -33,12 +33,34 @@ jobs:
         run: npm run build
 
       - name: Run Lighthouse CI
-        id: lhci
-        uses: treosh/lighthouse-ci-action@v12
+        run: |
+          npx vite preview --host 127.0.0.1 --port 4173 > /tmp/vite-preview.log 2>&1 &
+          PREVIEW_PID=$!
+          trap 'kill $PREVIEW_PID || true' EXIT
+
+          ready=0
+          for _ in $(seq 1 60); do
+            if curl -sf http://127.0.0.1:4173 > /dev/null; then
+              ready=1
+              break
+            fi
+            sleep 2
+          done
+          if [ "$ready" -ne 1 ]; then
+            echo "Vite preview did not start in time."
+            cat /tmp/vite-preview.log || true
+            exit 1
+          fi
+
+          npx lhci collect --url=http://127.0.0.1:4173 --numberOfRuns=3
+          npx lhci upload --target=temporary-public-storage
+
+      - name: Upload Lighthouse artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
         with:
-          configPath: ./.lighthouserc.json
-          uploadArtifacts: true
-          temporaryPublicStorage: true
+          name: lighthouse-results
+          path: .lighthouseci
 
       - name: Format Lighthouse summary
         id: summary
