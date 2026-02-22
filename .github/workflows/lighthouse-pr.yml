@@ -40,7 +40,7 @@ jobs:
 
           ready=0
           for _ in $(seq 1 60); do
-            if curl -sf http://127.0.0.1:4173 > /dev/null; then
+            if curl -sf http://127.0.0.1:4173/idtech-clone/ > /dev/null; then
               ready=1
               break
             fi
@@ -52,7 +52,7 @@ jobs:
             exit 1
           fi
 
-          npx @lhci/cli@0.15.x collect --url=http://127.0.0.1:4173 --numberOfRuns=3 --settings.chromeFlags="--no-sandbox --disable-dev-shm-usage"
+          npx @lhci/cli@0.15.x collect --url=http://127.0.0.1:4173/idtech-clone/ --numberOfRuns=3 --settings.chromeFlags="--no-sandbox --disable-dev-shm-usage"
           npx @lhci/cli@0.15.x upload --target=temporary-public-storage
 
       - name: Upload Lighthouse artifacts
