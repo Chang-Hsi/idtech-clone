@@ -163,50 +163,7 @@ jobs:
             exit 0
           fi
 
-          payload=$(
-            node <<'NODE'
-            const parseNumber = (value) => {
-              const normalized = String(value ?? '').trim()
-              if (!normalized || normalized === '--') return null
-              const parsed = Number(normalized)
-              return Number.isFinite(parsed) ? parsed : null
-            }
-            const parseInteger = (value) => {
-              const normalized = String(value ?? '').trim()
-              if (!normalized) return null
-              const parsed = Number.parseInt(normalized, 10)
-              return Number.isFinite(parsed) ? parsed : null
-            }
-            const payload = {
-              source: 'github-actions',
-              repository: process.env.GITHUB_REPOSITORY,
-              pullRequestNumber: parseInteger(process.env.PR_NUMBER),
-              branch: process.env.GITHUB_HEAD_REF || process.env.GITHUB_REF_NAME,
-              commitSha: process.env.GITHUB_SHA,
-              targetUrl: 'https://chang-hsi.github.io/idtech-clone/',
-              performanceScore: parseNumber(process.env.PERFORMANCE_SCORE),
-              accessibilityScore: parseNumber(process.env.ACCESSIBILITY_SCORE),
-              bestPracticesScore: parseNumber(process.env.BEST_PRACTICES_SCORE),
-              seoScore: parseNumber(process.env.SEO_SCORE),
-              lcpMs: parseNumber(process.env.LCP_MS),
-              cls: parseNumber(process.env.CLS),
-              fidLikeMs: parseNumber(process.env.FID_LIKE_MS),
-              inpMs: parseNumber(process.env.INP_MS),
-              tbtMs: parseNumber(process.env.TBT_MS),
-              fcpMs: parseNumber(process.env.FCP_MS),
-              speedIndexMs: parseNumber(process.env.SPEED_INDEX_MS),
-              runId: process.env.GITHUB_RUN_ID,
-              runUrl: `https://github.com/${process.env.GITHUB_REPOSITORY}/actions/runs/${process.env.GITHUB_RUN_ID}`,
-              recordedAt: new Date().toISOString(),
-              rawPayload: {
-                workflow: process.env.GITHUB_WORKFLOW,
-                job: process.env.GITHUB_JOB,
-                attempt: process.env.GITHUB_RUN_ATTEMPT,
-              },
-            }
-            process.stdout.write(JSON.stringify(payload))
-            NODE
-          )
+          payload=$(node -e "const parseNumber=(value)=>{const normalized=String(value??'').trim();if(!normalized||normalized==='--')return null;const parsed=Number(normalized);return Number.isFinite(parsed)?parsed:null;};const parseInteger=(value)=>{const normalized=String(value??'').trim();if(!normalized)return null;const parsed=Number.parseInt(normalized,10);return Number.isFinite(parsed)?parsed:null;};const payload={source:'github-actions',repository:process.env.GITHUB_REPOSITORY,pullRequestNumber:parseInteger(process.env.PR_NUMBER),branch:process.env.GITHUB_HEAD_REF||process.env.GITHUB_REF_NAME,commitSha:process.env.GITHUB_SHA,targetUrl:'https://chang-hsi.github.io/idtech-clone/',performanceScore:parseNumber(process.env.PERFORMANCE_SCORE),accessibilityScore:parseNumber(process.env.ACCESSIBILITY_SCORE),bestPracticesScore:parseNumber(process.env.BEST_PRACTICES_SCORE),seoScore:parseNumber(process.env.SEO_SCORE),lcpMs:parseNumber(process.env.LCP_MS),cls:parseNumber(process.env.CLS),fidLikeMs:parseNumber(process.env.FID_LIKE_MS),inpMs:parseNumber(process.env.INP_MS),tbtMs:parseNumber(process.env.TBT_MS),fcpMs:parseNumber(process.env.FCP_MS),speedIndexMs:parseNumber(process.env.SPEED_INDEX_MS),runId:process.env.GITHUB_RUN_ID,runUrl:'https://github.com/'+process.env.GITHUB_REPOSITORY+'/actions/runs/'+process.env.GITHUB_RUN_ID,recordedAt:new Date().toISOString(),rawPayload:{workflow:process.env.GITHUB_WORKFLOW,job:process.env.GITHUB_JOB,attempt:process.env.GITHUB_RUN_ATTEMPT}};process.stdout.write(JSON.stringify(payload));")
 
           http_code=$(curl --silent --show-error \
             -o /tmp/lighthouse-ingest-response.json \
