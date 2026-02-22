@@ -109,12 +109,16 @@ jobs:
           NODE
 
       - name: Push Lighthouse metrics to backend
-        if: ${{ secrets.BACKEND_BASE_URL != '' && secrets.LIGHTHOUSE_METRICS_INGEST_TOKEN != '' }}
         env:
           BACKEND_BASE_URL: ${{ secrets.BACKEND_BASE_URL }}
           LIGHTHOUSE_METRICS_INGEST_TOKEN: ${{ secrets.LIGHTHOUSE_METRICS_INGEST_TOKEN }}
           PR_NUMBER: ${{ github.event.pull_request.number }}
         run: |
+          if [ -z "${BACKEND_BASE_URL}" ] || [ -z "${LIGHTHOUSE_METRICS_INGEST_TOKEN}" ]; then
+            echo "Skip ingest: BACKEND_BASE_URL or LIGHTHOUSE_METRICS_INGEST_TOKEN is missing."
+            exit 0
+          fi
+
           if [ -n "${PR_NUMBER}" ]; then
             pr_number="${PR_NUMBER}"
           else
