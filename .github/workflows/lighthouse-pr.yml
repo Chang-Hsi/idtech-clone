@@ -14,6 +14,10 @@ on:
         description: 'Trigger source'
         required: false
         type: string
+      backend_base_url:
+        description: 'Backend callback base URL'
+        required: false
+        type: string
 
 permissions:
   contents: read
@@ -152,8 +156,9 @@ jobs:
 
       - name: Push Lighthouse metrics to backend
         env:
-          BACKEND_BASE_URL: ${{ secrets.BACKEND_BASE_URL || vars.BACKEND_BASE_URL }}
+          BACKEND_BASE_URL: ${{ github.event.inputs.backend_base_url || secrets.BACKEND_BASE_URL || vars.BACKEND_BASE_URL }}
           LIGHTHOUSE_METRICS_INGEST_TOKEN: ${{ secrets.LIGHTHOUSE_METRICS_INGEST_TOKEN || vars.LIGHTHOUSE_METRICS_INGEST_TOKEN }}
+          LIGHTHOUSE_METRICS_WEBHOOK_SECRET: ${{ secrets.LIGHTHOUSE_METRICS_WEBHOOK_SECRET || vars.LIGHTHOUSE_METRICS_WEBHOOK_SECRET }}
           PR_NUMBER: ${{ github.event.pull_request.number }}
           PERFORMANCE_SCORE: ${{ steps.summary.outputs.performance_score }}
           ACCESSIBILITY_SCORE: ${{ steps.summary.outputs.accessibility_score }}
@@ -174,12 +179,18 @@ jobs:
 
           payload=$(node -e "const parseNumber=(value)=>{const normalized=String(value??'').trim();if(!normalized||normalized==='--')return null;const parsed=Number(normalized);return Number.isFinite(parsed)?parsed:null;};const parseInteger=(value)=>{const normalized=String(value??'').trim();if(!normalized)return null;const parsed=Number.parseInt(normalized,10);return Number.isFinite(parsed)?parsed:null;};const payload={source:'github-actions',repository:process.env.GITHUB_REPOSITORY,pullRequestNumber:parseInteger(process.env.PR_NUMBER),branch:process.env.GITHUB_HEAD_REF||process.env.GITHUB_REF_NAME,commitSha:process.env.GITHUB_SHA,targetUrl:'https://chang-hsi.github.io/idtech-clone/',performanceScore:parseNumber(process.env.PERFORMANCE_SCORE),accessibilityScore:parseNumber(process.env.ACCESSIBILITY_SCORE),bestPracticesScore:parseNumber(process.env.BEST_PRACTICES_SCORE),seoScore:parseNumber(process.env.SEO_SCORE),lcpMs:parseNumber(process.env.LCP_MS),cls:parseNumber(process.env.CLS),fidLikeMs:parseNumber(process.env.FID_LIKE_MS),inpMs:parseNumber(process.env.INP_MS),tbtMs:parseNumber(process.env.TBT_MS),fcpMs:parseNumber(process.env.FCP_MS),speedIndexMs:parseNumber(process.env.SPEED_INDEX_MS),runId:process.env.GITHUB_RUN_ID,runUrl:'https://github.com/'+process.env.GITHUB_REPOSITORY+'/actions/runs/'+process.env.GITHUB_RUN_ID,recordedAt:new Date().toISOString(),rawPayload:{workflow:process.env.GITHUB_WORKFLOW,job:process.env.GITHUB_JOB,attempt:process.env.GITHUB_RUN_ATTEMPT}};process.stdout.write(JSON.stringify(payload));")
 
+          timestamp=$(date +%s)
+          signature=$(LH_TS="$timestamp" LH_PAYLOAD="$payload" LH_SECRET="${LIGHTHOUSE_METRICS_WEBHOOK_SECRET}" \
+            node -e "const crypto=require('node:crypto');const ts=String(process.env.LH_TS||'');const payload=String(process.env.LH_PAYLOAD||'');const secret=String(process.env.LH_SECRET||'');const h=crypto.createHmac('sha256', secret).update(ts+'.'+payload).digest('hex');process.stdout.write('sha256='+h);")
+
           http_code=$(curl --silent --show-error \
             -o /tmp/lighthouse-ingest-response.json \
             -w "%{http_code}" \
             -X POST "${BACKEND_BASE_URL}/api/internal/seo/lighthouse-records" \
             -H "Content-Type: application/json" \
             -H "Authorization: Bearer ${LIGHTHOUSE_METRICS_INGEST_TOKEN}" \
+            -H "X-Lighthouse-Timestamp: ${timestamp}" \
+            -H "X-Lighthouse-Signature: ${signature}" \
             -d "${payload}")
           if [ "$http_code" -lt 200 ] || [ "$http_code" -ge 300 ]; then
             echo "Lighthouse ingest failed with HTTP ${http_code}"
@@ -254,8 +265,9 @@ jobs:
       - name: Report run status to backend
         if: always()
         env:
-          BACKEND_BASE_URL: ${{ secrets.BACKEND_BASE_URL || vars.BACKEND_BASE_URL }}
+          BACKEND_BASE_URL: ${{ github.event.inputs.backend_base_url || secrets.BACKEND_BASE_URL || vars.BACKEND_BASE_URL }}
           LIGHTHOUSE_METRICS_INGEST_TOKEN: ${{ secrets.LIGHTHOUSE_METRICS_INGEST_TOKEN || vars.LIGHTHOUSE_METRICS_INGEST_TOKEN }}
+          LIGHTHOUSE_METRICS_WEBHOOK_SECRET: ${{ secrets.LIGHTHOUSE_METRICS_WEBHOOK_SECRET || vars.LIGHTHOUSE_METRICS_WEBHOOK_SECRET }}
           TRIGGER_ID: ${{ github.event.inputs.trigger_id }}
           TRIGGER_SOURCE: ${{ github.event.inputs.trigger_source }}
           FAILED_STEP: ${{ steps.failed_step.outputs.value }}
@@ -268,12 +280,18 @@ jobs:
 
           payload=$(node -e "const workflowStatus=String(process.env.WORKFLOW_STATUS||'').trim();const status=workflowStatus==='success'?'success':workflowStatus==='cancelled'?'cancelled':'failed';const conclusion=status==='success'?'success':status==='cancelled'?'cancelled':'failure';const payload={triggerId:process.env.TRIGGER_ID?String(process.env.TRIGGER_ID):null,repository:process.env.GITHUB_REPOSITORY,workflowId:'lighthouse-pr.yml',ref:process.env.GITHUB_HEAD_REF||process.env.GITHUB_REF_NAME,runId:String(process.env.GITHUB_RUN_ID),runUrl:'https://github.com/'+process.env.GITHUB_REPOSITORY+'/actions/runs/'+process.env.GITHUB_RUN_ID,status,conclusion,failureStep:process.env.FAILED_STEP?String(process.env.FAILED_STEP):null,failureReason:status==='success'?null:status==='cancelled'?'Workflow was cancelled.':'Workflow failed. Check run logs for details.',completedAt:new Date().toISOString(),rawPayload:{eventName:process.env.GITHUB_EVENT_NAME,triggerSource:process.env.TRIGGER_SOURCE||'',workflow:process.env.GITHUB_WORKFLOW,job:process.env.GITHUB_JOB,attempt:process.env.GITHUB_RUN_ATTEMPT}};process.stdout.write(JSON.stringify(payload));")
 
+          timestamp=$(date +%s)
+          signature=$(LH_TS="$timestamp" LH_PAYLOAD="$payload" LH_SECRET="${LIGHTHOUSE_METRICS_WEBHOOK_SECRET}" \
+            node -e "const crypto=require('node:crypto');const ts=String(process.env.LH_TS||'');const payload=String(process.env.LH_PAYLOAD||'');const secret=String(process.env.LH_SECRET||'');const h=crypto.createHmac('sha256', secret).update(ts+'.'+payload).digest('hex');process.stdout.write('sha256='+h);")
+
           http_code=$(curl --silent --show-error \
             -o /tmp/lighthouse-run-report-response.json \
             -w "%{http_code}" \
             -X POST "${BACKEND_BASE_URL}/api/internal/seo/lighthouse-runs/report" \
             -H "Content-Type: application/json" \
             -H "Authorization: Bearer ${LIGHTHOUSE_METRICS_INGEST_TOKEN}" \
+            -H "X-Lighthouse-Timestamp: ${timestamp}" \
+            -H "X-Lighthouse-Signature: ${signature}" \
             -d "${payload}")
           if [ "$http_code" -lt 200 ] || [ "$http_code" -ge 300 ]; then
             echo "Lighthouse run report failed with HTTP ${http_code}"
