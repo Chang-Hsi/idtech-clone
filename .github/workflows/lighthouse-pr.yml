@@ -18,6 +18,10 @@ on:
         description: 'Backend callback base URL'
         required: false
         type: string
+      runner_target:
+        description: 'Runner target (github-hosted or self-hosted)'
+        required: false
+        type: string
 
 permissions:
   contents: read
@@ -25,7 +29,7 @@ permissions:
 
 jobs:
   lighthouse:
-    runs-on: ubuntu-latest
+    runs-on: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.runner_target == 'self-hosted' && 'self-hosted' || 'ubuntu-latest' }}
     timeout-minutes: 20
     steps:
       - name: Checkout
