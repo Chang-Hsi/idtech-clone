@@ -35,7 +35,14 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Setup Node
+      - name: Setup Node (self-hosted)
+        if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.runner_target == 'self-hosted' }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Setup Node (github-hosted/cache)
+        if: ${{ !(github.event_name == 'workflow_dispatch' && github.event.inputs.runner_target == 'self-hosted') }}
         uses: actions/setup-node@v4
         with:
           node-version: 20
