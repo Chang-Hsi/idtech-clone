@@ -160,6 +160,42 @@ To align with the current project state, SEO v1 will include:
 
 ---
 
+# 🚦 2.2 Lighthouse CI + PR Metrics Plan (Implemented)
+
+目的：
+
+- 在 PR 階段用數據驗證前台性能，而不是主觀感受。
+- 將 Lighthouse 指標同步到後端，供後台長期追蹤。
+
+已落地流程：
+
+1. GitHub Actions Workflow：`.github/workflows/lighthouse-pr.yml`
+2. 事件：
+   - `pull_request`（opened/synchronize/reopened）
+   - `workflow_dispatch`（手動驗證）
+3. 執行內容：
+   - `npm ci`
+   - `npm run build`
+   - 以 `vite preview` 啟動站點（`/idtech-clone/` base）
+   - 執行 `@lhci/cli` collect + upload
+4. 產出：
+   - 上傳 `.lighthouseci` artifacts
+   - 產生 PR 評論內容（Performance/LCP/CLS/FID-like）
+   - 呼叫後端 ingest API 寫入 Score Records
+
+環境與 Secret：
+
+- `BACKEND_BASE_URL`：後端 API base URL
+- `LIGHTHOUSE_METRICS_INGEST_TOKEN`：後端 ingest token
+- Workflow 內已對缺少 secret 做保護：缺少時跳過 ingest，不阻塞 Lighthouse 主流程。
+
+目前限制：
+
+- `Upsert PR comment` 僅在 `pull_request` 事件執行。
+- `workflow_dispatch` 主要用於手動驗證流程，不會寫 PR 評論。
+
+---
+
 # 📁 3. Project Structure
 
 ```

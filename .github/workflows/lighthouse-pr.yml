@@ -5,6 +5,15 @@ on:
     branches: ['main']
     types: [opened, synchronize, reopened]
   workflow_dispatch:
+    inputs:
+      trigger_id:
+        description: 'Backstage trigger id for run tracking'
+        required: false
+        type: string
+      trigger_source:
+        description: 'Trigger source'
+        required: false
+        type: string
 
 permissions:
   contents: read
@@ -213,3 +222,61 @@ jobs:
                 body,
               })
             }
+
+      - name: Resolve failed step
+        if: always()
+        id: failed_step
+        uses: actions/github-script@v7
+        with:
+          script: |
+            let failedStep = ''
+            try {
+              const jobs = await github.paginate(github.rest.actions.listJobsForWorkflowRun, {
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                run_id: context.runId,
+                per_page: 100,
+              })
+              for (const job of jobs) {
+                for (const step of job.steps || []) {
+                  if (step.conclusion === 'failure') {
+                    failedStep = `${job.name} / ${step.name}`
+                    break
+                  }
+                }
+                if (failedStep) break
+              }
+            } catch (error) {
+              failedStep = `Unable to resolve failed step: ${error.message}`
+            }
+            core.setOutput('value', failedStep)
+
+      - name: Report run status to backend
+        if: always()
+        env:
+          BACKEND_BASE_URL: ${{ secrets.BACKEND_BASE_URL || vars.BACKEND_BASE_URL }}
+          LIGHTHOUSE_METRICS_INGEST_TOKEN: ${{ secrets.LIGHTHOUSE_METRICS_INGEST_TOKEN || vars.LIGHTHOUSE_METRICS_INGEST_TOKEN }}
+          TRIGGER_ID: ${{ github.event.inputs.trigger_id }}
+          TRIGGER_SOURCE: ${{ github.event.inputs.trigger_source }}
+          FAILED_STEP: ${{ steps.failed_step.outputs.value }}
+          WORKFLOW_STATUS: ${{ job.status }}
+        run: |
+          if [ -z "${BACKEND_BASE_URL}" ] || [ -z "${LIGHTHOUSE_METRICS_INGEST_TOKEN}" ]; then
+            echo "Skip run report: BACKEND_BASE_URL or LIGHTHOUSE_METRICS_INGEST_TOKEN is missing."
+            exit 0
+          fi
+
+          payload=$(node -e "const workflowStatus=String(process.env.WORKFLOW_STATUS||'').trim();const status=workflowStatus==='success'?'success':workflowStatus==='cancelled'?'cancelled':'failed';const conclusion=status==='success'?'success':status==='cancelled'?'cancelled':'failure';const payload={triggerId:process.env.TRIGGER_ID?String(process.env.TRIGGER_ID):null,repository:process.env.GITHUB_REPOSITORY,workflowId:'lighthouse-pr.yml',ref:process.env.GITHUB_HEAD_REF||process.env.GITHUB_REF_NAME,runId:String(process.env.GITHUB_RUN_ID),runUrl:'https://github.com/'+process.env.GITHUB_REPOSITORY+'/actions/runs/'+process.env.GITHUB_RUN_ID,status,conclusion,failureStep:process.env.FAILED_STEP?String(process.env.FAILED_STEP):null,failureReason:status==='success'?null:status==='cancelled'?'Workflow was cancelled.':'Workflow failed. Check run logs for details.',completedAt:new Date().toISOString(),rawPayload:{eventName:process.env.GITHUB_EVENT_NAME,triggerSource:process.env.TRIGGER_SOURCE||'',workflow:process.env.GITHUB_WORKFLOW,job:process.env.GITHUB_JOB,attempt:process.env.GITHUB_RUN_ATTEMPT}};process.stdout.write(JSON.stringify(payload));")
+
+          http_code=$(curl --silent --show-error \
+            -o /tmp/lighthouse-run-report-response.json \
+            -w "%{http_code}" \
+            -X POST "${BACKEND_BASE_URL}/api/internal/seo/lighthouse-runs/report" \
+            -H "Content-Type: application/json" \
+            -H "Authorization: Bearer ${LIGHTHOUSE_METRICS_INGEST_TOKEN}" \
+            -d "${payload}")
+          if [ "$http_code" -lt 200 ] || [ "$http_code" -ge 300 ]; then
+            echo "Lighthouse run report failed with HTTP ${http_code}"
+            cat /tmp/lighthouse-run-report-response.json
+            exit 1
+          fi
