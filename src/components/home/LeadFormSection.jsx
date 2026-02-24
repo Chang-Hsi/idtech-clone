@@ -1,4 +1,7 @@
-import { useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
+import { submitLeadFormToApi } from '../../api/leadApi'
+import { createIdempotencyKey } from '../../api/submissionsApi'
+import RecaptchaCheckboxField from '../ui/RecaptchaCheckboxField'
 
 const INITIAL_FORM = {
   firstName: '',
@@ -11,27 +14,47 @@ const INITIAL_FORM = {
   website: '',
 }
 
+const SUCCESS_FEEDBACK_MESSAGE =
+  'Your message has been sent successfully. Thank you for reaching out to our team.'
+
 const LeadFormSection = ({ config }) => {
   const [formData, setFormData] = useState(INITIAL_FORM)
   const [errors, setErrors] = useState({})
   const [submitState, setSubmitState] = useState('idle')
   const [statusMessage, setStatusMessage] = useState('')
-  const [isHumanChecked, setIsHumanChecked] = useState(false)
+  const [captchaToken, setCaptchaToken] = useState('')
+  const [recaptchaResetSignal, setRecaptchaResetSignal] = useState(0)
+  const isSuccessVisible = submitState === 'success' && Boolean(statusMessage)
+
+  useEffect(() => {
+    if (!isSuccessVisible) return undefined
+    const timeoutId = window.setTimeout(() => {
+      setSubmitState('idle')
+      setStatusMessage('')
+    }, 5000)
+    return () => window.clearTimeout(timeoutId)
+  }, [isSuccessVisible])
 
   const handleChange = (event) => {
     const { name, value } = event.target
     setFormData((prev) => ({ ...prev, [name]: value }))
-  }
-
-  const handleHumanCheck = (event) => {
-    setIsHumanChecked(event.target.checked)
     setErrors((prev) => {
-      if (!prev.humanCheck) return prev
+      if (!prev[name]) return prev
       const next = { ...prev }
-      delete next.humanCheck
+      delete next[name]
       return next
     })
   }
+
+  const handleCaptchaTokenChange = useCallback((token) => {
+    setCaptchaToken(String(token ?? '').trim())
+    setErrors((prev) => {
+      if (!prev.captchaToken) return prev
+      const next = { ...prev }
+      delete next.captchaToken
+      return next
+    })
+  }, [])
 
   const validate = () => {
     const nextErrors = {}
@@ -42,9 +65,13 @@ const LeadFormSection = ({ config }) => {
     if (formData.email.trim() && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
       nextErrors.email = 'Invalid email'
     }
+    if (!formData.phone.trim()) nextErrors.phone = 'This field is required.'
+    if (formData.phone.trim() && formData.phone.replace(/[^\d]/g, '').length < 8) {
+      nextErrors.phone = 'Phone number must contain at least 8 digits.'
+    }
     if (!formData.region.trim()) nextErrors.region = 'This field is required.'
     if (!formData.message.trim()) nextErrors.message = 'This field is required.'
-    if (!isHumanChecked) nextErrors.humanCheck = 'Please verify you are not a robot.'
+    if (!captchaToken) nextErrors.captchaToken = 'Please complete reCAPTCHA verification.'
 
     return nextErrors
   }
@@ -63,14 +90,24 @@ const LeadFormSection = ({ config }) => {
     }
 
     setSubmitState('submitting')
-    setStatusMessage('Submitting...')
+    setStatusMessage('')
 
-    await new Promise((resolve) => setTimeout(resolve, 450))
+    try {
+      await submitLeadFormToApi({
+        ...formData,
+        captchaToken,
+        idempotencyKey: createIdempotencyKey('lead'),
+      })
 
-    setSubmitState('success')
-    setStatusMessage('Message sent successfully.')
-    setFormData(INITIAL_FORM)
-    setIsHumanChecked(false)
+      setSubmitState('success')
+      setStatusMessage(SUCCESS_FEEDBACK_MESSAGE)
+      setFormData(INITIAL_FORM)
+      setCaptchaToken('')
+      setRecaptchaResetSignal((value) => value + 1)
+    } catch (error) {
+      setSubmitState('error')
+      setStatusMessage(error.message || 'Unable to submit right now.')
+    }
   }
 
   return (
@@ -138,13 +175,14 @@ const LeadFormSection = ({ config }) => {
             </label>
 
             <label className="space-y-2 text-sm">
-              <span>Phone</span>
+              <span>Phone *</span>
               <input
                 name="phone"
                 value={formData.phone}
                 onChange={handleChange}
                 className="w-full rounded-sm border border-black/20 bg-[#fff] px-3 py-2 outline-none focus:border-[#7DC242]"
               />
+              {errors.phone && <span className="text-xs text-red-500">{errors.phone}</span>}
             </label>
 
             <label className="space-y-2 text-sm">
@@ -178,28 +216,14 @@ const LeadFormSection = ({ config }) => {
             </label>
 
             <div className="md:col-span-2">
-              <label
-                htmlFor="lead-human-check"
-                className={`flex w-full max-w-[380px] cursor-pointer items-center justify-between rounded-sm border px-4 py-3 transition ${
-                  errors.humanCheck ? 'border-red-300 bg-red-50' : 'border-black/20 bg-white hover:border-black/35'
-                }`}
-              >
-                <span className="flex items-center gap-3 text-sm text-black/80">
-                  <input
-                    id="lead-human-check"
-                    type="checkbox"
-                    checked={isHumanChecked}
-                    onChange={handleHumanCheck}
-                    className="h-4 w-4 rounded border-black/30 accent-[#7DC242]"
-                  />
-                  I'm not a robot
-                </span>
-                <span className="text-[11px] uppercase tracking-wide text-black/40">Simulated</span>
-              </label>
-              {errors.humanCheck && <p className="mt-2 text-xs text-red-500">{errors.humanCheck}</p>}
+              <RecaptchaCheckboxField
+                resetSignal={recaptchaResetSignal}
+                onTokenChange={handleCaptchaTokenChange}
+                errorMessage={errors.captchaToken}
+              />
             </div>
 
-            <div className="flex flex-col gap-3 md:col-span-2 md:flex-row md:items-center md:justify-between">
+            <div className="md:col-span-2">
               <button
                 type="submit"
                 disabled={submitState === 'submitting'}
@@ -207,18 +231,19 @@ const LeadFormSection = ({ config }) => {
               >
                 {submitState === 'submitting' ? 'Submitting...' : 'Submit'}
               </button>
-              {statusMessage ? (
-                <p
-                  className={`text-sm ${
-                    submitState === 'success'
-                      ? 'text-[#2f7f18]'
-                      : submitState === 'error'
-                        ? 'text-red-500'
-                        : 'text-black/60'
-                  }`}
-                >
+
+              <div
+                className={`mt-3 transform overflow-hidden transition-all duration-500 ease-out ${
+                  isSuccessVisible ? 'max-h-24 translate-y-0 opacity-100' : 'max-h-0 -translate-y-2 opacity-0'
+                }`}
+              >
+                <p className="rounded-sm border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-700">
                   {statusMessage}
                 </p>
+              </div>
+
+              {submitState === 'error' && statusMessage ? (
+                <p className="mt-3 text-sm text-red-500">{statusMessage}</p>
               ) : null}
             </div>
           </form>

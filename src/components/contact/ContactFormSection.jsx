@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom'
-import { useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
+import RecaptchaCheckboxField from '../ui/RecaptchaCheckboxField'
 
 const INITIAL_FORM = {
   subject: '',
@@ -41,6 +42,8 @@ const defaultSubmitContactForm = async (payload) => {
 }
 
 const normalizePhoneDigits = (value) => value.replace(/[^\d]/g, '')
+const SUCCESS_FEEDBACK_MESSAGE =
+  'Your message has been sent successfully. Thank you for contacting us.'
 
 const ContactFormSection = ({
   content,
@@ -53,8 +56,20 @@ const ContactFormSection = ({
   const [errors, setErrors] = useState({})
   const [submitState, setSubmitState] = useState('idle')
   const [statusMessage, setStatusMessage] = useState('')
+  const [captchaToken, setCaptchaToken] = useState('')
+  const [recaptchaResetSignal, setRecaptchaResetSignal] = useState(0)
   const fieldRefs = useRef({})
   const statusRef = useRef(null)
+  const isSuccessVisible = submitState === 'success' && Boolean(statusMessage)
+
+  useEffect(() => {
+    if (!isSuccessVisible) return undefined
+    const timeoutId = window.setTimeout(() => {
+      setSubmitState('idle')
+      setStatusMessage('')
+    }, 5000)
+    return () => window.clearTimeout(timeoutId)
+  }, [isSuccessVisible])
 
   const registerFieldRef = (name) => (node) => {
     if (!node) return
@@ -103,9 +118,20 @@ const ContactFormSection = ({
       nextErrors.message = `Message must be at least ${content.messageMinLength} characters.`
     if (!formData.privacyConsent)
       nextErrors.privacyConsent = 'You must agree to the privacy policy before submitting.'
+    if (!captchaToken) nextErrors.captchaToken = 'Please complete reCAPTCHA verification.'
 
     return nextErrors
   }
+
+  const handleCaptchaTokenChange = useCallback((token) => {
+    setCaptchaToken(String(token ?? '').trim())
+    setErrors((prev) => {
+      if (!prev.captchaToken) return prev
+      const next = { ...prev }
+      delete next.captchaToken
+      return next
+    })
+  }, [])
 
   const focusFirstError = (nextErrors) => {
     const firstErrorField = FIELD_ORDER.find((field) => Boolean(nextErrors[field]))
@@ -141,16 +167,19 @@ const ContactFormSection = ({
     }
 
     setSubmitState('submitting')
-    setStatusMessage('Submitting your request...')
+    setStatusMessage('')
 
     try {
       await onSubmitInquiry({
         ...formData,
-        source: 'contact-page',
+        source: 'contact',
+        captchaToken,
       })
       setSubmitState('success')
-      setStatusMessage('Your message has been sent successfully.')
+      setStatusMessage(SUCCESS_FEEDBACK_MESSAGE)
       resetAfterSuccess()
+      setCaptchaToken('')
+      setRecaptchaResetSignal((value) => value + 1)
     } catch (error) {
       setSubmitState('error')
       setStatusMessage(error.message)
@@ -431,7 +460,14 @@ const ContactFormSection = ({
               </p>
             ) : null}
 
-            <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+            <RecaptchaCheckboxField
+              className="pt-2"
+              resetSignal={recaptchaResetSignal}
+              onTokenChange={handleCaptchaTokenChange}
+              errorMessage={errors.captchaToken}
+            />
+
+            <div className="flex flex-col gap-4">
               <button
                 type="submit"
                 disabled={submitState === 'submitting'}
@@ -440,20 +476,26 @@ const ContactFormSection = ({
                 {submitState === 'submitting' ? 'Submitting...' : 'Submit'}
               </button>
 
-              <p
-                ref={statusRef}
-                role={submitState === 'error' ? 'alert' : 'status'}
-                tabIndex={-1}
-                className={`text-sm ${
-                  submitState === 'success'
-                    ? 'text-emerald-700'
-                    : submitState === 'error'
-                      ? 'text-red-600'
-                      : 'text-slate-500'
+              <div
+                className={`transform overflow-hidden transition-all duration-500 ease-out ${
+                  isSuccessVisible ? 'max-h-24 translate-y-0 opacity-100' : 'max-h-0 -translate-y-2 opacity-0'
                 }`}
               >
-                {statusMessage}
-              </p>
+                <p
+                  ref={isSuccessVisible ? statusRef : null}
+                  role="status"
+                  tabIndex={-1}
+                  className="rounded-md border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-700"
+                >
+                  {statusMessage}
+                </p>
+              </div>
+
+              {submitState === 'error' && statusMessage ? (
+                <p ref={statusRef} role="alert" tabIndex={-1} className="text-sm text-red-600">
+                  {statusMessage}
+                </p>
+              ) : null}
             </div>
           </form>
         </div>

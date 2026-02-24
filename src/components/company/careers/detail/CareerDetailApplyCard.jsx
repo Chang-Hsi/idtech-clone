@@ -1,7 +1,8 @@
-import { useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { EnvelopeIcon, PhoneIcon } from '@heroicons/react/24/outline'
-import imNotARobotIcon from '../../../../assets/common/imNotARobotIcon.jpg'
+import { createIdempotencyKey, submitCareerSubmissionToApi } from '../../../../api/submissionsApi'
 import useInViewOnce from '../../../../hooks/useInViewOnce'
+import RecaptchaCheckboxField from '../../../ui/RecaptchaCheckboxField'
 
 const INITIAL_FORM = {
   firstName: '',
@@ -9,24 +10,62 @@ const INITIAL_FORM = {
   email: '',
   phone: '',
   resume: null,
+  website: '',
 }
+
+const SUCCESS_FEEDBACK_MESSAGE =
+  'Your message has been sent successfully. Thank you for your interest in joining us.'
 
 const CareerDetailApplyCard = ({ job }) => {
   const { ref, isInView } = useInViewOnce()
   const [formData, setFormData] = useState(INITIAL_FORM)
   const [errors, setErrors] = useState({})
-  const [isSubmitted, setIsSubmitted] = useState(false)
-  const [isHuman, setIsHuman] = useState(false)
+  const [submitState, setSubmitState] = useState('idle')
+  const [statusMessage, setStatusMessage] = useState('')
+  const [captchaToken, setCaptchaToken] = useState('')
+  const [recaptchaResetSignal, setRecaptchaResetSignal] = useState(0)
+  const isSuccessVisible = submitState === 'success' && Boolean(statusMessage)
+
+  useEffect(() => {
+    if (!isSuccessVisible) return undefined
+    const timeoutId = window.setTimeout(() => {
+      setSubmitState('idle')
+      setStatusMessage('')
+    }, 5000)
+    return () => window.clearTimeout(timeoutId)
+  }, [isSuccessVisible])
 
   const handleChange = (event) => {
     const { name, value } = event.target
     setFormData((prev) => ({ ...prev, [name]: value }))
+    setErrors((prev) => {
+      if (!prev[name]) return prev
+      const next = { ...prev }
+      delete next[name]
+      return next
+    })
   }
 
   const handleResumeChange = (event) => {
     const file = event.target.files?.[0] ?? null
     setFormData((prev) => ({ ...prev, resume: file }))
+    setErrors((prev) => {
+      if (!prev.resume) return prev
+      const next = { ...prev }
+      delete next.resume
+      return next
+    })
   }
+
+  const handleCaptchaTokenChange = useCallback((token) => {
+    setCaptchaToken(String(token ?? '').trim())
+    setErrors((prev) => {
+      if (!prev.captchaToken) return prev
+      const next = { ...prev }
+      delete next.captchaToken
+      return next
+    })
+  }, [])
 
   const validate = () => {
     const nextErrors = {}
@@ -36,34 +75,59 @@ const CareerDetailApplyCard = ({ job }) => {
     if (formData.email.trim() && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email))
       nextErrors.email = 'Invalid email'
     if (!formData.phone.trim()) nextErrors.phone = 'This field is required.'
+    if (formData.phone.trim() && formData.phone.replace(/[^\d]/g, '').length < 8)
+      nextErrors.phone = 'Phone number must contain at least 8 digits.'
     if (!formData.resume) nextErrors.resume = 'Please upload your resume.'
-    if (!isHuman) nextErrors.humanCheck = 'Please confirm you are not a robot.'
+    if (!captchaToken) nextErrors.captchaToken = 'Please complete reCAPTCHA verification.'
     return nextErrors
   }
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault()
     const nextErrors = validate()
     setErrors(nextErrors)
 
     if (Object.keys(nextErrors).length > 0) return
 
-    console.log('Career application payload:', {
-      jobSlug: job.slug,
-      firstName: formData.firstName,
-      lastName: formData.lastName,
-      email: formData.email,
-      phone: formData.phone,
-      resumeName: formData.resume?.name ?? null,
-    })
+    if (formData.website.trim()) {
+      setSubmitState('error')
+      setStatusMessage('Unable to submit right now.')
+      return
+    }
 
-    setIsSubmitted(true)
-    setIsHuman(false)
-    setFormData(INITIAL_FORM)
+    setSubmitState('submitting')
+    setStatusMessage('')
 
-    setTimeout(() => {
-      setIsSubmitted(false)
-    }, 3000)
+    try {
+      await submitCareerSubmissionToApi({
+        firstName: formData.firstName,
+        lastName: formData.lastName,
+        email: formData.email,
+        phone: formData.phone,
+        message: `Career application for ${job.title}`,
+        captchaToken,
+        website: formData.website,
+        resume: formData.resume,
+        payload: {
+          jobSlug: job.slug,
+          jobTitle: job.title,
+          applyEmail: job.applyEmail,
+          employmentType: job.employmentType,
+          region: job.region,
+        },
+      }, {
+        idempotencyKey: createIdempotencyKey('career'),
+      })
+
+      setSubmitState('success')
+      setStatusMessage(SUCCESS_FEEDBACK_MESSAGE)
+      setCaptchaToken('')
+      setRecaptchaResetSignal((value) => value + 1)
+      setFormData(INITIAL_FORM)
+    } catch (error) {
+      setSubmitState('error')
+      setStatusMessage(error.message || 'Unable to submit your application right now.')
+    }
   }
 
   return (
@@ -78,6 +142,16 @@ const CareerDetailApplyCard = ({ job }) => {
       </p>
 
       <form onSubmit={handleSubmit} className="mt-6 space-y-4">
+        <input
+          tabIndex={-1}
+          autoComplete="off"
+          name="website"
+          value={formData.website}
+          onChange={handleChange}
+          className="sr-only"
+          aria-hidden="true"
+        />
+
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2">
           <label className="space-y-2 text-sm">
             <span>First Name *</span>
@@ -138,35 +212,32 @@ const CareerDetailApplyCard = ({ job }) => {
           {errors.resume ? <p className="text-xs text-red-500">{errors.resume}</p> : null}
         </label>
 
-        <label className="inline-flex cursor-pointer items-center gap-3 rounded-sm border border-black/20 bg-white px-4 py-2 text-sm">
-          <input
-            type="checkbox"
-            checked={isHuman}
-            onChange={(event) => setIsHuman(event.target.checked)}
-            className="h-5 w-5 accent-[#7DC242]"
-          />
-          <span>I'm not a robot</span>
-          <span className="ml-auto flex flex-col items-center text-[10px] leading-tight text-black/50">
-            <img
-              src={imNotARobotIcon}
-              alt="reCAPTCHA verification"
-              className="h-10 rounded-[2px] object-cover"
-            />
-            <span className="mt-1">Privacy - Terms</span>
-          </span>
-        </label>
-        {errors.humanCheck ? <p className="text-xs text-red-500">{errors.humanCheck}</p> : null}
+        <RecaptchaCheckboxField
+          resetSignal={recaptchaResetSignal}
+          onTokenChange={handleCaptchaTokenChange}
+          errorMessage={errors.captchaToken}
+        />
 
         <div className="flex flex-col gap-3">
           <button
             type="submit"
-            disabled={!isHuman}
+            disabled={submitState === 'submitting'}
             className="w-fit rounded-sm bg-emerald-500 px-5 py-3 text-sm font-semibold text-[#121417] transition-colors hover:bg-[#93d25b] disabled:cursor-not-allowed disabled:bg-[#7DC242]/50 disabled:text-[#121417]/60"
           >
-            Submit Application
+            {submitState === 'submitting' ? 'Submitting...' : 'Submit Application'}
           </button>
-          {isSubmitted ? (
-            <p className="text-center text-sm text-[#7DC242]">Application sent successfully.</p>
+          <div
+            className={`transform overflow-hidden transition-all duration-500 ease-out ${
+              isSuccessVisible ? 'max-h-24 translate-y-0 opacity-100' : 'max-h-0 -translate-y-2 opacity-0'
+            }`}
+          >
+            <p className="rounded-sm border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-700">
+              {statusMessage}
+            </p>
+          </div>
+
+          {submitState === 'error' && statusMessage ? (
+            <p className="text-center text-sm text-red-500">{statusMessage}</p>
           ) : null}
         </div>
       </form>
