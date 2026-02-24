@@ -44,6 +44,7 @@ const defaultSubmitContactForm = async (payload) => {
 const normalizePhoneDigits = (value) => value.replace(/[^\d]/g, '')
 const SUCCESS_FEEDBACK_MESSAGE =
   'Your message has been sent successfully. Thank you for contacting us.'
+const CAPTCHA_TOKEN_MAX_AGE_MS = 90_000
 
 const ContactFormSection = ({
   content,
@@ -57,6 +58,7 @@ const ContactFormSection = ({
   const [submitState, setSubmitState] = useState('idle')
   const [statusMessage, setStatusMessage] = useState('')
   const [captchaToken, setCaptchaToken] = useState('')
+  const [captchaVerifiedAt, setCaptchaVerifiedAt] = useState(0)
   const [recaptchaResetSignal, setRecaptchaResetSignal] = useState(0)
   const fieldRefs = useRef({})
   const statusRef = useRef(null)
@@ -119,12 +121,16 @@ const ContactFormSection = ({
     if (!formData.privacyConsent)
       nextErrors.privacyConsent = 'You must agree to the privacy policy before submitting.'
     if (!captchaToken) nextErrors.captchaToken = 'Please complete reCAPTCHA verification.'
+    else if (!captchaVerifiedAt || Date.now() - captchaVerifiedAt > CAPTCHA_TOKEN_MAX_AGE_MS)
+      nextErrors.captchaToken = 'reCAPTCHA expired. Please verify again before submitting.'
 
     return nextErrors
   }
 
   const handleCaptchaTokenChange = useCallback((token) => {
-    setCaptchaToken(String(token ?? '').trim())
+    const normalizedToken = String(token ?? '').trim()
+    setCaptchaToken(normalizedToken)
+    setCaptchaVerifiedAt(normalizedToken ? Date.now() : 0)
     setErrors((prev) => {
       if (!prev.captchaToken) return prev
       const next = { ...prev }
@@ -178,12 +184,20 @@ const ContactFormSection = ({
       setSubmitState('success')
       setStatusMessage(SUCCESS_FEEDBACK_MESSAGE)
       resetAfterSuccess()
-      setCaptchaToken('')
-      setRecaptchaResetSignal((value) => value + 1)
     } catch (error) {
       setSubmitState('error')
-      setStatusMessage(error.message)
+      const message = String(error?.message ?? '').trim()
+      if (message.includes('Captcha verification failed')) {
+        setStatusMessage('reCAPTCHA expired or already used. Please verify again and resubmit.')
+      } else {
+        setStatusMessage(message || 'Unable to submit at the moment. Please try again.')
+      }
     } finally {
+      // Google reCAPTCHA v2 token is one-time and can expire quickly.
+      // Always reset after each submission attempt to prevent timeout-or-duplicate on retry.
+      setCaptchaToken('')
+      setCaptchaVerifiedAt(0)
+      setRecaptchaResetSignal((value) => value + 1)
       statusRef.current?.focus()
     }
   }
