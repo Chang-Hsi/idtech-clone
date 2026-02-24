@@ -16,14 +16,30 @@ const toAbsoluteUrl = (path) => {
 
 export async function request(path, options = {}) {
   const { method = 'GET', headers = {}, body, signal, ...fetchOptions } = options
+  const isFormDataPayload =
+    typeof FormData !== 'undefined' &&
+    body instanceof FormData
+  const isStringBody = typeof body === 'string'
+  const mergedHeaders = { ...headers }
+
+  if (
+    !isFormDataPayload &&
+    !isStringBody &&
+    body &&
+    !('Content-Type' in mergedHeaders) &&
+    !('content-type' in mergedHeaders)
+  ) {
+    mergedHeaders['Content-Type'] = 'application/json'
+  }
 
   const response = await fetch(toAbsoluteUrl(path), {
     method,
-    headers: {
-      'Content-Type': 'application/json',
-      ...headers,
-    },
-    body: body ? JSON.stringify(body) : undefined,
+    headers: mergedHeaders,
+    body: body
+      ? isFormDataPayload || isStringBody
+        ? body
+        : JSON.stringify(body)
+      : undefined,
     signal,
     ...fetchOptions,
   })
