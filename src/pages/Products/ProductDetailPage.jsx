@@ -21,7 +21,7 @@ import useLoadProductsOnPage from '../../features/catalog/useLoadProductsOnPage'
 const ProductDetailPage = () => {
   const { productSlug } = useParams()
   const dispatch = useDispatch()
-  useLoadProductsOnPage([productSlug])
+  useLoadProductsOnPage(productSlug)
 
   const localProduct = useSelector((state) => selectProductBySlug(state, productSlug))
   const productFromApi = useSelector((state) => selectProductDetailBySlug(state, productSlug))

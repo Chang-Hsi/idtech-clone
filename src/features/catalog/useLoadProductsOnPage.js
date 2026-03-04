@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { loadProductsFromApi } from './catalogSlice'
 import { selectCatalogDataSource, selectCatalogStatus } from './catalogSelectors'
 
-const useLoadProductsOnPage = (deps = []) => {
+const useLoadProductsOnPage = (reloadKey) => {
   const dispatch = useDispatch()
   const status = useSelector(selectCatalogStatus)
   const dataSource = useSelector(selectCatalogDataSource)
@@ -13,7 +13,7 @@ const useLoadProductsOnPage = (deps = []) => {
     // Skip if a request is already in-flight or data already came from API.
     if (status === 'loading' || dataSource === 'api') return
     dispatch(loadProductsFromApi())
-  }, [dispatch, status, dataSource, ...deps])
+  }, [dispatch, status, dataSource, reloadKey])
 }
 
 export default useLoadProductsOnPage

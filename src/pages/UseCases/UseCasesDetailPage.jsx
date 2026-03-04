@@ -17,7 +17,7 @@ import useLoadProductsOnPage from '../../features/catalog/useLoadProductsOnPage'
 const UseCasesDetailPage = () => {
   const { slug } = useParams()
   const dispatch = useDispatch()
-  useLoadProductsOnPage([slug])
+  useLoadProductsOnPage(slug)
 
   const allProducts = useSelector(selectAllProducts)
   const useCase = useSelector((state) => selectUseCaseDetailBySlug(state, slug))

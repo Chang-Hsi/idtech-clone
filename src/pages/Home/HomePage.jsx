@@ -18,10 +18,13 @@ const HomePage = () => {
   const homePage = useSelector(selectHomePageContent)
   const homePageStatus = useSelector(selectHomePageStatus)
   const keyword = (searchParams.get('s') ?? '').trim()
-  const heroSlides = homePage?.heroSlides ?? []
-  const useCases = homePage?.useCases ?? []
-  const featuredProducts = homePage?.featuredProducts ?? []
-  const rawNews = homePage?.news ?? []
+  const heroSlides = useMemo(() => homePage?.heroSlides ?? [], [homePage?.heroSlides])
+  const useCases = useMemo(() => homePage?.useCases ?? [], [homePage?.useCases])
+  const featuredProducts = useMemo(
+    () => homePage?.featuredProducts ?? [],
+    [homePage?.featuredProducts]
+  )
+  const rawNews = useMemo(() => homePage?.news ?? [], [homePage?.news])
   const news = useMemo(
     () =>
       rawNews.map((item) => ({
